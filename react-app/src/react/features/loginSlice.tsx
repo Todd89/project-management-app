@@ -15,7 +15,7 @@ export const setNewUser = createAsyncThunk('setNewUser', async (user: INewUser, 
   const USER_DATA = await httpClient.setNewUser(user);
   if (typeof USER_DATA !== 'string') {
     dispatch(setRegisterUserData({ ...user, id: USER_DATA.id }));
-    dispatch(setUserStatus('Register'));
+    dispatch(setUserStatus('Registered'));
   } else dispatch(setUserStatus(USER_DATA));
 });
 
@@ -23,7 +23,7 @@ export const getUserToken = createAsyncThunk('getUserToken', async (user: IUser,
   const TOKEN = await httpClient.getUserToken(user);
   if (typeof TOKEN !== 'string') {
     dispatch(setUserToken(TOKEN));
-    dispatch(setUserStatus('Authorize'));
+    dispatch(setUserStatus('Authorized'));
   } else dispatch(setUserStatus(TOKEN));
 });
 

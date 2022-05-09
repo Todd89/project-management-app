@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import './authorizeForm.css';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { getUserToken, setAuthorizedUserData } from '../../../react/features/loginSlice';
+import { getUserToken, setAuthorizedUserData } from '../../../../react/features/loginSlice';
 import { useSelector } from 'react-redux';
-import { INewUser } from '../../../interface/types';
+import { INewUser } from '../../../../interface/types';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
-import httpClient from '../../../API/api';
+import httpClient from '../../../../API/api';
 
 const AurhorizeForm: React.FC = () => {
   const {
@@ -43,27 +43,54 @@ const AurhorizeForm: React.FC = () => {
   }, [userState.token]);
 
   return (
-    <div>
-      <p>Authotization</p>
+    <div className="registration-block">
+      <p className="info-block-preview">Authotization</p>
+      <p className="info-block-status">Status:{userState.status}</p>
       <form onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="userLoginIn">
           Login:
           <input
-            {...register('userLoginIn', { required: true })}
+            {...register('userLoginIn', {
+              required: 'Поле обязательно к заполнению',
+              minLength: {
+                value: 3,
+                message: 'Минимум 3 символа',
+              },
+              pattern: /[\d\wА-я]{3,}/,
+            })}
+            placeholder="login"
             type="text"
             name="userLoginIn"
             id="userLoginIn"
           />
+          {errors.userLoginIn && (
+            <span className={'userName-error'} data-testid="userName-error">
+              {errors.userLoginIn.message}
+            </span>
+          )}
         </label>
         <label htmlFor="userPasswordIn">
           Password:
           <input
-            {...register('userPasswordIn', { required: true })}
+            {...register('userPasswordIn', {
+              required: 'Поле обязательно к заполнению',
+              minLength: {
+                value: 3,
+                message: 'Минимум 3 символов',
+              },
+              pattern: /[\d\wА-я]{3,}/,
+            })}
+            placeholder="passsowrd"
             type="password"
             name="userPasswordIn"
             id="userPasswordIn"
             autoComplete="off"
           />
+          {errors.userPasswordIn && (
+            <span className={'userName-error'} data-testid="userName-error">
+              {errors.userPasswordIn.message}
+            </span>
+          )}
         </label>
         <input type="submit" onClick={() => console.log('Send')} value={'Send'} />
       </form>

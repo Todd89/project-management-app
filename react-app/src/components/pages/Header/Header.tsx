@@ -1,8 +1,11 @@
 import React from 'react';
 import './Header.css';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { clearUserStatus } from '../../../react/features/loginSlice';
 
 const Header: React.FC = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const logoutApp = () => {
     navigate('/');
@@ -30,6 +33,7 @@ const Header: React.FC = () => {
         className="button-logout"
         type="button"
         onClick={() => {
+          dispatch(clearUserStatus('clear'));
           logoutApp();
         }}
       >
