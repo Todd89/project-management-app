@@ -15,7 +15,7 @@ export const setNewUser = createAsyncThunk('setNewUser', async (user: INewUser, 
   const USER_DATA = await httpClient.setNewUser(user);
   if (typeof USER_DATA !== 'string') {
     dispatch(setRegisterUserData({ ...user, id: USER_DATA.id }));
-    dispatch(setUserStatus(''));
+    dispatch(setUserStatus('Register'));
   } else dispatch(setUserStatus(USER_DATA));
 });
 
@@ -23,7 +23,7 @@ export const getUserToken = createAsyncThunk('getUserToken', async (user: IUser,
   const TOKEN = await httpClient.getUserToken(user);
   if (typeof TOKEN !== 'string') {
     dispatch(setUserToken(TOKEN));
-    dispatch(setUserStatus(''));
+    dispatch(setUserStatus('Authorize'));
   } else dispatch(setUserStatus(TOKEN));
 });
 
@@ -32,7 +32,7 @@ const userReducer = createSlice({
   initialState: userState,
   reducers: {
     setUserToken: (state, action) => {
-      return { ...state, token: action.payload };
+      return { ...state, token: action.payload.token };
     },
     setRegisterUserData: (state, action) => {
       console.log(action, 'action');
@@ -41,8 +41,28 @@ const userReducer = createSlice({
     setUserStatus: (state, action) => {
       return { ...state, status: action.payload };
     },
+    setAuthorizedUserData: (state, action) => {
+      return { ...state, ...action.payload };
+    },
+    clearUserStatus: (state, action) => {
+      const clearState = {
+        name: '',
+        login: '',
+        password: '',
+        id: '',
+        token: '',
+        status: 'Unregister',
+      };
+      return { ...state, ...clearState };
+    },
   },
 });
 
-export const { setUserToken, setRegisterUserData, setUserStatus } = userReducer.actions;
+export const {
+  setUserToken,
+  setRegisterUserData,
+  setUserStatus,
+  clearUserStatus,
+  setAuthorizedUserData,
+} = userReducer.actions;
 export default userReducer.reducer;

@@ -2,6 +2,23 @@ import { INewUser, IUser } from '../interface/types';
 import { API_URL, API_METHODS, USER_STATUS, API_STATUS } from '.././constant/constant';
 
 class HTTPClient {
+  async getAllUsers(token: string) {
+    try {
+      const response = await fetch(`${API_URL.MAIN_URL}/users`, {
+        method: `${API_METHODS.GET}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.status === 200) {
+        return await response.json();
+      }
+    } catch (err) {
+      console.error('Error: ', err);
+    }
+  }
   async setNewUser(user: INewUser) {
     try {
       const response = await fetch(`${API_URL.MAIN_URL}/signup`, {
