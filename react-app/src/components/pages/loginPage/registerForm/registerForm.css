@@ -1,0 +1,18 @@
+.registration-block{
+  padding: 5px;
+  height: 25vh;
+
+}
+
+.info-block-preview{
+  font-size: 1.5rem;
+  color: rgb(18, 121, 232);
+}
+
+.info-block-status{
+  margin: 10px 0 20px;
+}
+
+.userName-error{
+  color: red;
+}
