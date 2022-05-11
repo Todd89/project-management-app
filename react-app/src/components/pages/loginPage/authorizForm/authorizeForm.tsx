@@ -46,6 +46,7 @@ const AurhorizeForm: React.FC = () => {
     <div className="registration-block">
       <p className="info-block-preview">Authotization</p>
       <p className="info-block-status">Status:{userState.status}</p>
+      <p className="info-block-status">Status:{userState.id}</p>
       <form onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="userLoginIn">
           Login:
@@ -92,7 +93,14 @@ const AurhorizeForm: React.FC = () => {
             </span>
           )}
         </label>
-        <input type="submit" onClick={() => console.log('Send')} value={'Send'} />
+        <input type="submit" onClick={() => console.log('send')} value={'Send'} />
+        <input
+          type="button"
+          onClick={() => {
+            console.log('Send');
+          }}
+          value={'Send'}
+        />
       </form>
     </div>
   );
