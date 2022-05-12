@@ -7,5 +7,17 @@ type IUser = {
   login: string;
   password: string;
 };
+type ILoginState = {
+  name: string;
+  login: string;
+  password: string;
+  id: string;
+  token: string;
+  status: string;
+};
 
-export { INewUser, IUser };
+type IState = {
+  loginData: ILoginState;
+};
+
+export { INewUser, IUser, ILoginState, IState };

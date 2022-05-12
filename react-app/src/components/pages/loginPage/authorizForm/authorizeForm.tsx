@@ -1,52 +1,67 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import './authorizeForm.css';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { getUserToken, setAuthorizedUserData } from '../../../../react/features/loginSlice';
 import { useSelector } from 'react-redux';
-import { INewUser } from '../../../../interface/types';
+import { INewUser, IState, ILoginState } from '../../../../interface/types';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import httpClient from '../../../../API/api';
+import { useNavigate } from 'react-router';
+
+type FormData = {
+  userLoginIn: string;
+  userPasswordIn: string;
+};
 
 const AurhorizeForm: React.FC = () => {
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitSuccessful },
-  } = useForm();
+    formState: { errors, isSubmitSuccessful, isValid, isDirty },
+  } = useForm<FormData>({ mode: 'onChange', reValidateMode: 'onChange' });
+  const navigate = useNavigate();
   const [userLogin, setUserLogin] = useState('');
-  const userState = useSelector((state: any) => state.loginData);
+  const [submitBtnDisabled, setSubmitBtnDisabled] = useState(true);
+  const userState = useSelector((state: IState) => state.loginData);
   const dispatch = useDispatch();
 
-  const onSubmit: SubmitHandler<any> = (data) => {
-    console.log(userState);
+  const onSubmit = handleSubmit((data) => {
     const userData = {
       login: data.userLoginIn,
       password: data.userPasswordIn,
     } as INewUser;
     setUserLogin(data.userLoginIn);
     dispatch(getUserToken(userData));
-  };
+  });
 
   useEffect(() => {
     const findUser = async () => {
       const ALL_USERS = await httpClient.getAllUsers(userState.token);
-      const USER = ALL_USERS.filter((el: any) => {
+      const USER = ALL_USERS.filter((el: ILoginState) => {
         return el.login === userLogin;
       });
       dispatch(setAuthorizedUserData(USER[0]));
     };
     if (userState.token) {
       findUser();
+      navigate('/main');
     }
   }, [userState.token]);
+
+  const closeSignUpWindow = () => {
+    navigate('/');
+  };
+
+  useEffect(() => {
+    if (isDirty && isValid) setSubmitBtnDisabled(false);
+  }, [isDirty, isValid]);
 
   return (
     <div className="registration-block">
       <p className="info-block-preview">Authotization</p>
       <p className="info-block-status">Status:{userState.status}</p>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={onSubmit}>
         <label htmlFor="userLoginIn">
           Login:
           <input
@@ -65,7 +80,8 @@ const AurhorizeForm: React.FC = () => {
           />
           {errors.userLoginIn && (
             <span className={'userName-error'} data-testid="userName-error">
-              {errors.userLoginIn.message}
+              {errors.userLoginIn.message ||
+                'Введите свой Login. Минимум 3 символа. Допустимы латинские смволы и цифры'}
             </span>
           )}
         </label>
@@ -75,10 +91,10 @@ const AurhorizeForm: React.FC = () => {
             {...register('userPasswordIn', {
               required: 'Поле обязательно к заполнению',
               minLength: {
-                value: 3,
-                message: 'Минимум 3 символов',
+                value: 7,
+                message: 'Минимум 7 символов',
               },
-              pattern: /[\d\wА-я]{3,}/,
+              pattern: /[\d\wА-я]{7,}/,
             })}
             placeholder="passsowrd"
             type="password"
@@ -88,12 +104,22 @@ const AurhorizeForm: React.FC = () => {
           />
           {errors.userPasswordIn && (
             <span className={'userName-error'} data-testid="userName-error">
-              {errors.userPasswordIn.message}
+              {errors.userPasswordIn.message ||
+                'Введите пароль. Минимум 5 символов. Допустимы латинские смволы и цифры'}
             </span>
           )}
         </label>
-        <input type="submit" onClick={() => console.log('Send')} value={'Send'} />
+        <input type="submit" disabled={submitBtnDisabled} value={'Send'} />
       </form>
+      <button
+        type="button"
+        className="close-btn"
+        onClick={() => {
+          closeSignUpWindow();
+        }}
+      >
+        X
+      </button>
     </div>
   );
 };
