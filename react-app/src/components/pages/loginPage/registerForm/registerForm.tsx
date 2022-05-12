@@ -86,7 +86,7 @@ const RegisterForm: React.FC = () => {
                 value: 3,
                 message: 'Минимум 3 симовла',
               },
-              pattern: /[\d\wА-я]{7,}/,
+              pattern: /[\d\wА-я]{3,}/,
             })}
             placeholder="login"
             type="text"

@@ -15,7 +15,9 @@ const USER_STATUS = {
 };
 
 const API_STATUS = {
+  REAL_SUCCESS: 200,
   SUCCESS: 201,
+  DELETE_SUCCESS: 204,
   NOT_FOUND: 403,
   EXIST: 409,
 };

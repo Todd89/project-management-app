@@ -15,9 +15,21 @@ type ILoginState = {
   token: string;
   status: string;
 };
-
 type IState = {
   loginData: ILoginState;
 };
+type INewBoard = {
+  title: string;
+};
+type INewColumn = {
+  title: string;
+};
+type INewTask = {
+  title: string;
+  order: number;
+  description: string;
+  userId: string;
+};
 
-export { INewUser, IUser, ILoginState, IState };
+export { INewUser, IUser, INewBoard, INewColumn, INewTask, ILoginState, IState };
+
