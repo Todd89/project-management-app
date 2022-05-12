@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { IState } from '../../../../interface/types';
+import CloseWindowButton from '../../reusableComponents/closeWindowButton/CloseWindowButton';
 
 type FormData = {
   userName: string;
@@ -41,8 +42,8 @@ const RegisterForm: React.FC = () => {
     }
   }, [userState.id]);
 
-  const closeSignUpWindow = () => {
-    navigate('/');
+  const closeWindow = (event: boolean) => {
+    if (event) navigate('/');
   };
 
   useEffect(() => {
@@ -126,15 +127,7 @@ const RegisterForm: React.FC = () => {
         </label>
         <input type="submit" disabled={submitBtnDisabled} value={'Send'} />
       </form>
-      <button
-        type="button"
-        className="close-btn"
-        onClick={() => {
-          closeSignUpWindow();
-        }}
-      >
-        X
-      </button>
+      <CloseWindowButton closeWindow={closeWindow} />
     </div>
   );
 };

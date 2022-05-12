@@ -1,19 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './WelcomeRoute.css';
+import LogInButton from '../reusableComponents/logInButton/LogInButton';
+import SignUpButton from '../reusableComponents/signUpButton/SignUpButton';
 
 const WelcomeRoute: React.FC = () => {
   return (
     <section className="welcome-page">
-      <Link to="/login">
-        <button className="button-login" type="button">
-          Log in
-        </button>
-      </Link>
       <Link to="/signup">
-        <button className="button-signUp" type="button">
-          Sign Up
-        </button>
+        <SignUpButton />
+      </Link>
+      <Link to="/login">
+        <LogInButton />
       </Link>
       <article>
         <h1>Project management app</h1>

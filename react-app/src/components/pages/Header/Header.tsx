@@ -3,12 +3,16 @@ import './Header.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { clearUserStatus } from '../../../react/features/loginSlice';
+import LogOutButton from '../reusableComponents/logOutButton/LogOutButton';
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const logoutApp = () => {
-    navigate('/');
+  const logoutApp = (event: boolean) => {
+    if (event) {
+      dispatch(clearUserStatus('clear'));
+      navigate('/');
+    }
   };
   return (
     <header className="header">
@@ -29,16 +33,7 @@ const Header: React.FC = () => {
           <span className="formSwitcher-text">Русский/English</span>
         </label>
       </div>
-      <button
-        className="button-logout"
-        type="button"
-        onClick={() => {
-          dispatch(clearUserStatus('clear'));
-          logoutApp();
-        }}
-      >
-        Logout
-      </button>
+      <LogOutButton logoutApp={logoutApp} />
     </header>
   );
 };

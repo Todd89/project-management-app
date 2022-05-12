@@ -32,4 +32,3 @@ type INewTask = {
 };
 
 export { INewUser, IUser, INewBoard, INewColumn, INewTask, ILoginState, IState };
-
