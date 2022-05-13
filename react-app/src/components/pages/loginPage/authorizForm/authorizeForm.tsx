@@ -3,10 +3,11 @@ import './authorizeForm.css';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { getUserToken, setAuthorizedUserData } from '../../../../react/features/loginSlice';
 import { useSelector } from 'react-redux';
-import { INewUser } from '../../../../interface/types';
+import { INewUser, IState } from '../../../../interface/types';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import httpClient from '../../../../API/api';
+import { useNavigate } from 'react-router';
 
 const AurhorizeForm: React.FC = () => {
   const {
@@ -15,8 +16,9 @@ const AurhorizeForm: React.FC = () => {
     reset,
     formState: { errors, isSubmitSuccessful },
   } = useForm();
+  const navigate = useNavigate();
   const [userLogin, setUserLogin] = useState('');
-  const userState = useSelector((state: any) => state.loginData);
+  const userState = useSelector((state: IState) => state.loginData);
   const dispatch = useDispatch();
 
   const onSubmit: SubmitHandler<any> = (data) => {
@@ -39,6 +41,7 @@ const AurhorizeForm: React.FC = () => {
     };
     if (userState.token) {
       findUser();
+      navigate('/main');
     }
   }, [userState.token]);
 
@@ -94,13 +97,6 @@ const AurhorizeForm: React.FC = () => {
           )}
         </label>
         <input type="submit" onClick={() => console.log('send')} value={'Send'} />
-        <input
-          type="button"
-          onClick={() => {
-            console.log('Send');
-          }}
-          value={'Send'}
-        />
       </form>
     </div>
   );

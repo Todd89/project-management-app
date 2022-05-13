@@ -3,7 +3,7 @@ import './registerForm.css';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { setNewUser } from '../../../../react/features/loginSlice';
 import { useSelector } from 'react-redux';
-import { INewUser } from '../../../../interface/types';
+import { INewUser, IState, IRegisterData } from '../../../../interface/types';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
@@ -16,10 +16,10 @@ const RegisterForm: React.FC = () => {
     formState: { errors, isSubmitSuccessful },
   } = useForm();
   const navigate = useNavigate();
-  const userState = useSelector((state: any) => state.loginData);
+  const userState = useSelector((state: IState) => state.loginData);
   const dispatch = useDispatch();
 
-  const onSubmit: SubmitHandler<any> = (data) => {
+  const onSubmit: handleSubmit = (data) => {
     console.log(userState);
     const user = {
       name: data.userName,

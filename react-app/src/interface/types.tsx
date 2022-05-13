@@ -20,4 +20,28 @@ type INewTask = {
   userId: string;
 };
 
-export { INewUser, IUser, INewBoard, INewColumn, INewTask };
+type ILoginState = {
+  name: string;
+  login: string;
+  password: string;
+  id: string;
+  token: string;
+  status: string;
+};
+
+type IState = {
+  loginData: ILoginState;
+};
+
+type IRegisterData = {
+  userName: string;
+  userLogin: string;
+  userPassword: string;
+};
+
+type IAuthorizeData = {
+  userLogin: string;
+  userPassword: string;
+};
+
+export { INewUser, IUser, INewBoard, INewColumn, INewTask, IState, IRegisterData, IAuthorizeData };
