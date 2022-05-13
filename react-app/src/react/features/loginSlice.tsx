@@ -21,10 +21,11 @@ export const setNewUser = createAsyncThunk('setNewUser', async (user: INewUser, 
 
 export const getUserToken = createAsyncThunk('getUserToken', async (user: IUser, { dispatch }) => {
   const TOKEN = await httpClient.getUserToken(user);
-  if (typeof TOKEN !== 'string') {
+  if (TOKEN !== '') {
     dispatch(setUserToken(TOKEN));
     dispatch(setUserStatus('Authorized'));
   } else dispatch(setUserStatus(TOKEN));
+  console.log(TOKEN);
 });
 
 const userReducer = createSlice({
@@ -35,7 +36,6 @@ const userReducer = createSlice({
       return { ...state, token: action.payload.token };
     },
     setRegisterUserData: (state, action) => {
-      console.log(action, 'action');
       return { ...state, ...action.payload };
     },
     setUserStatus: (state, action) => {

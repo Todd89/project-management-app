@@ -7,6 +7,17 @@ type IUser = {
   login: string;
   password: string;
 };
+type ILoginState = {
+  name: string;
+  login: string;
+  password: string;
+  id: string;
+  token: string;
+  status: string;
+};
+type IState = {
+  loginData: ILoginState;
+};
 type INewBoard = {
   title: string;
 };
@@ -20,19 +31,6 @@ type INewTask = {
   userId: string;
 };
 
-type ILoginState = {
-  name: string;
-  login: string;
-  password: string;
-  id: string;
-  token: string;
-  status: string;
-};
-
-type IState = {
-  loginData: ILoginState;
-};
-
 type IRegisterData = {
   userName: string;
   userLogin: string;
@@ -44,4 +42,14 @@ type IAuthorizeData = {
   userPassword: string;
 };
 
-export { INewUser, IUser, INewBoard, INewColumn, INewTask, IState, IRegisterData, IAuthorizeData };
+export {
+  INewUser,
+  IUser,
+  INewBoard,
+  INewColumn,
+  INewTask,
+  IState,
+  IRegisterData,
+  IAuthorizeData,
+  ILoginState,
+};

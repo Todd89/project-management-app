@@ -1,0 +1,22 @@
+.registration-block{
+  padding: 5px;
+  height: 92.5vh;
+}
+
+.info-block-preview{
+  font-size: 1.5rem;
+}
+
+.close-btn {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  padding: 0.2rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.7s;
+}
+
+.close-btn:hover{
+  box-shadow: 0rem 0rem 0.5rem 0.5rem rgba(0, 0, 255, 0.37);
+}

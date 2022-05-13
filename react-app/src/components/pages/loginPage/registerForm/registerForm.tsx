@@ -1,33 +1,46 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import './registerForm.css';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { setNewUser } from '../../../../react/features/loginSlice';
 import { useSelector } from 'react-redux';
 import { INewUser, IState, IRegisterData } from '../../../../interface/types';
 import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { IState } from '../../../../interface/types';
+
+type FormData = {
+  userName: string;
+  userLogin: string;
+  userPassword: string;
+};
 
 const RegisterForm: React.FC = () => {
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitSuccessful },
-  } = useForm();
+    formState: { errors, isSubmitSuccessful, isValid, isDirty },
+  } = useForm<FormData>({ mode: 'onChange', reValidateMode: 'onChange' });
   const navigate = useNavigate();
   const userState = useSelector((state: IState) => state.loginData);
+<<<<<<< HEAD
   const dispatch = useDispatch();
 
   const onSubmit: handleSubmit = (data) => {
     console.log(userState);
+=======
+  const [submitBtnDisabled, setSubmitInputDisabled] = useState(true);
+  const dispatch = useDispatch();
+
+  const onSubmit = handleSubmit((data) => {
+>>>>>>> 9b23280d10817bd49e8fa2979fb6c7d1c6af90a5
     const user = {
       name: data.userName,
       login: data.userLogin,
       password: data.userPassword,
     } as INewUser;
     dispatch(setNewUser(user));
-  };
+  });
 
   useEffect(() => {
     if (userState.id) {
@@ -35,11 +48,19 @@ const RegisterForm: React.FC = () => {
     }
   }, [userState.id]);
 
+  const closeSignUpWindow = () => {
+    navigate('/');
+  };
+
+  useEffect(() => {
+    if (isDirty && isValid) setSubmitInputDisabled(false);
+  }, [isDirty, isValid]);
+
   return (
     <div className="registration-block">
       <p className="info-block-preview">Register new user</p>
       <p className="info-block-status">Status:{userState.status}</p>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={onSubmit}>
         <label htmlFor="userName">
           Name:
           <input
@@ -56,7 +77,12 @@ const RegisterForm: React.FC = () => {
             name="userName"
             id="userName"
           />
-          {errors.userName && <span className="userName-error">{errors.userName.message}</span>}
+          {errors.userName && (
+            <span className="userName-error">
+              {errors.userName.message ||
+                'Введите Ваш Никнэйм. Минимум 3 символов. Допустимы латинские смволы и цифры'}
+            </span>
+          )}
         </label>
         <label htmlFor="userLogin">
           Login:
@@ -74,7 +100,12 @@ const RegisterForm: React.FC = () => {
             name="userLogin"
             id="userLogin"
           />
-          {errors.userLogin && <span className="userName-error">{errors.userLogin.message}</span>}
+          {errors.userLogin && (
+            <span className="userName-error">
+              {errors.userLogin.message ||
+                'Введите свой Login. Минимум 3 символа. Допустимы латинские смволы и цифры'}
+            </span>
+          )}
         </label>
         <label htmlFor="userPassword">
           Password:
@@ -94,11 +125,23 @@ const RegisterForm: React.FC = () => {
             autoComplete="off"
           />
           {errors.userPassword && (
-            <span className="userName-error">{errors.userPassword.message}</span>
+            <span className="userName-error">
+              {errors.userPassword.message ||
+                'Введите пароль. Минимум 5 символов. Допустимы латинские смволы и цифры'}
+            </span>
           )}
         </label>
-        <input type="submit" onClick={() => console.log('Send')} value={'Send'} />
+        <input type="submit" disabled={submitBtnDisabled} value={'Send'} />
       </form>
+      <button
+        type="button"
+        className="close-btn"
+        onClick={() => {
+          closeSignUpWindow();
+        }}
+      >
+        X
+      </button>
     </div>
   );
 };
