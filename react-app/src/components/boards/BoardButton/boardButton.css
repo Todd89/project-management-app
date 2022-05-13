@@ -1,0 +1,13 @@
+.board-button {
+  width: 300px;
+  height: 200px;
+  border: 1px solid var(--color-grey);
+  background-color: var(--color-silver);
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.board-button:hover {
+  background-color: var(--color-dark-blue);
+  color: var(--color-white);
+}

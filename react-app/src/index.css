@@ -1,4 +1,14 @@
-*{
+:root {
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-grey: #6d6767;
+  --color-silver: #ffffff;
+  --color-dark-silver: #b6c0c2c5;
+  --color-azure: rgba(55, 194, 212, 0.205);
+  --color-dark-blue: rgba(0, 0, 255, 0.466);
+}
+
+* {
   margin: 0;
   padding: 0;
   box-sizing: inherit;
