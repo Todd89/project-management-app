@@ -1,6 +1,7 @@
 import React from 'react';
 import './Footer.css';
 import { ReactComponent as RssSchool } from './rss.svg';
+import { ReactComponent as GitHub } from './github.svg';
 
 const Footer: React.FC = () => {
   return (
@@ -11,6 +12,7 @@ const Footer: React.FC = () => {
         </a>
       </div>
       <div className="footer-github">
+        <GitHub className="git-hub_svg" />
         <a href="https://github.com/todd89" target="_Blank" rel="noreferrer">
           Alexandr
         </a>
@@ -20,6 +22,7 @@ const Footer: React.FC = () => {
         <a href="https://github.com/ArturZabashta" target="_Blank" rel="noreferrer">
           Artur
         </a>
+        <GitHub className="git-hub_svg" />
       </div>
       <div className="footer-copyright">© 2022</div>
     </footer>

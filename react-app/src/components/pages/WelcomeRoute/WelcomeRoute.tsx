@@ -7,17 +7,19 @@ import SignUpButton from '../reusableComponents/signUpButton/SignUpButton';
 const WelcomeRoute: React.FC = () => {
   return (
     <section className="welcome-page">
-      <Link to="/signup">
-        <SignUpButton />
-      </Link>
-      <Link to="/login">
-        <LogInButton />
-      </Link>
-      <article>
-        <h1>Project management app</h1>
-      </article>
-      <article>Our team</article>
-      <article>React 2022 Q1</article>
+      <div className="welcome-page_blur">
+        <Link to="/signup">
+          <SignUpButton />
+        </Link>
+        <Link to="/login">
+          <LogInButton />
+        </Link>
+        <article>
+          <h1>Project management app</h1>
+        </article>
+        <article>Our team</article>
+        <article>React 2022 Q1</article>
+      </div>
     </section>
   );
 };

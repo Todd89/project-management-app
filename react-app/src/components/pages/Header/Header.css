@@ -8,7 +8,7 @@
 
 .button-edit-profile,
 .button-add-board {
-    margin: 0 0.5rem;
+    margin-right: 0.7rem;
     height: 1.2rem;
     font-size: 0.9rem;
     border-radius: 0.4rem;
@@ -33,7 +33,10 @@
     transform: scale(0.97);
 }
 
-
+.current-user {
+    color: blue;
+    margin-right: 0.5rem;
+}
 
 /*----------------------------------------*/
 

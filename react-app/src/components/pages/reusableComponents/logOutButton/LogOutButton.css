@@ -1,7 +1,11 @@
+.logout-button_wrapper {
+    flex: 0 0 1.5rem;
+}
+
 .button-logout {
     margin-right: 1rem;
-    width:  2.3rem;
-    height: 1.6rem;    
+    width:  1.5rem;
+    height: 1.5rem;    
     border: solid transparent;
     border-radius: 50%;
     background-color: transparent;

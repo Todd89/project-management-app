@@ -1,4 +1,4 @@
-import './authorizeForm.css';
+import '../registerForm/registerForm.css';
 import { useForm } from 'react-hook-form';
 import { getUserToken, setAuthorizedUserData } from '../../../../react/features/loginSlice';
 import { useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import httpClient from '../../../../API/api';
 import { useNavigate } from 'react-router';
 import CloseWindowButton from '../../reusableComponents/closeWindowButton/CloseWindowButton';
+import SubmitButton from '../../reusableComponents/submitButton/SubmitButton';
 
 type FormData = {
   userLoginIn: string;
@@ -18,7 +19,6 @@ const AurhorizeForm: React.FC = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitSuccessful, isValid, isDirty },
   } = useForm<FormData>({ mode: 'onChange', reValidateMode: 'onChange' });
   const navigate = useNavigate();
@@ -60,59 +60,63 @@ const AurhorizeForm: React.FC = () => {
 
   return (
     <div className="registration-block">
-      <p className="info-block-preview">Authotization</p>
-      <p className="info-block-status">Status:{userState.status}</p>
-      <form onSubmit={onSubmit}>
-        <label htmlFor="userLoginIn">
-          Login:
-          <input
-            {...register('userLoginIn', {
-              required: 'Поле обязательно к заполнению',
-              minLength: {
-                value: 3,
-                message: 'Минимум 3 символа',
-              },
-              pattern: /[\d\wА-я]{3,}/,
-            })}
-            placeholder="login"
-            type="text"
-            name="userLoginIn"
-            id="userLoginIn"
-          />
-          {errors.userLoginIn && (
-            <span className={'userName-error'} data-testid="userName-error">
-              {errors.userLoginIn.message ||
-                'Введите свой Login. Минимум 3 символа. Допустимы латинские смволы и цифры'}
-            </span>
-          )}
-        </label>
-        <label htmlFor="userPasswordIn">
-          Password:
-          <input
-            {...register('userPasswordIn', {
-              required: 'Поле обязательно к заполнению',
-              minLength: {
-                value: 7,
-                message: 'Минимум 7 символов',
-              },
-              pattern: /[\d\wА-я]{7,}/,
-            })}
-            placeholder="passsowrd"
-            type="password"
-            name="userPasswordIn"
-            id="userPasswordIn"
-            autoComplete="off"
-          />
-          {errors.userPasswordIn && (
-            <span className={'userName-error'} data-testid="userName-error">
-              {errors.userPasswordIn.message ||
-                'Введите пароль. Минимум 5 символов. Допустимы латинские смволы и цифры'}
-            </span>
-          )}
-        </label>
-        <input type="submit" disabled={submitBtnDisabled} value={'Send'} />
-      </form>
-      <CloseWindowButton closeWindow={closeWindow} />
+      <div className="registration-block_blur">
+        <div className="form-wrapper">
+          <p className="info-block-preview">Authotization</p>
+          <p className="info-block-status">Status:{userState.status}</p>
+          <form className="registration-form" onSubmit={onSubmit}>
+            <label className="registration-form_userLogin" htmlFor="userLoginIn">
+              <input
+                {...register('userLoginIn', {
+                  required: 'Поле обязательно к заполнению',
+                  minLength: {
+                    value: 3,
+                    message: 'Минимум 3 символа',
+                  },
+                  pattern: /[\d\w\DА-я]{3,}/,
+                })}
+                placeholder="login"
+                type="text"
+                className="userLogin"
+                name="userLoginIn"
+                id="userLoginIn"
+              />
+              {errors.userLoginIn && (
+                <span className={'userName-error'} data-testid="userName-error">
+                  {errors.userLoginIn.message ||
+                    'Введите свой Login. Минимум 3 символа. Допустимы латинские смволы и цифры'}
+                </span>
+              )}
+            </label>
+            <label className="registration-form_userPassword" htmlFor="userPasswordIn">
+              <input
+                {...register('userPasswordIn', {
+                  required: 'Поле обязательно к заполнению',
+                  minLength: {
+                    value: 7,
+                    message: 'Минимум 7 символов',
+                  },
+                  pattern: /[\d\wА-я]{7,}/,
+                })}
+                placeholder="passsowrd"
+                type="password"
+                className="userPassword"
+                name="userPasswordIn"
+                id="userPasswordIn"
+                autoComplete="off"
+              />
+              {errors.userPasswordIn && (
+                <span className={'userName-error'} data-testid="userName-error">
+                  {errors.userPasswordIn.message ||
+                    'Введите пароль. Минимум 5 символов. Допустимы латинские смволы и цифры'}
+                </span>
+              )}
+            </label>
+            <SubmitButton submitBtnDisabled={submitBtnDisabled} />
+          </form>
+          <CloseWindowButton closeWindow={closeWindow} />
+        </div>
+      </div>
     </div>
   );
 };

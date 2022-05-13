@@ -6,7 +6,8 @@
     height: 6vh;
     justify-content: space-evenly;
     align-items: center;
-    background-color: rgba(0, 0, 255, 0.466); 
+    background-color: rgba(0, 0, 255, 0.466);
+    overflow: hidden;
      
   }
   .footer-copyright,
@@ -14,8 +15,7 @@
   .footer-github {
     display: flex;
     align-items: center;
-    justify-content: space-around;
-    height: 3rem;
+    justify-content: space-around;    
     font-size: 1rem;
     color: rgb(0, 0, 0);
     text-decoration: none;
@@ -31,7 +31,13 @@
     transition: all 0.7s;
   }
   .rss-school_svg:hover {       
-    filter: invert(77%);
+    fill: blue;
+    transition: all 0.7s;
+  }
+
+  .git-hub_svg {
+    width: 1rem;
+    height: 1rem;      
     transition: all 0.7s;
   }
   
@@ -46,6 +52,7 @@
     font-weight: 700;
     margin: 0 0.5rem;
     text-decoration: none;
+    color: white;
     cursor: pointer;
     transition: all 0.7s;
   }
