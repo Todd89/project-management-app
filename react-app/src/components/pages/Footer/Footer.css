@@ -58,7 +58,7 @@
   }
   .footer-github a:hover {
     text-decoration: underline;
-    color: brown;
+    color: red;
     transition: all 0.7s;
   }
   .footer-github_logo {

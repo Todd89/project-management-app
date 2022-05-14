@@ -6,6 +6,7 @@
     background-image: url('/public/assets/pma.png');
     background-repeat: no-repeat;
     background-position: center;
+    background-size: contain;
     
    
 }

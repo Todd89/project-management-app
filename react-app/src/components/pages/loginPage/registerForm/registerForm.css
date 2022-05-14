@@ -3,7 +3,8 @@
   background-color: white;
   background-image: url('/public/assets/pma.png');
   background-repeat: no-repeat;
-  background-position: center;  
+  background-position: center;
+  background-size: contain;  
 }
 
 .registration-block_blur {
@@ -49,9 +50,20 @@
   height: 1.5rem;
   text-align: center;
   border-radius: 0 1rem 1rem 1rem;
+  border-color: gray;
   cursor: pointer;
+  transition: all 0.7s;
 }
 
+.userName:hover,
+.userLogin:hover,
+.userPassword:hover,
+.userName:focus,
+.userLogin:focus,
+.userPassword:focus {
+  border-color: blue !important;
+  color: blue;
+}
 
 .info-block-preview{
   margin-top: 1.5rem;
