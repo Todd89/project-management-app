@@ -62,8 +62,8 @@ const AurhorizeForm: React.FC = () => {
     <div className="registration-block">
       <div className="registration-block_blur">
         <div className="form-wrapper">
-          <p className="info-block-preview">Authotization</p>
-          <p className="info-block-status">Status:{userState.status}</p>
+          <p className="info-block-preview">Авторизация</p>
+          <p className="info-block-status">Ваш статус:{userState.status}</p>
           <form className="registration-form" onSubmit={onSubmit}>
             <label className="registration-form_userLogin" htmlFor="userLoginIn">
               <input

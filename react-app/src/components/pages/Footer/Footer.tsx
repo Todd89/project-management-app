@@ -1,6 +1,6 @@
 import React from 'react';
 import './Footer.css';
-import { ReactComponent as RssSchool } from './rss.svg';
+import RSSchoolLogo from '../reusableComponents/RSSchoolLogo/RSSchoolLogo';
 import { ReactComponent as GitHub } from './github.svg';
 
 const Footer: React.FC = () => {
@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
     <footer className="footer">
       <div className="footer-rsschool">
         <a href="https://rs.school/react/" target="_Blank" rel="noreferrer">
-          <RssSchool className="rss-school_svg" />
+          <RSSchoolLogo />
         </a>
       </div>
       <div className="footer-github">
