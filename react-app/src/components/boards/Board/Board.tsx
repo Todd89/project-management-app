@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-//import { setCurrentBoard, setAppBoards } from '../../../react/features/boardsSlice';
 import { setCurrentBoard } from '../../../react/features/boardsSlice';
 import { TStore } from '../../../react/store';
 import { IBoard, IColumn, TBoards } from '../../../interface/interfaces';
 import './board.css';
-import ButtonDelete from '../ButtonDelete/ButtonDelete';
 import ButtonAdd from '../ButtonAdd/ButtonAdd';
 import ModalColumn from '../ModalColumn/ModalColumn';
 import Column from '../Column/Column';
 //remove
-import {
-  setTempBoards,
-  setTempColumns,
-  setTempTasks,
-  TempBoards,
-} from '../../../react/features/tempSlice';
+import { setTempBoards, TempBoards } from '../../../react/features/tempSlice';
 //remove
 
 interface IPropsBoard {
@@ -30,7 +23,7 @@ function Board(props: IPropsBoard) {
   const [isEditBoardModeOn, setIsEditBoardModeOn] = useState(false);
   const [isModalOn, setIsModalOn] = useState(false);
 
-  const boardColumns = Array.from(props.boardData.columns).sort((a, b) => a.order - b.order);
+  const boardColumns = [...props.boardData.columns].sort((a, b) => a.order - b.order);
 
   const boardState: TBoards = useSelector((state: TStore) => state.boardsFunctions);
 
@@ -65,9 +58,6 @@ function Board(props: IPropsBoard) {
         ...tempState.boardsArray.slice(index + 1),
       ])
     );
-    // console.log(tempState.boardsArray);
-
-    //dispatch(setAppBoards());
   }
 
   useEffect(() => {
@@ -78,47 +68,6 @@ function Board(props: IPropsBoard) {
       )
     );
   }, [dispatch, tempState.boardsArray, props.boardData.id]);
-
-  function handleBoardDelete(answer: boolean) {
-    // console.log('handleBoardDelete');
-    if (answer) {
-      const index = tempState.boardsArray.findIndex((item) => props.boardData.id === item.id);
-
-      const boardColumnsIds: string[] = props.boardData.columns.map((item) => item.id);
-      dispatch(
-        setTempBoards([
-          ...tempState.boardsArray.slice(0, index),
-          ...tempState.boardsArray.slice(index + 1),
-        ])
-      );
-
-      let ind = 0;
-      while (ind < tempState.columnsArray.length) {
-        if (boardColumnsIds.includes(tempState.columnsArray[ind].id)) {
-          dispatch(
-            setTempColumns([
-              ...tempState.columnsArray.slice(0, ind),
-              ...tempState.columnsArray.slice(ind + 1),
-            ])
-          );
-        }
-      }
-      ind = 0;
-      while (ind < tempState.tasksArray.length) {
-        if (tempState.tasksArray[ind].boardId === props.boardData.id) {
-          dispatch(
-            setTempTasks([
-              ...tempState.tasksArray.slice(0, ind),
-              ...tempState.tasksArray.slice(ind + 1),
-            ])
-          );
-        } else {
-          ind += 1;
-        }
-      }
-      //dispatch(setAppBoards());
-    }
-  }
 
   const emptyColumn: IColumn = {
     id: `column${String(tempState.columnsArray.length)}`,
@@ -141,10 +90,6 @@ function Board(props: IPropsBoard) {
         <div className="board__header">
           <nav className="column__nav">
             <ButtonAdd buttonText={'Add column'} handleAdd={handleColumnAdd} />
-            <ButtonDelete
-              confirmationText={props.boardData.title}
-              handleDelete={handleBoardDelete}
-            />
           </nav>
           {isEditBoardModeOn ? (
             <input

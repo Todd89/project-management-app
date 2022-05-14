@@ -222,7 +222,7 @@ export const tasksArray: Array<ITask> = [
     order: 1,
     description: 'drama, biography',
     userId: 'user001',
-    boardId: 'board002',
+    boardId: 'board003',
     columnId: 'column002',
   },
   {
@@ -231,7 +231,7 @@ export const tasksArray: Array<ITask> = [
     order: 1,
     description: 'drama',
     userId: 'user001',
-    boardId: 'board002',
+    boardId: 'board003',
     columnId: 'column003',
   },
   {
@@ -240,7 +240,7 @@ export const tasksArray: Array<ITask> = [
     order: 1,
     description: 'I,II',
     userId: 'user002',
-    boardId: 'board003',
+    boardId: 'board002',
     columnId: 'column004',
   },
   {
@@ -249,7 +249,7 @@ export const tasksArray: Array<ITask> = [
     order: 1,
     description: 'first two lectures by prof. Popov',
     userId: 'user002',
-    boardId: 'board003',
+    boardId: 'board002',
     columnId: 'column004',
   },
 ];

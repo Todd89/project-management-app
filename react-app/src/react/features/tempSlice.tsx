@@ -25,7 +25,6 @@ export const tempSlice = createSlice({
       return { ...state, columnsArray: action.payload };
     },
     setTempTasks: (state, action) => {
-      console.log('spice');
       return { ...state, tasksArray: action.payload };
     },
   },

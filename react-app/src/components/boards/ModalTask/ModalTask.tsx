@@ -29,12 +29,12 @@ function ModalTask(props: IModalTaskProps) {
   const dispatch = useDispatch();
   const [isFinished, setIsFinished] = useState(false);
 
-  const userState: TUsers = useSelector((state: TStore) => state.usersFunctions);
+  const usersState = useSelector((state: TStore) => state.loginData);
 
   const [currentData, setCurrentData] = useState({
     name: props.taskData.title,
     description: props.taskData.description,
-    user: userState.currentUser,
+    user: usersState,
   });
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -75,6 +75,42 @@ function ModalTask(props: IModalTaskProps) {
       editTask.title = currentData.name;
       editTask.description = currentData.description;
       editTask.userId = currentData.user.id;
+
+      editTaskInColumn = {
+        ...editTask,
+        done: false,
+        files: [],
+      };
+
+      const editColumn: IColumn = JSON.parse(
+        JSON.stringify(
+          tempState.columnsArray.find((item) => item.id === editTask.columnId) ||
+            tempState.columnsArray[0]
+        )
+      );
+
+      const indexC = editColumn.tasks.findIndex((item) => item.id === editTask.id);
+      const indexBB = tempState.columnsArray.findIndex((item) => item.id === editColumn.id);
+
+      const columnTasks = [...editColumn.tasks];
+      columnTasks.splice(indexC, 1, editTaskInColumn);
+      editColumn.tasks = columnTasks;
+
+      const indexB = tempState.boardsArray.findIndex((item) => item.id === editTask.boardId);
+      const editBoard: IBoard = JSON.parse(
+        JSON.stringify(
+          tempState.boardsArray.find((item) => item.id === editTask.boardId) ||
+            tempState.boardsArray[0]
+        )
+      );
+
+      const boardColumns = [...editBoard.columns];
+
+      const indexCB = boardColumns.findIndex((item) => item.id === editTask.columnId);
+
+      boardColumns.splice(indexCB, 1, editColumn);
+      editBoard.columns = boardColumns;
+
       dispatch(
         setTempTasks([
           ...tempState.tasksArray.slice(0, index),
@@ -83,96 +119,84 @@ function ModalTask(props: IModalTaskProps) {
         ])
       );
 
-      editTaskInColumn = {
-        ...editTask,
-        done: false,
-        files: [],
-      };
+      dispatch(
+        setTempColumns([
+          ...tempState.columnsArray.slice(0, indexBB),
+          editColumn,
+          ...tempState.columnsArray.slice(indexBB + 1),
+        ])
+      );
+
+      dispatch(
+        setTempBoards([
+          ...tempState.boardsArray.slice(0, indexB),
+          editBoard,
+          ...tempState.boardsArray.slice(indexB + 1),
+        ])
+      );
     } else {
       editTask = { ...props.taskData };
       editTask.title = currentData.name;
       editTask.description = currentData.description;
       editTask.userId = currentData.user.id;
-      dispatch(setTempTasks([...tempState.tasksArray.slice(), editTask]));
-
       editTaskInColumn = {
         ...editTask,
         done: false,
         files: [],
       };
-    }
 
-    const editColumn: IColumn = JSON.parse(
-      JSON.stringify(
-        tempState.columnsArray.find((item) => item.id === editTask.columnId) ||
-          tempState.columnsArray[0]
-      )
-    );
+      const editColumn: IColumn = JSON.parse(
+        JSON.stringify(
+          tempState.columnsArray.find((item) => item.id === editTask.columnId) ||
+            tempState.columnsArray[0]
+        )
+      );
 
-    const indexBB = tempState.columnsArray.findIndex((item) => item.id === editColumn.id);
-    dispatch(
-      setTempColumns([
-        ...tempState.columnsArray.slice(0, indexBB),
-        editColumn,
-        ...tempState.columnsArray.slice(indexBB + 1),
-      ])
-    );
+      const indexBB = tempState.columnsArray.findIndex((item) => item.id === editColumn.id);
 
-    const indexC = editColumn.tasks.findIndex((item) => item.id === editTask.id);
-    const columnTasks = [...editColumn.tasks];
+      const columnTasks = [...editColumn.tasks];
+      const newOrder = columnTasks.length
+        ? Math.max(...columnTasks.map((item) => item.order)) + 1
+        : 1;
+      editTaskInColumn.order = newOrder;
+      editTask.order = newOrder;
 
-    if (indexC >= 0) {
-      columnTasks.splice(indexC, 1, editTaskInColumn);
-    } else {
       columnTasks.push(editTaskInColumn);
+      editColumn.tasks = columnTasks;
+
+      const indexB = tempState.boardsArray.findIndex((item) => item.id === editTask.boardId);
+      const editBoard: IBoard = JSON.parse(
+        JSON.stringify(
+          tempState.boardsArray.find((item) => item.id === editTask.boardId) ||
+            tempState.boardsArray[0]
+        )
+      );
+
+      const boardColumns = [...editBoard.columns];
+      const indexCB = boardColumns.findIndex((item) => item.id === editTask.columnId);
+
+      boardColumns.splice(indexCB, 1, editColumn);
+      editBoard.columns = boardColumns;
+
+      dispatch(setTempTasks([...tempState.tasksArray.slice(), editTask]));
+
+      dispatch(
+        setTempColumns([
+          ...tempState.columnsArray.slice(0, indexBB),
+          editColumn,
+          ...tempState.columnsArray.slice(indexBB + 1),
+        ])
+      );
+
+      dispatch(
+        setTempBoards([
+          ...tempState.boardsArray.slice(0, indexB),
+          editBoard,
+          ...tempState.boardsArray.slice(indexB + 1),
+        ])
+      );
     }
-    const order = 1;
-
-    console.log(columnTasks);
-    columnTasks.sort((a, b) => a.order - b.order);
-    console.log('2', tempState.tasksArray);
-    /*  columnTasks.forEach((task) => {
-      if (task.order != order) {
-        task.order = order;
-        const index = tempState.tasksArray.findIndex((item) => item.id === task.id);
-        const findTask = tempState.tasksArray.slice(index, index + 1)[0];
-        const change = JSON.parse(JSON.stringify(findTask));
-        change.order = order;
-        dispatch(
-          setTempTasks([
-            ...tempState.tasksArray.slice(0, index),
-            change,
-            ...tempState.tasksArray.slice(index + 1),
-          ])
-        );
-      }
-      order += 1;
-    });
-    editColumn.tasks = columnTasks;
-    */
-    const indexB = tempState.boardsArray.findIndex((item) => item.id === editTask.boardId);
-    const editBoard: IBoard = JSON.parse(
-      JSON.stringify(
-        tempState.boardsArray.find((item) => item.id === editTask.boardId) ||
-          tempState.boardsArray[0]
-      )
-    );
-    const indexCB = editBoard.columns.findIndex((item) => item.id === editTask.columnId);
-    editBoard.columns.splice(indexCB, 1, editColumn);
-    dispatch(
-      setTempBoards([
-        ...tempState.boardsArray.slice(0, indexB),
-        editBoard,
-        ...tempState.boardsArray.slice(indexB + 1),
-      ])
-    );
-
-    //dispatch(setAppBoards());
   }
-
-  useEffect(() => {
-    console.log('useEffect', tempState.tasksArray);
-  }, [tempState.tasksArray]);
 
   function handleKeyDown(event: React.KeyboardEvent) {
     if (event.key === 'Enter') {

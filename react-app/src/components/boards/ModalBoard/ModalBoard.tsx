@@ -7,7 +7,7 @@ import ButtonSave from '../ButtonSave/ButtonSave';
 import './modalBoard.css';
 
 //remove
-import { TempBoards } from '../../../react/features/tempSlice';
+import { setTempBoards, TempBoards } from '../../../react/features/tempSlice';
 import { TStore } from '../../../react/store';
 //remove
 
@@ -24,7 +24,7 @@ function ModalBoard(props: IModalBoardProps) {
     name: props.boardData.title,
   });
 
-  //const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     setCurrentData({
@@ -36,8 +36,7 @@ function ModalBoard(props: IModalBoardProps) {
     props.cancelModalState();
     const addBoard: IBoard = { ...props.boardData };
     addBoard.title = currentData.name;
-    tempState.boardsArray.push(addBoard);
-    //dispatch(setAppBoards());
+    dispatch(setTempBoards([...tempState.boardsArray.slice(0), addBoard]));
   }
 
   function handleKeyDown(event: React.KeyboardEvent) {

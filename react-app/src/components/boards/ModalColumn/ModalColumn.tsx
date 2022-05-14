@@ -35,19 +35,16 @@ function ModalColumn(props: IModalColumnProps) {
   function handleDataSave() {
     const addColumn: IColumn = { ...props.columnData };
     addColumn.title = currentData.name;
-    tempState.columnsArray.push(addColumn); //API
+
     const index = tempState.boardsArray.findIndex((item) => props.boardData.id === item.id);
     const change: IBoard = JSON.parse(JSON.stringify(props.boardData));
-    let order = 1;
+    const newOrder = change.columns.length
+      ? Math.max(...change.columns.map((item) => item.order)) + 1
+      : 1;
+    addColumn.order = newOrder;
     change.columns.push(addColumn);
-    change.columns.forEach((column) => {
-      if (column.order != order) {
-        column.order = order;
-        const index = tempState.columnsArray.findIndex((item) => item.id === column.id);
-        tempState.columnsArray[index].order = order;
-      }
-      order += 1;
-    });
+
+    dispatch(setTempColumns([...tempState.columnsArray.slice(), addColumn]));
     dispatch(
       setTempBoards([
         ...tempState.boardsArray.slice(0, index),
@@ -56,7 +53,6 @@ function ModalColumn(props: IModalColumnProps) {
       ])
     );
 
-    //    dispatch(setAppBoards());
     props.cancelModalState();
   }
 

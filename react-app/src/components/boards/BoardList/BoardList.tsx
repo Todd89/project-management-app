@@ -25,12 +25,8 @@ function BoardList() {
   const [isModalOn, setIsModalOn] = useState(false);
   const [isBoardChosen, setIsBoardChosen] = useState(false);
   const dispatch = useDispatch();
-  // const usersState: TUsers = useSelector((state: TStore) => state.usersFunctions);
-  const boardsState: TBoards = useSelector((state: TStore) => state.boardsFunctions);
 
-  /*function handleUserChoice(event: React.MouseEvent<HTMLButtonElement>) {
-    dispatch(setCurrentUser((event.target as HTMLButtonElement).id));
-  }*/
+  const boardsState: TBoards = useSelector((state: TStore) => state.boardsFunctions);
 
   const emptyBoard: IBoard = {
     id: `board${String(tempState.boardsArray.length)}`,
@@ -52,13 +48,8 @@ function BoardList() {
 
   function handleReturnToBoardList() {
     setIsBoardChosen(false);
+    dispatch(setCurrentBoard({ id: '', title: '', columns: [] }));
   }
-
-  // console.log('boardList', tempState.boardsArray);
-
-  /* useEffect(() => {
-    dispatch(setAppBoards());
-  }, [usersState.currentUser, dispatch]);*/
 
   useEffect(() => {
     if (boardsState.currentBoard.id) {
