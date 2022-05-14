@@ -4,6 +4,8 @@ import {
   deleteUserProfile,
   editUserProfile,
   clearUserStatus,
+  getUserToken,
+  setUserStatus,
 } from '../../../../react/features/loginSlice';
 import { useSelector } from 'react-redux';
 import { INewUser, IState, IDeleteUser } from '../../../../interface/types';
@@ -11,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { USER_STATUS } from '../../../../constant/constant';
+import React from 'react';
 
 type FormData = {
   userName: string;
@@ -26,6 +29,7 @@ const RegisterForm: React.FC = () => {
     formState: { errors, isValid, isDirty },
   } = useForm<FormData>({ mode: 'onChange', reValidateMode: 'onChange' });
   const navigate = useNavigate();
+
   const userState = useSelector((state: IState) => state.loginData);
   const [submitBtnDisabled, setSubmitInputDisabled] = useState(true);
   const dispatch = useDispatch();
@@ -55,14 +59,24 @@ const RegisterForm: React.FC = () => {
   }, [isDirty, isValid]);
 
   useEffect(() => {
+    console.log(userState);
+    if (userState.status === USER_STATUS.DELETE_SUCCESS) {
+      reset();
+      localStorage.removeItem('token');
+      dispatch(clearUserStatus('clear'));
+      navigate('/');
+    }
+  }, [userState.status]);
+
+  useEffect(() => {
     if (userState.status === USER_STATUS.EDIT_SUCCESS) {
       reset();
-    }
-    if (userState.status === USER_STATUS.DELETE_SUCCESS) {
-      navigate('/');
+      localStorage.removeItem('token');
       dispatch(clearUserStatus('clear'));
+      dispatch(setUserStatus(USER_STATUS.UNAUTHORIZED));
+      navigate('/login');
     }
-  }, [userState.status, userState.status]);
+  }, [userState.status]);
 
   return (
     <div className="registration-block">
@@ -121,10 +135,10 @@ const RegisterForm: React.FC = () => {
             {...register('userPassword', {
               required: 'Поле обязательно к заполнению',
               minLength: {
-                value: 3,
-                message: 'Минимум 3 символов',
+                value: 7,
+                message: 'Минимум 7 символов',
               },
-              pattern: /[\d\wА-я]{3,}/,
+              pattern: /[\d\wА-я]{7,}/,
             })}
             placeholder="password"
             type="password"

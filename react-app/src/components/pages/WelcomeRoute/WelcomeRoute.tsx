@@ -29,7 +29,10 @@ const WelcomeRoute: React.FC = () => {
       });
       dispatch(setAuthorizedUserData(USER[0]));
       if (ALL_USERS) {
-        dispatch(setUserToken(TOKEN));
+        const tokenObject = {
+          token: TOKEN,
+        };
+        dispatch(setUserToken(tokenObject));
         navigate('/main');
       }
     };

@@ -96,7 +96,7 @@ class HTTPClient {
       console.error('Error: ', err);
     }
   }
-  async getUserToken(user: IUser) {
+  async getUserToken(user: INewUser) {
     try {
       const response = await fetch(`${API_URL.MAIN_URL}/signin`, {
         method: `${API_METHODS.POST}`,

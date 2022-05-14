@@ -1,6 +1,10 @@
 import '../registerForm/registerForm.css';
 import { useForm } from 'react-hook-form';
-import { getUserToken, setAuthorizedUserData } from '../../../../react/features/loginSlice';
+import {
+  getUserToken,
+  setAuthorizedUserData,
+  setUserStatus,
+} from '../../../../react/features/loginSlice';
 import { useSelector } from 'react-redux';
 import { INewUser, IState, ILoginState } from '../../../../interface/types';
 import { useDispatch } from 'react-redux';
@@ -9,6 +13,7 @@ import httpClient from '../../../../API/api';
 import { useNavigate } from 'react-router';
 import CloseWindowButton from '../../reusableComponents/closeWindowButton/CloseWindowButton';
 import SubmitButton from '../../reusableComponents/submitButton/SubmitButton';
+import { USER_STATUS } from '../../../../constant/constant';
 
 type FormData = {
   userLoginIn: string;
@@ -19,7 +24,7 @@ const AurhorizeForm: React.FC = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitSuccessful, isValid, isDirty },
+    formState: { errors, isValid, isDirty },
   } = useForm<FormData>({ mode: 'onChange', reValidateMode: 'onChange' });
   const navigate = useNavigate();
   const [userLogin, setUserLogin] = useState('');
@@ -56,6 +61,9 @@ const AurhorizeForm: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!userState.status) {
+      dispatch(setUserStatus(USER_STATUS.UNAUTHORIZED));
+    }
     if (isDirty && isValid) setSubmitBtnDisabled(false);
   }, [isDirty, isValid]);
 

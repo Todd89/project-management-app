@@ -12,10 +12,6 @@ const Header: React.FC = () => {
   const userState = useSelector((state: IState) => state.loginData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const logoutApp = () => {
-    localStorage.removeItem('token');
-    navigate('/');
-  const userState = useSelector((state: IState) => state.loginData);
   const [checked, setChecked] = useState(false);
   const [language, setLanguage] = useState('Русский');
   function changeCheckbox() {
@@ -25,20 +21,18 @@ const Header: React.FC = () => {
     if (checked) setLanguage('English');
     else setLanguage('Русский');
   }, [checked]);
-  const logoutApp = (event: boolean) => {
-    if (event) {
-      dispatch(clearUserStatus('clear'));
-      navigate('/');
-    }
+  const logoutApp = () => {
+    localStorage.removeItem('token');
+    dispatch(clearUserStatus('clear'));
+    navigate('/');
   };
   const editProfileApp = () => {
     navigate('/edit');
   };
   return (
     <header className="header">
-      <button className="button-edit-profile" type="button" onClick={editProfileApp}>
       <AppLogo />
-      <button className="button-edit-profile" type="button">
+      <button onClick={editProfileApp} className="button-edit-profile" type="button">
         Edit profile
       </button>
       <button className="button-add-board" type="button">

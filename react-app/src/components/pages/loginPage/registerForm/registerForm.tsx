@@ -1,15 +1,14 @@
 import './registerForm.css';
 import { useForm } from 'react-hook-form';
-import { setNewUser } from '../../../../react/features/loginSlice';
+import { setNewUser, setUserStatus } from '../../../../react/features/loginSlice';
 import { useSelector } from 'react-redux';
 import { INewUser, IState, IRegisterData } from '../../../../interface/types';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-
-import { IState } from '../../../../interface/types';
 import CloseWindowButton from '../../reusableComponents/closeWindowButton/CloseWindowButton';
 import SubmitButton from '../../reusableComponents/submitButton/SubmitButton';
+import { USER_STATUS } from '../../../../constant/constant';
 
 type FormData = {
   userName: string;
@@ -38,6 +37,9 @@ const RegisterForm: React.FC = () => {
   });
 
   useEffect(() => {
+    if (!userState.status) {
+      dispatch(setUserStatus(USER_STATUS.UNREGISTER));
+    }
     if (userState.id) {
       navigate('/login');
     }
