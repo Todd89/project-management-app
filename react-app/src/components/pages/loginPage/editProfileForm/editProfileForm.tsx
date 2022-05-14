@@ -152,7 +152,7 @@ const RegisterForm: React.FC = () => {
           dispatch(deleteUserProfile(user));
         }}
       >
-        X
+        DELETE
       </button>
       <button
         type="button"
