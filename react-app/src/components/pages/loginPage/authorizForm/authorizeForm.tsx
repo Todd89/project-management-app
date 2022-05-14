@@ -46,6 +46,7 @@ const AurhorizeForm: React.FC = () => {
     if (userState.token) {
       findUser();
       navigate('/main');
+      localStorage.setItem('token', userState.token);
     }
   }, [userState.token]);
 
@@ -91,10 +92,10 @@ const AurhorizeForm: React.FC = () => {
             {...register('userPasswordIn', {
               required: 'Поле обязательно к заполнению',
               minLength: {
-                value: 7,
-                message: 'Минимум 7 символов',
+                value: 3,
+                message: 'Минимум 3 символов',
               },
-              pattern: /[\d\wА-я]{7,}/,
+              pattern: /[\d\wА-я]{3,}/,
             })}
             placeholder="passsowrd"
             type="password"
@@ -109,11 +110,7 @@ const AurhorizeForm: React.FC = () => {
             </span>
           )}
         </label>
-<<<<<<< HEAD
-        <input type="submit" onClick={() => console.log('send')} value={'Send'} />
-=======
         <input type="submit" disabled={submitBtnDisabled} value={'Send'} />
->>>>>>> 9b23280d10817bd49e8fa2979fb6c7d1c6af90a5
       </form>
       <button
         type="button"

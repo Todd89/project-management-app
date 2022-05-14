@@ -1,11 +1,16 @@
-import './registerForm.css';
+import './editProfileForm.css';
 import { useForm } from 'react-hook-form';
-import { setNewUser } from '../../../../react/features/loginSlice';
+import {
+  deleteUserProfile,
+  editUserProfile,
+  clearUserStatus,
+} from '../../../../react/features/loginSlice';
 import { useSelector } from 'react-redux';
-import { INewUser, IState, IRegisterData } from '../../../../interface/types';
+import { INewUser, IState, IDeleteUser } from '../../../../interface/types';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { USER_STATUS } from '../../../../constant/constant';
 
 type FormData = {
   userName: string;
@@ -18,7 +23,7 @@ const RegisterForm: React.FC = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitSuccessful, isValid, isDirty },
+    formState: { errors, isValid, isDirty },
   } = useForm<FormData>({ mode: 'onChange', reValidateMode: 'onChange' });
   const navigate = useNavigate();
   const userState = useSelector((state: IState) => state.loginData);
@@ -26,31 +31,42 @@ const RegisterForm: React.FC = () => {
   const dispatch = useDispatch();
 
   const onSubmit = handleSubmit((data) => {
-    const user = {
+    const NEW_USER = {
       name: data.userName,
       login: data.userLogin,
       password: data.userPassword,
     } as INewUser;
-    dispatch(setNewUser(user));
+    const EDIT_USER = {
+      ID: userState.id,
+      token: userState.token,
+      user: NEW_USER,
+    };
+    dispatch(editUserProfile(EDIT_USER));
   });
 
-  useEffect(() => {
-    if (userState.id) {
-      navigate('/login');
-    }
-  }, [userState.id]);
-
-  const closeSignUpWindow = () => {
-    navigate('/');
+  const closeEditWindow = () => {
+    navigate('/main');
   };
 
   useEffect(() => {
-    if (isDirty && isValid) setSubmitInputDisabled(false);
+    if (isDirty && isValid) {
+      setSubmitInputDisabled(false);
+    }
   }, [isDirty, isValid]);
+
+  useEffect(() => {
+    if (userState.status === USER_STATUS.EDIT_SUCCESS) {
+      reset();
+    }
+    if (userState.status === USER_STATUS.DELETE_SUCCESS) {
+      navigate('/');
+      dispatch(clearUserStatus('clear'));
+    }
+  }, [userState.status, userState.status]);
 
   return (
     <div className="registration-block">
-      <p className="info-block-preview">Register new user</p>
+      <p className="info-block-preview">Edit profile</p>
       <p className="info-block-status">Status:{userState.status}</p>
       <form onSubmit={onSubmit}>
         <label htmlFor="userName">
@@ -127,9 +143,22 @@ const RegisterForm: React.FC = () => {
       </form>
       <button
         type="button"
+        className=""
+        onClick={() => {
+          const user = {
+            ID: userState.id,
+            token: userState.token,
+          } as IDeleteUser;
+          dispatch(deleteUserProfile(user));
+        }}
+      >
+        X
+      </button>
+      <button
+        type="button"
         className="close-btn"
         onClick={() => {
-          closeSignUpWindow();
+          closeEditWindow();
         }}
       >
         X

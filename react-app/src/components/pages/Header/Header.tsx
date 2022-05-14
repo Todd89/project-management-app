@@ -1,23 +1,30 @@
 import React from 'react';
 import './Header.css';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearUserStatus } from '../../../react/features/loginSlice';
+import { IState } from '../../../interface/types';
 
 const Header: React.FC = () => {
+  const userState = useSelector((state: IState) => state.loginData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const logoutApp = () => {
+    localStorage.removeItem('token');
     navigate('/');
+  };
+  const editProfileApp = () => {
+    navigate('/edit');
   };
   return (
     <header className="header">
-      <button className="button-edit-profile" type="button">
+      <button className="button-edit-profile" type="button" onClick={editProfileApp}>
         Edit profile
       </button>
       <button className="button-add-board" type="button">
         Create board
       </button>
+      <div>{userState.name}</div>
       <div className="switcher-wrapper">
         <input
           type="checkbox"

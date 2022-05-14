@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import httpClient from '../../API/api';
-import { INewUser, IUser } from '../../interface/types';
+import { USER_STATUS } from '../../constant/constant';
+import { INewUser, IUser, IEditUser, IDeleteUser } from '../../interface/types';
 
 const userState = {
   name: '',
@@ -21,12 +23,38 @@ export const setNewUser = createAsyncThunk('setNewUser', async (user: INewUser, 
 
 export const getUserToken = createAsyncThunk('getUserToken', async (user: IUser, { dispatch }) => {
   const TOKEN = await httpClient.getUserToken(user);
-  if (TOKEN !== '') {
+  if (TOKEN !== USER_STATUS.NOT_FOUND) {
     dispatch(setUserToken(TOKEN));
     dispatch(setUserStatus('Authorized'));
-  } else dispatch(setUserStatus(TOKEN));
+  } else dispatch(setUserStatus(USER_STATUS.NOT_FOUND));
   console.log(TOKEN);
 });
+
+export const editUserProfile = createAsyncThunk(
+  'editUserProfile',
+  async (user: IEditUser, { dispatch }) => {
+    const NEW_USER = await httpClient.updateUser(user.ID, user.token, user.user);
+    if (NEW_USER && NEW_USER !== USER_STATUS.EDIT_ERROR) {
+      console.log(NEW_USER, 'NEW_USER');
+      dispatch(setRegisterUserData(NEW_USER));
+      dispatch(setUserStatus(USER_STATUS.EDIT_SUCCESS));
+    } else if (NEW_USER === USER_STATUS.EDIT_ERROR) {
+      dispatch(setUserStatus(USER_STATUS.EDIT_ERROR));
+    }
+  }
+);
+
+export const deleteUserProfile = createAsyncThunk(
+  'deleteUserProfile',
+  async (user: IDeleteUser, { dispatch }) => {
+    const NEW_USER = await httpClient.deleteUserByID(user.ID, user.token);
+    if (NEW_USER === USER_STATUS.DELETE_SUCCESS) {
+      dispatch(setUserStatus(USER_STATUS.DELETE_SUCCESS));
+    } else {
+      dispatch(setUserStatus('Something wrong'));
+    }
+  }
+);
 
 const userReducer = createSlice({
   name: 'UserLogin',

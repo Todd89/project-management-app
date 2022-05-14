@@ -5,12 +5,10 @@ type INewUser = {
 };
 type IUser = {
   login: string;
-  password: string;
 };
 type ILoginState = {
   name: string;
   login: string;
-  password: string;
   id: string;
   token: string;
   status: string;
@@ -41,6 +39,15 @@ type IAuthorizeData = {
   userLogin: string;
   userPassword: string;
 };
+type IEditUser = {
+  ID: string;
+  token: string;
+  user: INewUser;
+};
+type IDeleteUser = {
+  ID: string;
+  token: string;
+};
 
 export {
   INewUser,
@@ -52,4 +59,6 @@ export {
   IRegisterData,
   IAuthorizeData,
   ILoginState,
+  IEditUser,
+  IDeleteUser,
 };
