@@ -7,6 +7,8 @@ import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { IState } from '../../../../interface/types';
+import CloseWindowButton from '../../reusableComponents/closeWindowButton/CloseWindowButton';
+import SubmitButton from '../../reusableComponents/submitButton/SubmitButton';
 
 type FormData = {
   userName: string;
@@ -18,7 +20,6 @@ const RegisterForm: React.FC = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitSuccessful, isValid, isDirty },
   } = useForm<FormData>({ mode: 'onChange', reValidateMode: 'onChange' });
   const navigate = useNavigate();
@@ -41,8 +42,8 @@ const RegisterForm: React.FC = () => {
     }
   }, [userState.id]);
 
-  const closeSignUpWindow = () => {
-    navigate('/');
+  const closeWindow = (event: boolean) => {
+    if (event) navigate('/');
   };
 
   useEffect(() => {
@@ -51,90 +52,86 @@ const RegisterForm: React.FC = () => {
 
   return (
     <div className="registration-block">
-      <p className="info-block-preview">Register new user</p>
-      <p className="info-block-status">Status:{userState.status}</p>
-      <form onSubmit={onSubmit}>
-        <label htmlFor="userName">
-          Name:
-          <input
-            {...register('userName', {
-              required: 'Поле обязательно к заполнению',
-              minLength: {
-                value: 3,
-                message: 'Минимум 3 символа',
-              },
-              pattern: /[\d\wА-я]{3,}/,
-            })}
-            placeholder="Name"
-            type="text"
-            name="userName"
-            id="userName"
-          />
-          {errors.userName && (
-            <span className="userName-error">
-              {errors.userName.message ||
-                'Введите Ваш Никнэйм. Минимум 3 символов. Допустимы латинские смволы и цифры'}
-            </span>
-          )}
-        </label>
-        <label htmlFor="userLogin">
-          Login:
-          <input
-            {...register('userLogin', {
-              required: 'Поле обязательно к заполнению',
-              minLength: {
-                value: 3,
-                message: 'Минимум 3 симовла',
-              },
-              pattern: /[\d\wА-я]{3,}/,
-            })}
-            placeholder="login"
-            type="text"
-            name="userLogin"
-            id="userLogin"
-          />
-          {errors.userLogin && (
-            <span className="userName-error">
-              {errors.userLogin.message ||
-                'Введите свой Login. Минимум 3 символа. Допустимы латинские смволы и цифры'}
-            </span>
-          )}
-        </label>
-        <label htmlFor="userPassword">
-          Password:
-          <input
-            {...register('userPassword', {
-              required: 'Поле обязательно к заполнению',
-              minLength: {
-                value: 3,
-                message: 'Минимум 3 символов',
-              },
-              pattern: /[\d\wА-я]{3,}/,
-            })}
-            placeholder="password"
-            type="password"
-            name="userPassword"
-            id="userPassword"
-            autoComplete="off"
-          />
-          {errors.userPassword && (
-            <span className="userName-error">
-              {errors.userPassword.message ||
-                'Введите пароль. Минимум 5 символов. Допустимы латинские смволы и цифры'}
-            </span>
-          )}
-        </label>
-        <input type="submit" disabled={submitBtnDisabled} value={'Send'} />
-      </form>
-      <button
-        type="button"
-        className="close-btn"
-        onClick={() => {
-          closeSignUpWindow();
-        }}
-      >
-        X
-      </button>
+      <div className="registration-block_blur">
+        <div className="form-wrapper">
+          <p className="info-block-preview">Регистрация</p>
+          <p className="info-block-status">Ваш статус:{userState.status}</p>
+          <form className="registration-form" onSubmit={onSubmit}>
+            <label className="registration-form_userName" htmlFor="userName">
+              <input
+                {...register('userName', {
+                  required: 'Поле обязательно к заполнению',
+                  minLength: {
+                    value: 3,
+                    message: 'Минимум 3 символа',
+                  },
+                  pattern: /[\d\w\DА-я]{3,}/,
+                })}
+                placeholder="Insert your Name"
+                type="text"
+                className="userName"
+                name="userName"
+                id="userName"
+              />
+              {errors.userName && (
+                <span className="userName-error">
+                  {errors.userName.message ||
+                    'Введите Ваш Никнэйм. Минимум 3 символов. Допустимы латинские смволы и цифры'}
+                </span>
+              )}
+            </label>
+            <label className="registration-form_userLogin" htmlFor="userLogin">
+              <input
+                {...register('userLogin', {
+                  required: 'Поле обязательно к заполнению',
+                  minLength: {
+                    value: 3,
+                    message: 'Минимум 3 симовла',
+                  },
+                  pattern: /[\d\w\DА-я]{3,}/,
+                })}
+                placeholder="Insert your Login"
+                type="text"
+                className="userLogin"
+                name="userLogin"
+                id="userLogin"
+              />
+              {errors.userLogin && (
+                <span className="userName-error">
+                  {errors.userLogin.message ||
+                    'Введите свой Login. Минимум 3 символа. Допустимы латинские буквы и цифры'}
+                </span>
+              )}
+            </label>
+            <label className="registration-form_userPassword" htmlFor="userPassword">
+              <input
+                {...register('userPassword', {
+                  required: 'Поле обязательно к заполнению',
+                  minLength: {
+                    value: 7,
+                    message: 'Минимум 7 символов',
+                  },
+                  pattern: /[\d\wА-я]{7,}/,
+                })}
+                placeholder="Insert your Password"
+                type="password"
+                className="userPassword"
+                name="userPassword"
+                id="userPassword"
+                autoComplete="off"
+              />
+              {errors.userPassword && (
+                <span className="userName-error">
+                  {errors.userPassword.message ||
+                    'Введите пароль. Минимум 7 символов. Допустимы латинские смволы и цифры'}
+                </span>
+              )}
+            </label>
+            <SubmitButton submitBtnDisabled={submitBtnDisabled} />
+          </form>
+          <CloseWindowButton closeWindow={closeWindow} />
+        </div>
+      </div>
     </div>
   );
 };

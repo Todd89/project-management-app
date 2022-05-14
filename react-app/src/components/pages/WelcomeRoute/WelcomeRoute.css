@@ -1,37 +1,55 @@
-.welcome-page {
+.welcome-page {    
+    position: relative;    
+    height: 94vh;
+    font-size: 1.5rem;
+    background-color: white;
+    background-image: url('/public/assets/pma.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    
+   
+}
+
+.welcome-page_blur {  
     display: flex;
     flex-direction: column; 
     justify-content: center;
+    align-items: center;  
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(0.5rem);
+}
+
+.welcome-page_app,
+.welcome-page_team,
+.welcome-page_course {
+    display: flex;
+    max-width: 60%;
+    margin-bottom: 2rem;
+}
+
+.welcome-page_app {
+    flex-direction: column;
+}
+.app-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: red; 
+}
+.app-text {
+    text-align: justify;      
+}
+
+.course-title {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    position: relative;
-    width: 100%;
-    width: 100%;
-    height: 93.8vh;
-    font-size: 1.5rem;
-    background-color: white;
+    justify-content: center;
+    font-weight: 900;
 }
 
-.button-login,
-.button-signUp {
-    position: absolute;
-    top: 1rem;
-    height: 1.2rem;    
-    padding: 0 0.2rem;
-    border-radius: 0.5rem;    
-    cursor: pointer;
-    transition: all 0.7s;
-}
-
-.button-login {
-    right: 1rem;
-}
-
-.button-signUp {
-    right: 4rem;
-    margin-right: 0.5rem;
-}
-
-.button-login:hover,
-.button-signUp:hover {
-    box-shadow: 0rem 0rem 0.5rem 0.5rem rgba(0, 0, 255, 0.37);
+.course-title_name {
+    text-align: center;
 }

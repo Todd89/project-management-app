@@ -1,0 +1,13 @@
+.app-logo {  
+    flex: 0 0 1.7rem;
+    height: 1.7rem;
+    border-radius: 50%;
+    margin: 0 0.7rem;    
+    background-color: transparent;
+    background-image: url('/public/assets/pma.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 2rem;   
+    overflow: hidden;
+}
+
