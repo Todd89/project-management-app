@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import './boundaryError.css';
 
-class ErrorBoundary extends React.Component {
+interface ErrorBoundaryProps {
+  children: ReactNode;
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   state = { error: null, errorInfo: null };
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
