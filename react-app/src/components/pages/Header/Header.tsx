@@ -31,14 +31,15 @@ const Header: React.FC = () => {
   };
   return (
     <header className="header">
-      <AppLogo />
+      <div className="header-logo">
+        <AppLogo />
+      </div>
       <button onClick={editProfileApp} className="button-edit-profile" type="button">
         Edit profile
       </button>
       <button className="button-add-board" type="button">
         Create board
       </button>
-      <div>{userState.name}</div>
       <div className="switcher-wrapper">
         <input
           type="checkbox"
