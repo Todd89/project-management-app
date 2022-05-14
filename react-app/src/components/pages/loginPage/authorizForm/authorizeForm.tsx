@@ -47,6 +47,7 @@ const AurhorizeForm: React.FC = () => {
     if (userState.token) {
       findUser();
       navigate('/main');
+      localStorage.setItem('token', userState.token);
     }
   }, [userState.token]);
 

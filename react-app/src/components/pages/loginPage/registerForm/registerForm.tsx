@@ -2,10 +2,11 @@ import './registerForm.css';
 import { useForm } from 'react-hook-form';
 import { setNewUser } from '../../../../react/features/loginSlice';
 import { useSelector } from 'react-redux';
-import { INewUser } from '../../../../interface/types';
+import { INewUser, IState, IRegisterData } from '../../../../interface/types';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+
 import { IState } from '../../../../interface/types';
 import CloseWindowButton from '../../reusableComponents/closeWindowButton/CloseWindowButton';
 import SubmitButton from '../../reusableComponents/submitButton/SubmitButton';

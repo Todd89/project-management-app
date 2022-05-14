@@ -46,13 +46,14 @@ class HTTPClient {
         },
       });
       if (response.status === API_STATUS.DELETE_SUCCESS) {
-        console.log('User deleted');
+        return USER_STATUS.DELETE_SUCCESS;
       }
     } catch (err) {
       console.error('Error: ', err);
     }
   }
   async updateUser(ID: string, token: string, user: INewUser) {
+    console.log(ID);
     try {
       const response = await fetch(`${API_URL.MAIN_URL}/users/${ID}`, {
         method: `${API_METHODS.PUT}`,
@@ -65,6 +66,9 @@ class HTTPClient {
       });
       if (response.status === API_STATUS.REAL_SUCCESS) {
         return await response.json();
+      }
+      if (response.status === API_STATUS.SERVER_ERROR) {
+        return USER_STATUS.EDIT_ERROR;
       }
     } catch (err) {
       console.error('Error: ', err);

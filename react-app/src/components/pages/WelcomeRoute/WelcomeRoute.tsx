@@ -1,11 +1,42 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import jwt_decode from 'jwt-decode';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import httpClient from '../../../API/api';
+import { ILoginState, IState } from '../../../interface/types';
+import { setAuthorizedUserData, setUserToken } from '../../../react/features/loginSlice';
 import './WelcomeRoute.css';
 import LogInButton from '../reusableComponents/logInButton/LogInButton';
 import SignUpButton from '../reusableComponents/signUpButton/SignUpButton';
 import RSSchoolLogo from '../reusableComponents/RSSchoolLogo/RSSchoolLogo';
 
+type IToken = {
+  iat: number;
+  login: string;
+  userId: string;
+};
+
 const WelcomeRoute: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const TOKEN = localStorage.getItem('token');
+    const checkToken = async (TOKEN: string) => {
+      const ALL_USERS = await httpClient.getAllUsers(TOKEN);
+      const decoded: IToken = jwt_decode(TOKEN);
+      const USER = ALL_USERS.filter((el: ILoginState) => {
+        return el.login === decoded.login;
+      });
+      dispatch(setAuthorizedUserData(USER[0]));
+      if (ALL_USERS) {
+        dispatch(setUserToken(TOKEN));
+        navigate('/main');
+      }
+    };
+    if (TOKEN) {
+      checkToken(TOKEN);
+    }
+  }, []);
   return (
     <section className="welcome-page">
       <div className="welcome-page_blur">

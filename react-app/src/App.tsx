@@ -9,6 +9,7 @@ import BoardRoute from './components/pages/BoardRoute/BoardRoute';
 import ErrorRoute from './components/pages/ErrorRoute/ErrorRoute';
 import Login from './components/pages/loginPage/authorizForm/authorizeForm';
 import SignUp from './components/pages/loginPage/registerForm/registerForm';
+import EditProfile from './components/pages/loginPage/editProfileForm/editProfileForm';
 import PrivateRoute from './hoc/PrivateRoute';
 import { useSelector } from 'react-redux';
 import { IState } from './interface/types';
@@ -22,6 +23,7 @@ const App: React.FC = () => {
           <Route path="/" element={<WelcomeRoute />}></Route>
           <Route path="/signup" element={<SignUp />}></Route>
           <Route path="/login" element={<Login />}></Route>
+          <Route path="/edit" element={<EditProfile />}></Route>
           <Route
             path="/main"
             element={
