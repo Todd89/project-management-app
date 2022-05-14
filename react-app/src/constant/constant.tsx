@@ -10,6 +10,11 @@ const API_METHODS = {
 };
 
 const USER_STATUS = {
+  AUTHORIZE: 'Authorize',
+  UNAUTHORIZED: 'Unauthorized',
+  REGISTERED: 'Registered',
+  UNREGISTER: 'Unregister',
+  WRONG: 'Something wrong',
   EXIST: 'User login already exists!',
   NOT_FOUND: 'User was not founded',
   EDIT_ERROR: 'User already exisit or any sever error',
