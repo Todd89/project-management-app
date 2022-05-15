@@ -1,0 +1,11 @@
+.app-logo {  
+    width: inherit;
+    height: inherit;
+    background-color: transparent;
+    background-image: url('/public/assets/pma.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 110%;   
+    overflow: hidden;
+}
+

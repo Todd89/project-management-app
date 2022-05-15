@@ -10,8 +10,16 @@ const API_METHODS = {
 };
 
 const USER_STATUS = {
+  AUTHORIZE: 'Authorize',
+  UNAUTHORIZED: 'Unauthorized',
+  REGISTERED: 'Registered',
+  UNREGISTER: 'Unregister',
+  WRONG: 'Something wrong',
   EXIST: 'User login already exists!',
   NOT_FOUND: 'User was not founded',
+  EDIT_ERROR: 'User already exisit or any sever error',
+  EDIT_SUCCESS: 'Edit profile successfully',
+  DELETE_SUCCESS: 'User deleted',
 };
 
 const API_STATUS = {
@@ -19,7 +27,9 @@ const API_STATUS = {
   SUCCESS: 201,
   DELETE_SUCCESS: 204,
   NOT_FOUND: 403,
+  USER_ERROR: 404,
   EXIST: 409,
+  SERVER_ERROR: 500,
 };
 
 export { API_URL, API_METHODS, USER_STATUS, API_STATUS };
