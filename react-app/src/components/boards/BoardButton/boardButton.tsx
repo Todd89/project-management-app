@@ -1,46 +1,59 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { IBoard } from '../../../interface/interfaces';
+import { IBoard, IShortBoard } from '../../../interface/interfaces';
 import {
-  setTempBoards,
-  setTempColumns,
-  setTempTasks,
-  TempBoards,
-} from '../../../react/features/tempSlice';
+  setAppBoards,
+  setAppColumns,
+  setAppTasks,
+  DataBoards,
+  getBoardColumnsFromAPI,
+  deleteAllBoardColumns,
+} from '../../../react/features/dataSlice';
 import { TStore } from '../../../react/store';
 import ButtonDelete from '../ButtonDelete/ButtonDelete';
 import './boardButton.css';
 
 interface IBoardButtonProps {
-  boardData: IBoard;
-  handleBoardChoice: (board: IBoard) => void;
+  boardData: IShortBoard;
+  handleBoardChoice: (board: IShortBoard) => void;
 }
 
 function BoardButton(props: IBoardButtonProps) {
-  //remove
-  const tempState: TempBoards = useSelector((state: TStore) => state.tempFunctions);
-  //remove
+  const loginState = useSelector((state: TStore) => state.loginData);
+  //const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
+
   const dispatch = useDispatch();
 
   function handleBoardDelete(answer: boolean) {
     if (answer) {
-      const leftTasks = tempState.tasksArray.filter((item) => item.boardId != props.boardData.id);
+      // dispatch(getBoardColumnsFromAPI({ token: loginState.token, boardId: props.boardData.id }));
+      dispatch(deleteAllBoardColumns({ token: loginState.token, boardId: props.boardData.id }));
 
-      const indexB = tempState.boardsArray.findIndex((item) => item.id === props.boardData.id);
+      /*temp
+      
+      const leftTasks = dataState.tasksArray.filter((item) => item.boardId != props.boardData.id);
+*/
 
-      const columnIDs = props.boardData.columns.map((item) => item.id);
+      // const indexB = dataState.boardsArray.findIndex((item) => item.id === props.boardData.id);
 
-      const leftColumns = tempState.columnsArray.filter((item) => !columnIDs.includes(item.id));
+      /*   const columnIDs =
+        dataState.columnsArray
+          .find((columnData) => columnData.boardId === props.boardData.id)
+          ?.columns.map((item) => item.id) || [];
+*/
+      /*   const leftColumns = dataState.columnsArray.filter(
+        (item) => props.boardData.id !== item.boardId
+      );*/
 
-      dispatch(setTempColumns(leftColumns));
+      //  dispatch(setAppColumns(leftColumns));
 
-      dispatch(
-        setTempBoards([
-          ...tempState.boardsArray.slice(0, indexB),
-          ...tempState.boardsArray.slice(indexB + 1),
+      /*  dispatch(
+        setAppBoards([
+          ...dataState.boardsArray.slice(0, indexB),
+          ...dataState.boardsArray.slice(indexB + 1),
         ])
-      );
+      );*/
 
-      dispatch(setTempTasks(leftTasks));
+      //dispatch(setAppTasks(leftTasks));
     }
   }
 

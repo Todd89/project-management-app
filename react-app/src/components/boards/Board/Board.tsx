@@ -1,36 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentBoard } from '../../../react/features/boardsSlice';
+//import { setCurrentBoard } from '../../../react/features/boardsSlice';
 import { TStore } from '../../../react/store';
-import { IBoard, IColumn, TBoards } from '../../../interface/interfaces';
+import { IColumn } from '../../../interface/interfaces';
 import './board.css';
 import ButtonAdd from '../ButtonAdd/ButtonAdd';
 import ModalColumn from '../ModalColumn/ModalColumn';
 import Column from '../Column/Column';
-//remove
-import { setTempBoards, TempBoards } from '../../../react/features/tempSlice';
-//remove
 
-interface IPropsBoard {
-  boardData: IBoard;
-}
+import {
+  setAppBoards,
+  setCurrentBoard,
+  DataBoards,
+  getBoardByIdAPI,
+  setIsChanged,
+} from '../../../react/features/dataSlice';
 
-function Board(props: IPropsBoard) {
-  //remove
-  const tempState: TempBoards = useSelector((state: TStore) => state.tempFunctions);
-  //remove
+function Board() {
+  const loginState = useSelector((state: TStore) => state.loginData);
+  const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
+  const dispatch = useDispatch();
 
   const [isEditBoardModeOn, setIsEditBoardModeOn] = useState(false);
   const [isModalOn, setIsModalOn] = useState(false);
 
-  const boardColumns = [...props.boardData.columns].sort((a, b) => a.order - b.order);
-
-  const boardState: TBoards = useSelector((state: TStore) => state.boardsFunctions);
-
-  const dispatch = useDispatch();
+  const boardColumns = [...dataState.currentBoard.columns].sort((a, b) => a.order - b.order);
 
   function handleBoardClick() {
-    dispatch(setCurrentBoard(props.boardData));
+    // console.log('handleBoardClick');
+    dispatch(setCurrentBoard(dataState.currentBoard));
   }
 
   function handleHeaderStartEdit() {
@@ -48,29 +46,27 @@ function Board(props: IPropsBoard) {
   }
 
   function handleHeaderEdit(event: React.ChangeEvent<HTMLInputElement>) {
-    const index = tempState.boardsArray.findIndex((item) => boardState.currentBoard.id === item.id);
-    const change = JSON.parse(JSON.stringify(boardState.currentBoard));
+    const index = dataState.boardsArray.findIndex((item) => dataState.currentBoard.id === item.id);
+    const change = JSON.parse(JSON.stringify(dataState.currentBoard));
     change.title = event.target.value;
     dispatch(
-      setTempBoards([
-        ...tempState.boardsArray.slice(0, index),
+      setAppBoards([
+        ...dataState.boardsArray.slice(0, index),
         change,
-        ...tempState.boardsArray.slice(index + 1),
+        ...dataState.boardsArray.slice(index + 1),
       ])
     );
   }
 
   useEffect(() => {
-    dispatch(
-      setCurrentBoard(
-        tempState.boardsArray.find((board) => board.id === props.boardData.id) ||
-          tempState.boardsArray[0]
-      )
-    );
-  }, [dispatch, tempState.boardsArray, props.boardData.id]);
+    if (dataState.currentBoard.id !== '' && dataState.isChanged) {
+      dispatch(getBoardByIdAPI({ token: loginState.token, boardId: dataState.currentBoard.id }));
+      dispatch(setIsChanged(false));
+    }
+  }, [dataState.currentBoard, loginState.token, dispatch, dataState.isChanged]);
 
   const emptyColumn: IColumn = {
-    id: `column${String(tempState.columnsArray.length)}`,
+    id: `column${String(dataState.columnsArray.length)}`,
     title: '',
     order: 999,
     tasks: [],
@@ -95,7 +91,7 @@ function Board(props: IPropsBoard) {
             <input
               type="text"
               className="board__name board-header-input"
-              value={props.boardData.title}
+              value={dataState.currentBoard.title}
               autoFocus
               onChange={handleHeaderEdit}
               onBlur={handleHeaderEndEdit}
@@ -103,7 +99,7 @@ function Board(props: IPropsBoard) {
             />
           ) : (
             <span className="board__name board-header-text" onClick={handleHeaderStartEdit}>
-              {props.boardData.title}
+              {dataState.currentBoard.title}
             </span>
           )}
         </div>
@@ -111,14 +107,16 @@ function Board(props: IPropsBoard) {
         <div className="columns">
           <div className="columns__list">
             {boardColumns.map((column) => {
-              return <Column key={column.id} columnData={column} boardData={props.boardData} />;
+              return (
+                <Column key={column.id} columnData={column} boardData={dataState.currentBoard} />
+              );
             })}
           </div>
         </div>
         {isModalOn && (
           <ModalColumn
             columnData={emptyColumn}
-            boardData={props.boardData}
+            boardData={dataState.currentBoard}
             cancelModalState={cancelModalState}
           />
         )}

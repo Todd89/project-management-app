@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentBoard } from '../../../react/features/boardsSlice';
 import { TStore } from '../../../react/store';
-import { IBoard, TBoards } from '../../../interface/interfaces';
+import { IBoard, IShortBoard } from '../../../interface/interfaces';
 import Board from '../Board/Board';
 
 import './boardList.css';
@@ -10,24 +9,24 @@ import './boardList.css';
 import ButtonAdd from '../ButtonAdd/ButtonAdd';
 import ModalBoard from '../ModalBoard/ModalBoard';
 import BoardButton from '../BoardButton/boardButton';
-//remove
-import { TempBoards } from '../../../react/features/tempSlice';
-//remove
+import {
+  getAllBoardsFromAPI,
+  setCurrentBoard,
+  DataBoards,
+  getBoardByIdAPI,
+} from '../../../react/features/dataSlice';
 
 function BoardList() {
-  //remove
-  const tempState: TempBoards = useSelector((state: TStore) => state.tempFunctions);
-
-  //remove
+  const loginState = useSelector((state: TStore) => state.loginData);
+  const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
 
   const [isModalOn, setIsModalOn] = useState(false);
   const [isBoardChosen, setIsBoardChosen] = useState(false);
   const dispatch = useDispatch();
-
-  const boardsState: TBoards = useSelector((state: TStore) => state.boardsFunctions);
+  dispatch(getAllBoardsFromAPI(loginState.token));
 
   const emptyBoard: IBoard = {
-    id: `board${String(tempState.boardsArray.length)}`,
+    id: `board${String(dataState.boardsArray.length)}`,
     title: '',
     columns: [],
   };
@@ -40,21 +39,23 @@ function BoardList() {
     setIsModalOn(false);
   }
 
-  function handleBoardChoice(board: IBoard) {
-    dispatch(setCurrentBoard(board));
+  function handleBoardChoice(board: IShortBoard) {
+    setIsBoardChosen(true);
+    dispatch(getBoardByIdAPI({ token: loginState.token, boardId: board.id }));
   }
 
   function handleReturnToBoardList() {
     setIsBoardChosen(false);
+    console.log('handleReturnToBoardList');
     dispatch(setCurrentBoard({ id: '', title: '', columns: [] }));
   }
 
-  useEffect(() => {
-    if (boardsState.currentBoard.id) {
+  /*useEffect(() => {
+    if (dataState.currentBoard.id) {
       setIsBoardChosen(true);
     }
-  }, [boardsState.currentBoard]);
-
+  }, [dataState.currentBoard]);
+*/
   return (
     <>
       <section className="boards">
@@ -62,7 +63,7 @@ function BoardList() {
           <>
             <ButtonAdd buttonText={'Add board'} handleAdd={handleBoardAdd} />
             <div className="boards__list">
-              {tempState.boardsArray.map((board) => {
+              {dataState.boardsArray.map((board) => {
                 return (
                   <BoardButton
                     key={board.id}
@@ -82,7 +83,7 @@ function BoardList() {
             >
               back to the board list
             </button>
-            <Board key={boardsState.currentBoard.id} boardData={boardsState.currentBoard} />
+            <Board />
           </>
         )}
         {isModalOn && <ModalBoard boardData={emptyBoard} cancelModalState={cancelModalState} />}

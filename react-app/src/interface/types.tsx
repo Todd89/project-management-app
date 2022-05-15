@@ -21,6 +21,7 @@ type INewBoard = {
 };
 type INewColumn = {
   title: string;
+  order: number;
 };
 type INewTask = {
   title: string;

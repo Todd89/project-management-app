@@ -16,8 +16,10 @@ function ModalDeleteConfirmation(props: IModalConfirmationProps) {
     if (isClosing) {
       if (isConfirmed === CONFIRMATION_STATE.YES) {
         props.handleConfirmation(true);
+        props.cancelModalState();
       } else if (isConfirmed === CONFIRMATION_STATE.NO) {
         props.handleConfirmation(false);
+        props.cancelModalState();
       }
     }
   }, [isClosing, isConfirmed, props]);
@@ -36,11 +38,11 @@ function ModalDeleteConfirmation(props: IModalConfirmationProps) {
         onClick={(event: React.MouseEvent) => {
           event.stopPropagation();
         }}
-        onAnimationEnd={() => {
-          if (isClosing) {
-            props.cancelModalState();
-          }
-        }}
+        //      onAnimationEnd={() => {
+        //        if (isClosing) {
+        //          props.cancelModalState();
+        //       }
+        //   }}
       >
         <div className="wrapper outside">
           <span className="modalC__confirmation">

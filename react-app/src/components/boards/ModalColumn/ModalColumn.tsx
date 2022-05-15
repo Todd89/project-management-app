@@ -3,10 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IBoard, IColumn } from '../../../interface/interfaces';
 import ButtonSave from '../ButtonSave/ButtonSave';
 import './modalColumn.css';
-//remove
-import { setTempBoards, setTempColumns, TempBoards } from '../../../react/features/tempSlice';
+import {
+  setAppBoards,
+  setAppColumns,
+  DataBoards,
+  createNewColumnAPI,
+} from '../../../react/features/dataSlice';
 import { TStore } from '../../../react/store';
-//remove
+import { INewColumn } from '../../../interface/types';
 
 interface IModalColumnProps {
   columnData: IColumn;
@@ -15,9 +19,9 @@ interface IModalColumnProps {
 }
 
 function ModalColumn(props: IModalColumnProps) {
-  //remove
-  const tempState: TempBoards = useSelector((state: TStore) => state.tempFunctions);
-  //remove
+  const loginState = useSelector((state: TStore) => state.loginData);
+  const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
+
   const [currentData, setCurrentData] = useState({
     name: props.columnData.title,
   });
@@ -31,26 +35,42 @@ function ModalColumn(props: IModalColumnProps) {
   }
 
   function handleDataSave() {
-    const addColumn: IColumn = { ...props.columnData };
+    /*  const addColumn: IColumn = { ...props.columnData };
     addColumn.title = currentData.name;
 
-    const index = tempState.boardsArray.findIndex((item) => props.boardData.id === item.id);
+    const index = dataState.boardsArray.findIndex((item) => props.boardData.id === item.id);
     const change: IBoard = JSON.parse(JSON.stringify(props.boardData));
     const newOrder = change.columns.length
       ? Math.max(...change.columns.map((item) => item.order)) + 1
       : 1;
     addColumn.order = newOrder;
-    change.columns.push(addColumn);
+    change.columns.push(addColumn);*/
 
-    dispatch(setTempColumns([...tempState.columnsArray.slice(), addColumn]));
+    /* const newOrder = dataState.columnsArray.filter(column=>column.boardId===props.boardData.id).length
+      ? Math.max(...dataState.columnsArray.map((item) => item.order)) + 1
+      : 1;*/
+
+    const newOrder = props.boardData.columns.length
+      ? Math.max(...props.boardData.columns.map((item) => item.order)) + 1
+      : 1;
+
     dispatch(
-      setTempBoards([
-        ...tempState.boardsArray.slice(0, index),
-        change,
-        ...tempState.boardsArray.slice(index + 1),
-      ])
+      createNewColumnAPI({
+        token: loginState.token,
+        board: props.boardData,
+        columnBody: { title: currentData.name, order: newOrder },
+      })
     );
 
+    /*  dispatch(setAppColumns([...dataState.columnsArray.slice(), addColumn]));
+    dispatch(
+      setAppBoards([
+        ...dataState.boardsArray.slice(0, index),
+        change,
+        ...dataState.boardsArray.slice(index + 1),
+      ])
+    );
+*/
     props.cancelModalState();
   }
 

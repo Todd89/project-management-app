@@ -3,11 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IBoard } from '../../../interface/interfaces';
 import ButtonSave from '../ButtonSave/ButtonSave';
 import './modalBoard.css';
-
-//remove
-import { setTempBoards, TempBoards } from '../../../react/features/tempSlice';
+import { createNewBoardAPI, setAppBoards, DataBoards } from '../../../react/features/dataSlice';
 import { TStore } from '../../../react/store';
-//remove
 
 interface IModalBoardProps {
   boardData: IBoard;
@@ -15,9 +12,8 @@ interface IModalBoardProps {
 }
 
 function ModalBoard(props: IModalBoardProps) {
-  //remove
-  const tempState: TempBoards = useSelector((state: TStore) => state.tempFunctions);
-  //remove
+  const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
+  const loginState = useSelector((state: TStore) => state.loginData);
   const [currentData, setCurrentData] = useState({
     name: props.boardData.title,
   });
@@ -32,9 +28,11 @@ function ModalBoard(props: IModalBoardProps) {
 
   function handleDataSave() {
     props.cancelModalState();
-    const addBoard: IBoard = { ...props.boardData };
-    addBoard.title = currentData.name;
-    dispatch(setTempBoards([...tempState.boardsArray.slice(0), addBoard]));
+    //const addBoard: IBoard = { ...props.boardData };
+    //addBoard.title = currentData.name;
+    //dispatch(setAppBoards([...dataState.boardsArray.slice(0), addBoard]));
+    //const addBoard: ICreateBoard = {};
+    dispatch(createNewBoardAPI({ token: loginState.token, board: { title: currentData.name } }));
   }
 
   function handleKeyDown(event: React.KeyboardEvent) {

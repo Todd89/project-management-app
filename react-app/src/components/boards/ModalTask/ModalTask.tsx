@@ -4,15 +4,12 @@ import { TStore } from '../../../react/store';
 import { IBoard, IColumn, ITask, ITaskInColumn } from '../../../interface/interfaces';
 import ButtonSave from '../ButtonSave/ButtonSave';
 import './modalTask.css';
-
-//remove
 import {
-  setTempBoards,
-  setTempColumns,
-  setTempTasks,
-  TempBoards,
-} from '../../../react/features/tempSlice';
-//remove
+  setAppBoards,
+  setAppColumns,
+  setAppTasks,
+  DataBoards,
+} from '../../../react/features/dataSlice';
 
 interface IModalTaskProps {
   taskData: ITask;
@@ -21,9 +18,7 @@ interface IModalTaskProps {
 }
 
 function ModalTask(props: IModalTaskProps) {
-  //remove
-  const tempState: TempBoards = useSelector((state: TStore) => state.tempFunctions);
-  //remove
+  const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
   const dispatch = useDispatch();
   const [isFinished, setIsFinished] = useState(false);
 
@@ -62,9 +57,10 @@ function ModalTask(props: IModalTaskProps) {
 
   function handleDataSave() {
     setIsFinished(true);
+    /*temp
     props.cancelModalState();
 
-    const index = tempState.tasksArray.findIndex((item) => props.taskData === item);
+    const index = dataState.tasksArray.findIndex((item) => props.taskData === item);
     let editTaskInColumn: ITaskInColumn;
     let editTask: ITask;
 
@@ -82,23 +78,23 @@ function ModalTask(props: IModalTaskProps) {
 
       const editColumn: IColumn = JSON.parse(
         JSON.stringify(
-          tempState.columnsArray.find((item) => item.id === editTask.columnId) ||
-            tempState.columnsArray[0]
+          dataState.columnsArray.find((item) => item.id === editTask.columnId) ||
+            dataState.columnsArray[0]
         )
       );
 
       const indexC = editColumn.tasks.findIndex((item) => item.id === editTask.id);
-      const indexBB = tempState.columnsArray.findIndex((item) => item.id === editColumn.id);
+      const indexBB = dataState.columnsArray.findIndex((item) => item.id === editColumn.id);
 
       const columnTasks = [...editColumn.tasks];
       columnTasks.splice(indexC, 1, editTaskInColumn);
       editColumn.tasks = columnTasks;
 
-      const indexB = tempState.boardsArray.findIndex((item) => item.id === editTask.boardId);
+      const indexB = dataState.boardsArray.findIndex((item) => item.id === editTask.boardId);
       const editBoard: IBoard = JSON.parse(
         JSON.stringify(
-          tempState.boardsArray.find((item) => item.id === editTask.boardId) ||
-            tempState.boardsArray[0]
+          dataState.boardsArray.find((item) => item.id === editTask.boardId) ||
+            dataState.boardsArray[0]
         )
       );
 
@@ -110,26 +106,26 @@ function ModalTask(props: IModalTaskProps) {
       editBoard.columns = boardColumns;
 
       dispatch(
-        setTempTasks([
-          ...tempState.tasksArray.slice(0, index),
+        setAppTasks([
+          ...dataState.tasksArray.slice(0, index),
           editTask,
-          ...tempState.tasksArray.slice(index + 1),
+          ...dataState.tasksArray.slice(index + 1),
         ])
       );
 
       dispatch(
-        setTempColumns([
-          ...tempState.columnsArray.slice(0, indexBB),
+        setAppColumns([
+          ...dataState.columnsArray.slice(0, indexBB),
           editColumn,
-          ...tempState.columnsArray.slice(indexBB + 1),
+          ...dataState.columnsArray.slice(indexBB + 1),
         ])
       );
 
       dispatch(
-        setTempBoards([
-          ...tempState.boardsArray.slice(0, indexB),
+        setAppBoards([
+          ...dataState.boardsArray.slice(0, indexB),
           editBoard,
-          ...tempState.boardsArray.slice(indexB + 1),
+          ...dataState.boardsArray.slice(indexB + 1),
         ])
       );
     } else {
@@ -145,12 +141,12 @@ function ModalTask(props: IModalTaskProps) {
 
       const editColumn: IColumn = JSON.parse(
         JSON.stringify(
-          tempState.columnsArray.find((item) => item.id === editTask.columnId) ||
-            tempState.columnsArray[0]
+          dataState.columnsArray.find((item) => item.id === editTask.columnId) ||
+            dataState.columnsArray[0]
         )
       );
 
-      const indexBB = tempState.columnsArray.findIndex((item) => item.id === editColumn.id);
+      const indexBB = dataState.columnsArray.findIndex((item) => item.id === editColumn.id);
 
       const columnTasks = [...editColumn.tasks];
       const newOrder = columnTasks.length
@@ -162,11 +158,11 @@ function ModalTask(props: IModalTaskProps) {
       columnTasks.push(editTaskInColumn);
       editColumn.tasks = columnTasks;
 
-      const indexB = tempState.boardsArray.findIndex((item) => item.id === editTask.boardId);
+      const indexB = dataState.boardsArray.findIndex((item) => item.id === editTask.boardId);
       const editBoard: IBoard = JSON.parse(
         JSON.stringify(
-          tempState.boardsArray.find((item) => item.id === editTask.boardId) ||
-            tempState.boardsArray[0]
+          dataState.boardsArray.find((item) => item.id === editTask.boardId) ||
+            dataState.boardsArray[0]
         )
       );
 
@@ -176,24 +172,25 @@ function ModalTask(props: IModalTaskProps) {
       boardColumns.splice(indexCB, 1, editColumn);
       editBoard.columns = boardColumns;
 
-      dispatch(setTempTasks([...tempState.tasksArray.slice(), editTask]));
+      dispatch(setAppTasks([...dataState.tasksArray.slice(), editTask]));
 
       dispatch(
-        setTempColumns([
-          ...tempState.columnsArray.slice(0, indexBB),
+        setAppColumns([
+          ...dataState.columnsArray.slice(0, indexBB),
           editColumn,
-          ...tempState.columnsArray.slice(indexBB + 1),
+          ...dataState.columnsArray.slice(indexBB + 1),
         ])
       );
 
       dispatch(
-        setTempBoards([
-          ...tempState.boardsArray.slice(0, indexB),
+        setAppBoards([
+          ...dataState.boardsArray.slice(0, indexB),
           editBoard,
-          ...tempState.boardsArray.slice(indexB + 1),
+          ...dataState.boardsArray.slice(indexB + 1),
         ])
       );
     }
+    */
   }
 
   function handleKeyDown(event: React.KeyboardEvent) {

@@ -6,16 +6,13 @@ import { IBoard, IColumn, ITask } from '../../../interface/interfaces';
 import ButtonDelete from '../ButtonDelete/ButtonDelete';
 import ModalTask from '../ModalTask/ModalTask';
 import './task.css';
-
-//remove
 import {
-  setTempBoards,
-  setTempColumns,
-  setTempTasks,
-  TempBoards,
-} from '../../../react/features/tempSlice';
+  setAppBoards,
+  setAppColumns,
+  setAppTasks,
+  DataBoards,
+} from '../../../react/features/dataSlice';
 import { TStore } from '../../../react/store';
-//remove
 
 interface IPropsTask {
   columnData: IColumn;
@@ -23,9 +20,7 @@ interface IPropsTask {
 }
 
 function Task(props: IPropsTask) {
-  //remove
-  const tempState: TempBoards = useSelector((state: TStore) => state.tempFunctions);
-  //remove
+  const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
   const [isModalOn, setIsModalOn] = useState(false);
   const dispatch = useDispatch();
 
@@ -33,18 +28,18 @@ function Task(props: IPropsTask) {
     if (answer) {
       const editBoard: IBoard = JSON.parse(
         JSON.stringify(
-          tempState.boardsArray.find((item) => item.id === props.taskData.boardId) ||
-            tempState.boardsArray[0]
+          dataState.boardsArray.find((item) => item.id === props.taskData.boardId) ||
+            dataState.boardsArray[0]
         )
       );
-
+      /*temp
       const editColumn: IColumn = JSON.parse(JSON.stringify(props.columnData));
 
-      const indexT = tempState.tasksArray.findIndex((item) => props.taskData.id === item.id);
+      const indexT = dataState.tasksArray.findIndex((item) => props.taskData.id === item.id);
 
       const indexTC = editColumn.tasks.findIndex((item) => item.id === props.taskData.id);
 
-      const indexC = tempState.columnsArray.findIndex(
+      const indexC = dataState.columnsArray.findIndex(
         (item) => item.id === props.taskData.columnId
       );
 
@@ -52,7 +47,7 @@ function Task(props: IPropsTask) {
       columnTasks.splice(indexTC, 1);
       editColumn.tasks = columnTasks;
 
-      const indexB = tempState.boardsArray.findIndex((item) => item.id === props.taskData.boardId);
+      const indexB = dataState.boardsArray.findIndex((item) => item.id === props.taskData.boardId);
 
       const boardColumns = [...editBoard.columns];
 
@@ -62,27 +57,28 @@ function Task(props: IPropsTask) {
       editBoard.columns = boardColumns;
 
       dispatch(
-        setTempColumns([
-          ...tempState.columnsArray.slice(0, indexC),
+        setAppColumns([
+          ...dataState.columnsArray.slice(0, indexC),
           editColumn,
-          ...tempState.columnsArray.slice(indexC + 1),
+          ...dataState.columnsArray.slice(indexC + 1),
         ])
       );
 
       dispatch(
-        setTempBoards([
-          ...tempState.boardsArray.slice(0, indexB),
+        setAppBoards([
+          ...dataState.boardsArray.slice(0, indexB),
           editBoard,
-          ...tempState.boardsArray.slice(indexB + 1),
+          ...dataState.boardsArray.slice(indexB + 1),
         ])
       );
 
       dispatch(
-        setTempTasks([
-          ...tempState.tasksArray.slice(0, indexT),
-          ...tempState.tasksArray.slice(indexT + 1),
+        setAppTasks([
+          ...dataState.tasksArray.slice(0, indexT),
+          ...dataState.tasksArray.slice(indexT + 1),
         ])
       );
+temp*/
     }
   }
 
