@@ -1,0 +1,23 @@
+.board-button {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  height: 200px;
+  padding: 20px 0;
+  border: 1px solid var(--color-grey);
+  background-color: var(--color-silver);
+  box-sizing: border-box;
+}
+
+.board-button__button {
+  margin: 40px 0;
+  font-size: 30px;
+  font-weight: 700;
+  background-color: var(--color-silver);
+  border: none;
+}
+
+.board-button:hover {
+  background-color: var(--color-dark-blue);
+  color: var(--color-white);
+}

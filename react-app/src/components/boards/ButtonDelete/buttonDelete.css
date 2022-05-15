@@ -1,0 +1,16 @@
+.button-delete {
+  align-self: flex-end;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  padding: 0;
+  border: 1px solid var(--color-grey);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url('../../../../public/button-delete.svg');
+}
+
+.button-delete:hover {
+  background-color: var(--color-white);
+}
