@@ -33,3 +33,9 @@ const API_STATUS = {
 };
 
 export { API_URL, API_METHODS, USER_STATUS, API_STATUS };
+
+export enum CONFIRMATION_STATE {
+  'YES',
+  'NO',
+  'UNSET',
+}

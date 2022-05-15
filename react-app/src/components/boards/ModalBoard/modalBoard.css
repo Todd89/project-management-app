@@ -1,0 +1,55 @@
+.blur {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.modal {
+  position: relative;
+  top: calc(50vh - 100px);
+  margin: 0 auto;
+  width: 400px;
+  height: 200px;
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: #ffffff;
+  cursor: default;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0;
+}
+
+.modal__board {
+  width: 300px;
+}
+
+.board-name {
+  margin: 10px 0 20px 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 25px;
+}
+
+.board-title {
+  font-size: 14px;
+  font-style: italic;
+}
+
+.board-description {
+  margin: 10px 0 20px 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 25px;
+  font-style: italic;
+}
+
+@media (max-width: 1024px) {
+}
