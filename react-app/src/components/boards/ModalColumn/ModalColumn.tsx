@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-//import { setAppBoards } from '../../../react/features/boardsSlice';
-//import { boardsArray, columnsArray } from '../../../temporary/tempData';
 import { IBoard, IColumn } from '../../../interface/interfaces';
 import ButtonSave from '../ButtonSave/ButtonSave';
 import './modalColumn.css';

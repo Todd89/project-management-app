@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-//import { setAppBoards } from '../../../react/features/boardsSlice';
-//import { boardsArray } from '../../../temporary/tempData';
 import { IBoard } from '../../../interface/interfaces';
 import ButtonSave from '../ButtonSave/ButtonSave';
 import './modalBoard.css';

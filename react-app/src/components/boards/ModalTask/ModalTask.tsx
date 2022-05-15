@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-//import { setAppBoards } from '../../../react/features/boardsSlice';
 import { TStore } from '../../../react/store';
-//import { boardsArray, columnsArray, tasksArray } from '../../../temporary/tempData';
-import { IBoard, IColumn, ITask, ITaskInColumn, TUsers } from '../../../interface/interfaces';
+import { IBoard, IColumn, ITask, ITaskInColumn } from '../../../interface/interfaces';
 import ButtonSave from '../ButtonSave/ButtonSave';
 import './modalTask.css';
 

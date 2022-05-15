@@ -43,7 +43,6 @@ export interface ITask {
 }
 
 export interface TBoards {
-  // appBoards: Array<IBoard>;
   currentBoard: IBoard;
 }
 

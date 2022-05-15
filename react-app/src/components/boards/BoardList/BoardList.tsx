@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-//import { setCurrentUser } from '../../../react/features/usersSlice';
-//import { setAppBoards, setCurrentBoard } from '../../../react/features/boardsSlice';
 import { setCurrentBoard } from '../../../react/features/boardsSlice';
 import { TStore } from '../../../react/store';
-import { IBoard, TBoards, TUsers } from '../../../interface/interfaces';
+import { IBoard, TBoards } from '../../../interface/interfaces';
 import Board from '../Board/Board';
 
 import './boardList.css';

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-//import { setAppBoards } from '../../../react/features/boardsSlice';
 import { setCurrentColumn } from '../../../react/features/columnsSlice';
 import { TStore } from '../../../react/store';
 
