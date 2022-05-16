@@ -15,7 +15,7 @@ const Header: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
-  const [language, setLanguage] = useState('Русский');
+  const [language, setLanguage] = useState('English');
 
   const changeLanguage = (language: string) => {
     i18n.changeLanguage(language);
@@ -26,7 +26,7 @@ const Header: React.FC = () => {
   }
 
   useEffect(() => {
-    if (checked) {
+    if (!checked) {
       changeLanguage('en');
       setLanguage('English');
     } else {
@@ -50,11 +50,12 @@ const Header: React.FC = () => {
         <AppLogo />
       </div>
       <button onClick={editProfileApp} className="button-edit-profile" type="button">
-        Edit profile
+        {t('Header.edit')}
       </button>
       <button className="button-add-board" type="button">
-        Create board
+        {t('Header.board')}
       </button>
+
       <div className="switcher-wrapper">
         <input
           type="checkbox"

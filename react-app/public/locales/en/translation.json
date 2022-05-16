@@ -1,7 +1,11 @@
 {
-  "title": "Internationalizing with i18next",
-  "description": {
-    "part1": "To get started, edit <1>src/App.js</1> and save to reload.",
-    "part2": "Switch language between english and russian using buttons above."
+  "welcomeRoute": {
+    "description": "Project management app - application that helps an individual in a team or group of developers achieve their goals.",
+    "team": "Our team",
+    "RSS": "Project management app is an application that helps an individual in a team or group of developers achieve their goals."
+  },
+  "Header": {
+    "board": "New board",
+    "edit": "Edit profile"
   }
 }

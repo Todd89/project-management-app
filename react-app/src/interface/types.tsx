@@ -48,6 +48,11 @@ type IDeleteUser = {
   ID: string;
   token: string;
 };
+type IToken = {
+  iat: number;
+  login: string;
+  userId: string;
+};
 
 export {
   INewUser,
@@ -61,4 +66,5 @@ export {
   ILoginState,
   IEditUser,
   IDeleteUser,
+  IToken,
 };
