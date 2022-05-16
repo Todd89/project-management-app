@@ -23,14 +23,7 @@ const App: React.FC = () => {
         <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/edit" element={<EditProfile />}></Route>
-        <Route
-          path="/main"
-          element={
-            <PrivateRoute token={userState.token}>
-              <MainRoute />
-            </PrivateRoute>
-          }
-        ></Route>
+        <Route path="/main" element={<MainRoute />}></Route>
         <Route
           path="/board"
           element={

@@ -1,0 +1,11 @@
+{
+  "welcomeRoute": {
+    "description": "Project management app - application that helps an individual in a team or group of developers achieve their goals.",
+    "team": "Our team",
+    "RSS": "Project management app is an application that helps an individual in a team or group of developers achieve their goals."
+  },
+  "Header": {
+    "board": "New board",
+    "edit": "Edit profile"
+  }
+}
