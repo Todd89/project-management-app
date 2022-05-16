@@ -30,6 +30,15 @@ type INewTask = {
   userId: string;
 };
 
+type IUpdateTask = {
+  title: string;
+  order: number;
+  description: string;
+  userId: string;
+  boardId: string;
+  columnId: string;
+};
+
 type IRegisterData = {
   userName: string;
   userLogin: string;
@@ -56,6 +65,7 @@ export {
   INewBoard,
   INewColumn,
   INewTask,
+  IUpdateTask,
   IState,
   IRegisterData,
   IAuthorizeData,

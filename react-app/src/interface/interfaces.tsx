@@ -100,6 +100,12 @@ export interface IGetBoard {
   boardId: string;
 }
 
+export interface IGetColumn {
+  token: string;
+  boardId: string;
+  columnId: string;
+}
+
 export interface IGetAllColumns {
   token: string;
   boards: Array<IShortBoard>;
@@ -108,4 +114,52 @@ export interface IGetAllColumns {
 export interface IGetBoardColumns {
   token: string;
   boardId: string;
+}
+
+export interface IUpdateBoard {
+  token: string;
+  boardId: string;
+  boardTitle: string;
+}
+
+export interface IUpdateColumn {
+  token: string;
+  boardId: string;
+  columnId: string;
+  columnTitle: string;
+  columnOrder: number;
+}
+
+export interface IGetTasks {
+  token: string;
+  boardId: string;
+  columnId: string;
+}
+
+export interface ICreateTask {
+  token: string;
+  board: IBoard;
+  columnId: string;
+  taskTitle: string;
+  taskOrder: number;
+  taskDescription: string;
+  userId: string;
+}
+
+export interface IUpdateTask {
+  token: string;
+  boardId: string;
+  columnId: string;
+  taskId: string;
+  taskTitle: string;
+  taskOrder: number;
+  taskDescription: string;
+  userId: string;
+}
+
+export interface IDeleteTask {
+  token: string;
+  boardId: string;
+  columnId: string;
+  taskId: string;
 }

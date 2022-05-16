@@ -1,47 +1,54 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TStore } from '../../../react/store';
-import { IBoard, IColumn, ITask, ITaskInColumn } from '../../../interface/interfaces';
+import { IColumn, ITaskInColumn } from '../../../interface/interfaces';
 import ButtonSave from '../ButtonSave/ButtonSave';
 import './modalTask.css';
-import {
-  setAppBoards,
-  setAppColumns,
-  setAppTasks,
-  DataBoards,
-} from '../../../react/features/dataSlice';
+import { DataBoards, createNewTaskAPI, updateTaskAPI } from '../../../react/features/dataSlice';
 
 interface IModalTaskProps {
-  taskData: ITask;
+  taskData: ITaskInColumn;
   columnData: IColumn;
+  isNewTask: boolean;
   cancelModalState: () => void;
 }
 
 function ModalTask(props: IModalTaskProps) {
+  const loginState = useSelector((state: TStore) => state.loginData);
   const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
   const dispatch = useDispatch();
   const [isFinished, setIsFinished] = useState(false);
 
   const usersState = useSelector((state: TStore) => state.loginData);
 
+  let order = props.taskData.order;
+
+  if (props.isNewTask) {
+    order = props.columnData.tasks.length
+      ? Math.max(...props.columnData.tasks.map((item) => item.order)) + 1
+      : 1;
+  }
   const [currentData, setCurrentData] = useState({
-    name: props.taskData.title,
+    title: props.taskData.title,
     description: props.taskData.description,
+    order: order,
     user: usersState,
   });
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     setCurrentData({
-      name: event.target.value,
+      title: String(event.target.value),
       description: currentData.description,
+      order: currentData.order,
       user: currentData.user,
     });
   }
 
   function handleDescriptionChange(event: React.ChangeEvent<HTMLInputElement>) {
     setCurrentData({
-      name: currentData.name,
-      description: event.target.value,
+      title: currentData.title,
+      description: String(event.target.value),
+      order: currentData.order,
       user: currentData.user,
     });
   }
@@ -49,148 +56,43 @@ function ModalTask(props: IModalTaskProps) {
   function handleUserChange(event: React.ChangeEvent<HTMLInputElement>) {
     //добавить выбор из списка пользователей
     setCurrentData({
-      name: currentData.name,
+      title: currentData.title,
       description: currentData.description,
+      order: currentData.order,
       user: currentData.user,
     });
   }
 
   function handleDataSave() {
     setIsFinished(true);
-    /*temp
     props.cancelModalState();
 
-    const index = dataState.tasksArray.findIndex((item) => props.taskData === item);
-    let editTaskInColumn: ITaskInColumn;
-    let editTask: ITask;
-
-    if (index >= 0) {
-      editTask = JSON.parse(JSON.stringify(props.taskData));
-      editTask.title = currentData.name;
-      editTask.description = currentData.description;
-      editTask.userId = currentData.user.id;
-
-      editTaskInColumn = {
-        ...editTask,
-        done: false,
-        files: [],
-      };
-
-      const editColumn: IColumn = JSON.parse(
-        JSON.stringify(
-          dataState.columnsArray.find((item) => item.id === editTask.columnId) ||
-            dataState.columnsArray[0]
-        )
-      );
-
-      const indexC = editColumn.tasks.findIndex((item) => item.id === editTask.id);
-      const indexBB = dataState.columnsArray.findIndex((item) => item.id === editColumn.id);
-
-      const columnTasks = [...editColumn.tasks];
-      columnTasks.splice(indexC, 1, editTaskInColumn);
-      editColumn.tasks = columnTasks;
-
-      const indexB = dataState.boardsArray.findIndex((item) => item.id === editTask.boardId);
-      const editBoard: IBoard = JSON.parse(
-        JSON.stringify(
-          dataState.boardsArray.find((item) => item.id === editTask.boardId) ||
-            dataState.boardsArray[0]
-        )
-      );
-
-      const boardColumns = [...editBoard.columns];
-
-      const indexCB = boardColumns.findIndex((item) => item.id === editTask.columnId);
-
-      boardColumns.splice(indexCB, 1, editColumn);
-      editBoard.columns = boardColumns;
-
+    if (props.isNewTask) {
       dispatch(
-        setAppTasks([
-          ...dataState.tasksArray.slice(0, index),
-          editTask,
-          ...dataState.tasksArray.slice(index + 1),
-        ])
-      );
-
-      dispatch(
-        setAppColumns([
-          ...dataState.columnsArray.slice(0, indexBB),
-          editColumn,
-          ...dataState.columnsArray.slice(indexBB + 1),
-        ])
-      );
-
-      dispatch(
-        setAppBoards([
-          ...dataState.boardsArray.slice(0, indexB),
-          editBoard,
-          ...dataState.boardsArray.slice(indexB + 1),
-        ])
+        createNewTaskAPI({
+          token: loginState.token,
+          board: dataState.currentBoard,
+          columnId: props.columnData.id,
+          taskTitle: currentData.title,
+          taskOrder: currentData.order,
+          taskDescription: currentData.description !== '' ? currentData.description : ' ',
+          userId: currentData.user.id,
+        })
       );
     } else {
-      editTask = { ...props.taskData };
-      editTask.title = currentData.name;
-      editTask.description = currentData.description;
-      editTask.userId = currentData.user.id;
-      editTaskInColumn = {
-        ...editTask,
-        done: false,
-        files: [],
-      };
-
-      const editColumn: IColumn = JSON.parse(
-        JSON.stringify(
-          dataState.columnsArray.find((item) => item.id === editTask.columnId) ||
-            dataState.columnsArray[0]
-        )
-      );
-
-      const indexBB = dataState.columnsArray.findIndex((item) => item.id === editColumn.id);
-
-      const columnTasks = [...editColumn.tasks];
-      const newOrder = columnTasks.length
-        ? Math.max(...columnTasks.map((item) => item.order)) + 1
-        : 1;
-      editTaskInColumn.order = newOrder;
-      editTask.order = newOrder;
-
-      columnTasks.push(editTaskInColumn);
-      editColumn.tasks = columnTasks;
-
-      const indexB = dataState.boardsArray.findIndex((item) => item.id === editTask.boardId);
-      const editBoard: IBoard = JSON.parse(
-        JSON.stringify(
-          dataState.boardsArray.find((item) => item.id === editTask.boardId) ||
-            dataState.boardsArray[0]
-        )
-      );
-
-      const boardColumns = [...editBoard.columns];
-      const indexCB = boardColumns.findIndex((item) => item.id === editTask.columnId);
-
-      boardColumns.splice(indexCB, 1, editColumn);
-      editBoard.columns = boardColumns;
-
-      dispatch(setAppTasks([...dataState.tasksArray.slice(), editTask]));
-
       dispatch(
-        setAppColumns([
-          ...dataState.columnsArray.slice(0, indexBB),
-          editColumn,
-          ...dataState.columnsArray.slice(indexBB + 1),
-        ])
-      );
-
-      dispatch(
-        setAppBoards([
-          ...dataState.boardsArray.slice(0, indexB),
-          editBoard,
-          ...dataState.boardsArray.slice(indexB + 1),
-        ])
+        updateTaskAPI({
+          token: loginState.token,
+          boardId: dataState.currentBoard.id,
+          columnId: props.columnData.id,
+          taskId: props.taskData.id,
+          taskTitle: currentData.title,
+          taskOrder: currentData.order,
+          taskDescription: currentData.description !== '' ? currentData.description : ' ',
+          userId: currentData.user.id,
+        })
       );
     }
-    */
   }
 
   function handleKeyDown(event: React.KeyboardEvent) {
@@ -220,7 +122,7 @@ function ModalTask(props: IModalTaskProps) {
             <input
               type="text"
               className="modal__task task-name"
-              value={currentData.name}
+              value={currentData.title}
               autoFocus
               onChange={handleNameChange}
               onKeyDown={handleKeyDown}

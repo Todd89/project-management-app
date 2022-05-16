@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-//import { setCurrentColumn } from '../../../react/features/columnsSlice';
 import { TStore } from '../../../react/store';
-
-import { ITask, IColumn, TColumns, IBoard } from '../../../interface/interfaces';
+import { IColumn, IBoard, ITaskInColumn } from '../../../interface/interfaces';
 import ButtonAdd from '../ButtonAdd/ButtonAdd';
 import ButtonDelete from '../ButtonDelete/ButtonDelete';
 import Task from '../Task/Task';
@@ -11,12 +9,9 @@ import ModalTask from '../ModalTask/ModalTask';
 import './column.css';
 
 import {
-  setAppBoards,
-  setAppColumns,
   setCurrentColumn,
-  setAppTasks,
-  DataBoards,
   deleteColumnAPI,
+  updateColumnAPI,
 } from '../../../react/features/dataSlice';
 
 interface IPropsColumn {
@@ -26,24 +21,19 @@ interface IPropsColumn {
 
 function Column(props: IPropsColumn) {
   const loginState = useSelector((state: TStore) => state.loginData);
-  const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
 
   const [isEditColumnModeOn, setIsEditColumnModeOn] = useState(false);
-
-  const tasksFromColumnIds = Array.from(props.columnData.tasks).map((item) => item.id);
-
-  const columnTasks = dataState.tasksArray
-    .filter((item) => tasksFromColumnIds.includes(item.id))
-    .sort((a, b) => a.order - b.order);
-
+  const [currentColumnTitle, setCurrentColumnTitle] = useState(props.columnData.title);
   const dispatch = useDispatch();
+
+  const columnTasks = [...props.columnData.tasks].sort((a, b) => a.order - b.order);
+
   const [isModalOn, setIsModalOn] = useState(false);
   function cancelModalState() {
     setIsModalOn(false);
   }
 
   const currentUser = useSelector((state: TStore) => state.loginData);
-  //const columnState: TColumns = useSelector((state: TStore) => state.columnsFunctions);
 
   function handleColumnClick() {
     dispatch(setCurrentColumn(props.columnData));
@@ -54,6 +44,15 @@ function Column(props: IPropsColumn) {
   }
 
   function handleHeaderEndEdit() {
+    dispatch(
+      updateColumnAPI({
+        token: loginState.token,
+        boardId: props.boardData.id,
+        columnId: props.columnData.id,
+        columnTitle: currentColumnTitle,
+        columnOrder: props.columnData.order,
+      })
+    );
     setIsEditColumnModeOn(false);
   }
 
@@ -64,45 +63,17 @@ function Column(props: IPropsColumn) {
   }
 
   function handleHeaderEdit(event: React.ChangeEvent<HTMLInputElement>) {
-    /*temp
-    const index = dataState.columnsArray.findIndex(
-      (item) => columnState.currentColumn.id === item.id
-    );
-    const change = JSON.parse(JSON.stringify(columnState.currentColumn));
-    change.title = event.target.value;
-    dispatch(
-      setAppColumns([
-        ...dataState.columnsArray.slice(0, index),
-        change,
-        ...dataState.columnsArray.slice(index + 1),
-      ])
-    );
-
-    const indexB = dataState.boardsArray.findIndex((item) => props.boardData.id === item.id);
-    const changeB: IBoard = JSON.parse(JSON.stringify(props.boardData));
-    changeB.columns.forEach((item) => {
-      if (item.id === props.columnData.id) {
-        item.title = event.target.value;
-      }
-    });
-    dispatch(
-      setAppBoards([
-        ...dataState.boardsArray.slice(0, indexB),
-        changeB,
-        ...dataState.boardsArray.slice(indexB + 1),
-      ])
-    );
-    temp*/
+    setCurrentColumnTitle(String(event.target.value));
   }
 
-  const emptyTask: ITask = {
-    id: `task${String(dataState.tasksArray.length)}`,
+  const emptyTask: ITaskInColumn = {
+    id: `new task`,
     title: '',
     order: 999,
+    done: false,
     description: '',
     userId: currentUser.id,
-    boardId: props.boardData.id,
-    columnId: props.columnData.id,
+    files: [],
   };
 
   function handleTaskAdd() {
@@ -111,7 +82,6 @@ function Column(props: IPropsColumn) {
 
   function handleColumnDelete(answer: boolean) {
     if (answer) {
-      console.log('handleColumnDelete');
       dispatch(
         deleteColumnAPI({
           token: loginState.token,
@@ -119,37 +89,6 @@ function Column(props: IPropsColumn) {
           columnId: props.columnData.id,
         })
       );
-      /*temp
-      const leftTasks = dataState.tasksArray.filter((item) => item.columnId != props.columnData.id);
-
-      const indexC = dataState.columnsArray.findIndex((item) => props.columnData.id === item.id);
-
-      const indexB = dataState.boardsArray.findIndex((item) => item.id === props.boardData.id);
-      const editBoard: IBoard = JSON.parse(JSON.stringify(props.boardData));
-
-      const boardColumns = [...editBoard.columns];
-      const indexCB = boardColumns.findIndex((item) => item.id === props.columnData.id);
-
-      boardColumns.splice(indexCB, 1);
-      editBoard.columns = boardColumns;
-
-      dispatch(
-        setAppColumns([
-          ...dataState.columnsArray.slice(0, indexC),
-          ...dataState.columnsArray.slice(indexC + 1),
-        ])
-      );
-
-      dispatch(
-        setAppBoards([
-          ...dataState.boardsArray.slice(0, indexB),
-          editBoard,
-          ...dataState.boardsArray.slice(indexB + 1),
-        ])
-      );
-
-      dispatch(setAppTasks(leftTasks));
-          temp*/
     }
   }
 
@@ -157,16 +96,13 @@ function Column(props: IPropsColumn) {
     <article className="column" onClick={handleColumnClick}>
       <div className="column__header">
         <nav className="column__nav">
-          <ButtonDelete
-            confirmationText={props.columnData.title}
-            handleDelete={handleColumnDelete}
-          />
+          <ButtonDelete confirmationText={currentColumnTitle} handleDelete={handleColumnDelete} />
         </nav>
         {isEditColumnModeOn ? (
           <input
             type="text"
             className="header-input"
-            value={props.columnData.title}
+            value={currentColumnTitle}
             autoFocus
             onChange={handleHeaderEdit}
             onBlur={handleHeaderEndEdit}
@@ -174,7 +110,7 @@ function Column(props: IPropsColumn) {
           />
         ) : (
           <p className="header-text" onClick={handleHeaderStartEdit}>
-            {props.columnData.order}. {props.columnData.title}
+            {props.columnData.order}. {currentColumnTitle}
           </p>
         )}
       </div>
@@ -191,6 +127,7 @@ function Column(props: IPropsColumn) {
           taskData={emptyTask}
           columnData={props.columnData}
           cancelModalState={cancelModalState}
+          isNewTask={true}
         />
       )}
     </article>

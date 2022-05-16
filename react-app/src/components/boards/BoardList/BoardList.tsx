@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TStore } from '../../../react/store';
 import { IBoard, IShortBoard } from '../../../interface/interfaces';
@@ -46,16 +46,9 @@ function BoardList() {
 
   function handleReturnToBoardList() {
     setIsBoardChosen(false);
-    console.log('handleReturnToBoardList');
     dispatch(setCurrentBoard({ id: '', title: '', columns: [] }));
   }
 
-  /*useEffect(() => {
-    if (dataState.currentBoard.id) {
-      setIsBoardChosen(true);
-    }
-  }, [dataState.currentBoard]);
-*/
   return (
     <>
       <section className="boards">
@@ -83,7 +76,7 @@ function BoardList() {
             >
               back to the board list
             </button>
-            <Board />
+            <Board boardData={dataState.currentBoard} />
           </>
         )}
         {isModalOn && <ModalBoard boardData={emptyBoard} cancelModalState={cancelModalState} />}

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IBoard } from '../../../interface/interfaces';
 import ButtonSave from '../ButtonSave/ButtonSave';
 import './modalBoard.css';
-import { createNewBoardAPI, setAppBoards, DataBoards } from '../../../react/features/dataSlice';
+import { createNewBoardAPI, DataBoards } from '../../../react/features/dataSlice';
 import { TStore } from '../../../react/store';
 
 interface IModalBoardProps {
@@ -12,7 +12,6 @@ interface IModalBoardProps {
 }
 
 function ModalBoard(props: IModalBoardProps) {
-  const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
   const loginState = useSelector((state: TStore) => state.loginData);
   const [currentData, setCurrentData] = useState({
     name: props.boardData.title,
@@ -28,10 +27,6 @@ function ModalBoard(props: IModalBoardProps) {
 
   function handleDataSave() {
     props.cancelModalState();
-    //const addBoard: IBoard = { ...props.boardData };
-    //addBoard.title = currentData.name;
-    //dispatch(setAppBoards([...dataState.boardsArray.slice(0), addBoard]));
-    //const addBoard: ICreateBoard = {};
     dispatch(createNewBoardAPI({ token: loginState.token, board: { title: currentData.name } }));
   }
 
