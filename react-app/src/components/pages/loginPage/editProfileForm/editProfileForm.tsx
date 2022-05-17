@@ -4,7 +4,6 @@ import {
   deleteUserProfile,
   editUserProfile,
   clearUserStatus,
-  getUserToken,
   setUserStatus,
 } from '../../../../react/features/loginSlice';
 import { useSelector } from 'react-redux';

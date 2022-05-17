@@ -75,7 +75,6 @@ const userReducer = createSlice({
       return { ...state, ...action.payload };
     },
     clearUserStatus: (state, action) => {
-      console.log('Ow');
       const clearState = {
         name: '',
         login: '',

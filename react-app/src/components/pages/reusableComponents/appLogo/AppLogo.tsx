@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router';
 import './AppLogo.css';
 
 type LogOutButtonProps = {
@@ -6,7 +7,8 @@ type LogOutButtonProps = {
 };
 
 const AppLogo: React.FC = () => {
-  return <div className="app-logo"></div>;
+  const navigate = useNavigate();
+  return <div className="app-logo" onClick={() => navigate('/')}></div>;
 };
 
 export default AppLogo;
