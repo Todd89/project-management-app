@@ -14,6 +14,7 @@ import {
   setIsChanged,
   updateBoard,
 } from '../../../react/features/dataSlice';
+import { useTranslation } from 'react-i18next';
 
 interface IPropsBoard {
   boardData: IBoard;
@@ -23,7 +24,7 @@ function Board(props: IPropsBoard) {
   const loginState = useSelector((state: TStore) => state.loginData);
   const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
   const dispatch = useDispatch();
-
+  const { t, i18n } = useTranslation();
   const [isEditBoardModeOn, setIsEditBoardModeOn] = useState(false);
   const [isModalOn, setIsModalOn] = useState(false);
   const [currentBoardTitle, setCurrentBoardTitle] = useState('');
@@ -83,7 +84,7 @@ function Board(props: IPropsBoard) {
       <article className="board" onClick={handleBoardClick}>
         <div className="board__header">
           <nav className="column__nav">
-            <ButtonAdd buttonText={'Add column'} handleAdd={handleColumnAdd} />
+            <ButtonAdd buttonText={t('Column.add')} handleAdd={handleColumnAdd} />
           </nav>
           {isEditBoardModeOn ? (
             <input

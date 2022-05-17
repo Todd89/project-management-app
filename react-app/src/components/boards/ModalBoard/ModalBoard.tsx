@@ -5,6 +5,7 @@ import ButtonSave from '../ButtonSave/ButtonSave';
 import './modalBoard.css';
 import { createNewBoardAPI, DataBoards } from '../../../react/features/dataSlice';
 import { TStore } from '../../../react/store';
+import { useTranslation } from 'react-i18next';
 
 interface IModalBoardProps {
   boardData: IBoard;
@@ -16,7 +17,7 @@ function ModalBoard(props: IModalBoardProps) {
   const [currentData, setCurrentData] = useState({
     name: props.boardData.title,
   });
-
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -53,7 +54,7 @@ function ModalBoard(props: IModalBoardProps) {
         <div className="wrapper outside">
           <ButtonSave handleSave={handleDataSave} />
           <article className="modal__board">
-            <span className="modal__board board-title">Board name</span>
+            <span className="modal__board board-title">{t('Board.titleName')}</span>
             <input
               type="text"
               className="modal__board board-name"

@@ -1,25 +1,29 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { usersArray } from '../../temporary/tempData';
-import { IAppUser, TUsers } from '../../interface/interfaces';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import httpClient from '../../API/api';
+import { TUsers } from '../../interface/interfaces';
 
 export const initialState: TUsers = {
-  currentUser: {} as IAppUser,
+  usersArray: [],
 };
 
-function findUser(userId: string): IAppUser {
-  return usersArray.find((item) => item.id == userId) || usersArray[0];
-}
+export const getAllUsersApi = createAsyncThunk(
+  'getAllUsersApi',
+  async (token: string, { dispatch }) => {
+    const usersAPI = await httpClient.getAllUsers(token);
+    dispatch(setUsersArray(usersAPI));
+  }
+);
 
 export const usersSlice = createSlice({
   name: 'usersFunctions',
   initialState,
   reducers: {
-    setCurrentUser: (state, action) => {
-      return { ...state, currentUser: findUser(action.payload) };
+    setUsersArray: (state, action) => {
+      return { ...state, usersArray: action.payload };
     },
   },
 });
 
-export const { setCurrentUser } = usersSlice.actions;
+export const { setUsersArray } = usersSlice.actions;
 
 export default usersSlice.reducer;

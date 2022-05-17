@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TStore } from '../../../react/store';
 import { IBoard, IShortBoard } from '../../../interface/interfaces';
@@ -15,18 +15,27 @@ import {
   DataBoards,
   getBoardByIdAPI,
 } from '../../../react/features/dataSlice';
+import { getAllUsersApi } from '../../../react/features/usersSlice';
+import { useTranslation } from 'react-i18next';
 
 function BoardList() {
+  const dispatch = useDispatch();
   const loginState = useSelector((state: TStore) => state.loginData);
   const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
+  const { t, i18n } = useTranslation();
 
   const [isModalOn, setIsModalOn] = useState(false);
   const [isBoardChosen, setIsBoardChosen] = useState(false);
-  const dispatch = useDispatch();
-  dispatch(getAllBoardsFromAPI(loginState.token));
+
+  useEffect(() => {
+    if (loginState.token) {
+      dispatch(getAllBoardsFromAPI(loginState.token));
+      dispatch(getAllUsersApi(loginState.token));
+    }
+  }, [dispatch, loginState.token]);
 
   const emptyBoard: IBoard = {
-    id: `board${String(dataState.boardsArray.length)}`,
+    id: '',
     title: '',
     columns: [],
   };
@@ -54,7 +63,7 @@ function BoardList() {
       <section className="boards">
         {!isBoardChosen && (
           <>
-            <ButtonAdd buttonText={'Add board'} handleAdd={handleBoardAdd} />
+            <ButtonAdd buttonText={t('Board.add')} handleAdd={handleBoardAdd} />
             <div className="boards__list">
               {dataState.boardsArray.map((board) => {
                 return (
@@ -74,7 +83,7 @@ function BoardList() {
               className="boards__list__button button-return"
               onClick={handleReturnToBoardList}
             >
-              back to the board list
+              {t('Board.back')}
             </button>
             <Board boardData={dataState.currentBoard} />
           </>

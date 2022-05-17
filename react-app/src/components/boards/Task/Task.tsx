@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { IColumn, ITaskInColumn } from '../../../interface/interfaces';
+import { IColumn, ITaskInColumn, TUsers } from '../../../interface/interfaces';
 import ButtonDelete from '../ButtonDelete/ButtonDelete';
 import ModalTask from '../ModalTask/ModalTask';
 import './task.css';
@@ -15,8 +15,13 @@ interface IPropsTask {
 function Task(props: IPropsTask) {
   const loginState = useSelector((state: TStore) => state.loginData);
   const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
+  const userState: TUsers = useSelector((state: TStore) => state.usersFunctions);
   const [isModalOn, setIsModalOn] = useState(false);
+
   const dispatch = useDispatch();
+  const taskUser =
+    userState.usersArray.find((user) => user.id === props.taskData.userId) ||
+    userState.usersArray[0];
 
   function handleTaskDelete(answer: boolean) {
     if (answer) {
@@ -48,6 +53,7 @@ function Task(props: IPropsTask) {
       {isModalOn && (
         <ModalTask
           taskData={props.taskData}
+          user={taskUser}
           columnData={props.columnData}
           cancelModalState={cancelModalState}
           isNewTask={false}
@@ -55,6 +61,7 @@ function Task(props: IPropsTask) {
       )}
 
       <p className="task__description">{props.taskData.description}</p>
+      <p className="task__user">{taskUser.name}</p>
     </article>
   );
 }

@@ -41,6 +41,7 @@ export const initialState: DataBoards = {
 export const getAllBoardsFromAPI = createAsyncThunk(
   'getAllBoardsFromAPI',
   async (token: string, { dispatch }) => {
+    console.log('getAllBoardsFromAPI');
     const boardsAPI = await httpClient.getAllBoards(token);
     if (boardsAPI) {
       dispatch(setAppBoards(boardsAPI));

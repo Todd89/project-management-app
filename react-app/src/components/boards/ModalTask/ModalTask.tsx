@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TStore } from '../../../react/store';
-import { IColumn, ITaskInColumn } from '../../../interface/interfaces';
+import { IAppUser, IColumn, ITaskInColumn, TUsers } from '../../../interface/interfaces';
 import ButtonSave from '../ButtonSave/ButtonSave';
 import './modalTask.css';
 import { DataBoards, createNewTaskAPI, updateTaskAPI } from '../../../react/features/dataSlice';
+import { useTranslation } from 'react-i18next';
 
 interface IModalTaskProps {
   taskData: ITaskInColumn;
+  user: IAppUser;
   columnData: IColumn;
   isNewTask: boolean;
   cancelModalState: () => void;
@@ -16,13 +18,12 @@ interface IModalTaskProps {
 function ModalTask(props: IModalTaskProps) {
   const loginState = useSelector((state: TStore) => state.loginData);
   const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
+  const usersState: TUsers = useSelector((state: TStore) => state.usersFunctions);
   const dispatch = useDispatch();
+  const { t, i18n } = useTranslation();
   const [isFinished, setIsFinished] = useState(false);
 
-  const usersState = useSelector((state: TStore) => state.loginData);
-
   let order = props.taskData.order;
-
   if (props.isNewTask) {
     order = props.columnData.tasks.length
       ? Math.max(...props.columnData.tasks.map((item) => item.order)) + 1
@@ -32,7 +33,15 @@ function ModalTask(props: IModalTaskProps) {
     title: props.taskData.title,
     description: props.taskData.description,
     order: order,
-    user: usersState,
+    user: props.user,
+  });
+
+  const userSelectOptions = usersState.usersArray.map((user) => {
+    return (
+      <option key={user.id} value={user.id}>
+        {user.name}
+      </option>
+    );
   });
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -53,13 +62,15 @@ function ModalTask(props: IModalTaskProps) {
     });
   }
 
-  function handleUserChange(event: React.ChangeEvent<HTMLInputElement>) {
-    //добавить выбор из списка пользователей
+  function handleUserChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    const selected = event.target.selectedOptions[0];
     setCurrentData({
       title: currentData.title,
       description: currentData.description,
       order: currentData.order,
-      user: currentData.user,
+      user:
+        usersState.usersArray.find((user) => user.id === selected.value) ||
+        usersState.usersArray[0],
     });
   }
 
@@ -118,7 +129,7 @@ function ModalTask(props: IModalTaskProps) {
         <div className="wrapper outside">
           <ButtonSave handleSave={handleDataSave} />
           <article className="modal__task">
-            <span className="modal__task task-title">Task name</span>
+            <span className="modal__task task-title">{t('Task.titleName')}</span>
             <input
               type="text"
               className="modal__task task-name"
@@ -127,7 +138,7 @@ function ModalTask(props: IModalTaskProps) {
               onChange={handleNameChange}
               onKeyDown={handleKeyDown}
             />
-            <span className="modal__task task-title">Task description</span>
+            <span className="modal__task task-title">{t('Task.titleDescription')}</span>
             <input
               type="text"
               className="modal__task task-misc"
@@ -135,14 +146,10 @@ function ModalTask(props: IModalTaskProps) {
               onChange={handleDescriptionChange}
               onKeyDown={handleKeyDown}
             />
-            <span className="modal__task task-title">Task user</span>
-            <input
-              type="text"
-              className="modal__task task-misc"
-              value={currentData.user.name}
-              onChange={handleUserChange}
-              onKeyDown={handleKeyDown}
-            />
+            <span className="modal__task task-title">{t('Task.titleUser')}</span>
+            <select value={currentData.user.name} onChange={handleUserChange}>
+              {userSelectOptions}
+            </select>
           </article>
         </div>
       </div>

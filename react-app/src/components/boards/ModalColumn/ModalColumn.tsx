@@ -5,6 +5,7 @@ import ButtonSave from '../ButtonSave/ButtonSave';
 import './modalColumn.css';
 import { createNewColumnAPI } from '../../../react/features/dataSlice';
 import { TStore } from '../../../react/store';
+import { useTranslation } from 'react-i18next';
 
 interface IModalColumnProps {
   boardData: IBoard;
@@ -15,7 +16,7 @@ function ModalColumn(props: IModalColumnProps) {
   const loginState = useSelector((state: TStore) => state.loginData);
 
   const [currentTitle, setCurrentTitle] = useState('');
-
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -61,7 +62,7 @@ function ModalColumn(props: IModalColumnProps) {
         <div className="wrapper outside">
           <ButtonSave handleSave={handleDataSave} />
           <article className="modal__column">
-            <span className="modal__column column-title">Column name</span>
+            <span className="modal__column column-title">{t('Column.titleName')}</span>
             <input
               type="text"
               className="modal__column column-name"

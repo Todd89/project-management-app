@@ -70,7 +70,7 @@ export interface TColumns {
 }
 
 export interface TUsers {
-  currentUser: IAppUser;
+  usersArray: Array<IAppUser>;
 }
 
 export interface ICreateBoard {

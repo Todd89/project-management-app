@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TStore } from '../../../react/store';
-import { IColumn, IBoard, ITaskInColumn } from '../../../interface/interfaces';
+import { IColumn, IBoard, ITaskInColumn, IAppUser, TUsers } from '../../../interface/interfaces';
 import ButtonAdd from '../ButtonAdd/ButtonAdd';
 import ButtonDelete from '../ButtonDelete/ButtonDelete';
 import Task from '../Task/Task';
@@ -14,6 +14,8 @@ import {
   updateColumnAPI,
 } from '../../../react/features/dataSlice';
 
+import { useTranslation } from 'react-i18next';
+
 interface IPropsColumn {
   columnData: IColumn;
   boardData: IBoard;
@@ -21,11 +23,11 @@ interface IPropsColumn {
 
 function Column(props: IPropsColumn) {
   const loginState = useSelector((state: TStore) => state.loginData);
-
+  const userState: TUsers = useSelector((state: TStore) => state.usersFunctions);
   const [isEditColumnModeOn, setIsEditColumnModeOn] = useState(false);
   const [currentColumnTitle, setCurrentColumnTitle] = useState(props.columnData.title);
   const dispatch = useDispatch();
-
+  const { t, i18n } = useTranslation();
   const columnTasks = [...props.columnData.tasks].sort((a, b) => a.order - b.order);
 
   const [isModalOn, setIsModalOn] = useState(false);
@@ -121,10 +123,14 @@ function Column(props: IPropsColumn) {
           })}
         </div>
       </div>
-      <ButtonAdd buttonText={'Add task'} handleAdd={handleTaskAdd} />
+      <ButtonAdd buttonText={t('Task.add')} handleAdd={handleTaskAdd} />
       {isModalOn && (
         <ModalTask
           taskData={emptyTask}
+          user={
+            userState.usersArray.find((user: IAppUser) => user.id === currentUser.id) ||
+            userState.usersArray[0]
+          }
           columnData={props.columnData}
           cancelModalState={cancelModalState}
           isNewTask={true}
