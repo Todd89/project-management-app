@@ -1,62 +1,76 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TStore } from '../../../react/store';
-import { IBoard, IColumn, ITask, ITaskInColumn } from '../../../interface/interfaces';
+import { IAppUser, IColumn, ITaskInColumn, TUsers } from '../../../interface/interfaces';
 import ButtonSave from '../ButtonSave/ButtonSave';
 import './modalTask.css';
-
-//remove
-import {
-  setTempBoards,
-  setTempColumns,
-  setTempTasks,
-  TempBoards,
-} from '../../../react/features/tempSlice';
-//remove
+import { DataBoards, createNewTaskAPI, updateTaskAPI } from '../../../react/features/dataSlice';
+import { useTranslation } from 'react-i18next';
 
 interface IModalTaskProps {
-  taskData: ITask;
+  taskData: ITaskInColumn;
+  user: IAppUser;
   columnData: IColumn;
+  isNewTask: boolean;
   cancelModalState: () => void;
 }
 
 function ModalTask(props: IModalTaskProps) {
-  //remove
-  const tempState: TempBoards = useSelector((state: TStore) => state.tempFunctions);
-  //remove
+  const loginState = useSelector((state: TStore) => state.loginData);
+  const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
+  const usersState: TUsers = useSelector((state: TStore) => state.usersFunctions);
   const dispatch = useDispatch();
+  const { t, i18n } = useTranslation();
   const [isFinished, setIsFinished] = useState(false);
 
-  const usersState = useSelector((state: TStore) => state.loginData);
-
+  let order = props.taskData.order;
+  if (props.isNewTask) {
+    order = props.columnData.tasks.length
+      ? Math.max(...props.columnData.tasks.map((item) => item.order)) + 1
+      : 1;
+  }
   const [currentData, setCurrentData] = useState({
-    name: props.taskData.title,
+    title: props.taskData.title,
     description: props.taskData.description,
-    user: usersState,
+    order: order,
+    user: props.user,
+  });
+
+  const userSelectOptions = usersState.usersArray.map((user) => {
+    return (
+      <option key={user.id} value={user.id}>
+        {user.name}
+      </option>
+    );
   });
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     setCurrentData({
-      name: event.target.value,
+      title: String(event.target.value),
       description: currentData.description,
+      order: currentData.order,
       user: currentData.user,
     });
   }
 
   function handleDescriptionChange(event: React.ChangeEvent<HTMLInputElement>) {
     setCurrentData({
-      name: currentData.name,
-      description: event.target.value,
+      title: currentData.title,
+      description: String(event.target.value),
+      order: currentData.order,
       user: currentData.user,
     });
   }
 
-  function handleUserChange(event: React.ChangeEvent<HTMLInputElement>) {
-    //добавить выбор из списка пользователей
+  function handleUserChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    const selected = event.target.selectedOptions[0];
     setCurrentData({
-      name: currentData.name,
+      title: currentData.title,
       description: currentData.description,
-      user: currentData.user,
+      order: currentData.order,
+      user:
+        usersState.usersArray.find((user) => user.id === selected.value) ||
+        usersState.usersArray[0],
     });
   }
 
@@ -64,134 +78,30 @@ function ModalTask(props: IModalTaskProps) {
     setIsFinished(true);
     props.cancelModalState();
 
-    const index = tempState.tasksArray.findIndex((item) => props.taskData === item);
-    let editTaskInColumn: ITaskInColumn;
-    let editTask: ITask;
-
-    if (index >= 0) {
-      editTask = JSON.parse(JSON.stringify(props.taskData));
-      editTask.title = currentData.name;
-      editTask.description = currentData.description;
-      editTask.userId = currentData.user.id;
-
-      editTaskInColumn = {
-        ...editTask,
-        done: false,
-        files: [],
-      };
-
-      const editColumn: IColumn = JSON.parse(
-        JSON.stringify(
-          tempState.columnsArray.find((item) => item.id === editTask.columnId) ||
-            tempState.columnsArray[0]
-        )
-      );
-
-      const indexC = editColumn.tasks.findIndex((item) => item.id === editTask.id);
-      const indexBB = tempState.columnsArray.findIndex((item) => item.id === editColumn.id);
-
-      const columnTasks = [...editColumn.tasks];
-      columnTasks.splice(indexC, 1, editTaskInColumn);
-      editColumn.tasks = columnTasks;
-
-      const indexB = tempState.boardsArray.findIndex((item) => item.id === editTask.boardId);
-      const editBoard: IBoard = JSON.parse(
-        JSON.stringify(
-          tempState.boardsArray.find((item) => item.id === editTask.boardId) ||
-            tempState.boardsArray[0]
-        )
-      );
-
-      const boardColumns = [...editBoard.columns];
-
-      const indexCB = boardColumns.findIndex((item) => item.id === editTask.columnId);
-
-      boardColumns.splice(indexCB, 1, editColumn);
-      editBoard.columns = boardColumns;
-
+    if (props.isNewTask) {
       dispatch(
-        setTempTasks([
-          ...tempState.tasksArray.slice(0, index),
-          editTask,
-          ...tempState.tasksArray.slice(index + 1),
-        ])
-      );
-
-      dispatch(
-        setTempColumns([
-          ...tempState.columnsArray.slice(0, indexBB),
-          editColumn,
-          ...tempState.columnsArray.slice(indexBB + 1),
-        ])
-      );
-
-      dispatch(
-        setTempBoards([
-          ...tempState.boardsArray.slice(0, indexB),
-          editBoard,
-          ...tempState.boardsArray.slice(indexB + 1),
-        ])
+        createNewTaskAPI({
+          token: loginState.token,
+          board: dataState.currentBoard,
+          columnId: props.columnData.id,
+          taskTitle: currentData.title,
+          taskOrder: currentData.order,
+          taskDescription: currentData.description !== '' ? currentData.description : ' ',
+          userId: currentData.user.id,
+        })
       );
     } else {
-      editTask = { ...props.taskData };
-      editTask.title = currentData.name;
-      editTask.description = currentData.description;
-      editTask.userId = currentData.user.id;
-      editTaskInColumn = {
-        ...editTask,
-        done: false,
-        files: [],
-      };
-
-      const editColumn: IColumn = JSON.parse(
-        JSON.stringify(
-          tempState.columnsArray.find((item) => item.id === editTask.columnId) ||
-            tempState.columnsArray[0]
-        )
-      );
-
-      const indexBB = tempState.columnsArray.findIndex((item) => item.id === editColumn.id);
-
-      const columnTasks = [...editColumn.tasks];
-      const newOrder = columnTasks.length
-        ? Math.max(...columnTasks.map((item) => item.order)) + 1
-        : 1;
-      editTaskInColumn.order = newOrder;
-      editTask.order = newOrder;
-
-      columnTasks.push(editTaskInColumn);
-      editColumn.tasks = columnTasks;
-
-      const indexB = tempState.boardsArray.findIndex((item) => item.id === editTask.boardId);
-      const editBoard: IBoard = JSON.parse(
-        JSON.stringify(
-          tempState.boardsArray.find((item) => item.id === editTask.boardId) ||
-            tempState.boardsArray[0]
-        )
-      );
-
-      const boardColumns = [...editBoard.columns];
-      const indexCB = boardColumns.findIndex((item) => item.id === editTask.columnId);
-
-      boardColumns.splice(indexCB, 1, editColumn);
-      editBoard.columns = boardColumns;
-
-      dispatch(setTempTasks([...tempState.tasksArray.slice(), editTask]));
-
       dispatch(
-        setTempColumns([
-          ...tempState.columnsArray.slice(0, indexBB),
-          editColumn,
-          ...tempState.columnsArray.slice(indexBB + 1),
-        ])
-      );
-
-      dispatch(
-        setTempBoards([
-          ...tempState.boardsArray.slice(0, indexB),
-          editBoard,
-          ...tempState.boardsArray.slice(indexB + 1),
-        ])
+        updateTaskAPI({
+          token: loginState.token,
+          boardId: dataState.currentBoard.id,
+          columnId: props.columnData.id,
+          taskId: props.taskData.id,
+          taskTitle: currentData.title,
+          taskOrder: currentData.order,
+          taskDescription: currentData.description !== '' ? currentData.description : ' ',
+          userId: currentData.user.id,
+        })
       );
     }
   }
@@ -219,16 +129,16 @@ function ModalTask(props: IModalTaskProps) {
         <div className="wrapper outside">
           <ButtonSave handleSave={handleDataSave} />
           <article className="modal__task">
-            <span className="modal__task task-title">Task name</span>
+            <span className="modal__task task-title">{t('Task.titleName')}</span>
             <input
               type="text"
               className="modal__task task-name"
-              value={currentData.name}
+              value={currentData.title}
               autoFocus
               onChange={handleNameChange}
               onKeyDown={handleKeyDown}
             />
-            <span className="modal__task task-title">Task description</span>
+            <span className="modal__task task-title">{t('Task.titleDescription')}</span>
             <input
               type="text"
               className="modal__task task-misc"
@@ -236,14 +146,10 @@ function ModalTask(props: IModalTaskProps) {
               onChange={handleDescriptionChange}
               onKeyDown={handleKeyDown}
             />
-            <span className="modal__task task-title">Task user</span>
-            <input
-              type="text"
-              className="modal__task task-misc"
-              value={currentData.user.name}
-              onChange={handleUserChange}
-              onKeyDown={handleKeyDown}
-            />
+            <span className="modal__task task-title">{t('Task.titleUser')}</span>
+            <select value={currentData.user.name} onChange={handleUserChange}>
+              {userSelectOptions}
+            </select>
           </article>
         </div>
       </div>

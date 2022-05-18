@@ -1,4 +1,4 @@
-import { INewUser, IUser, INewColumn, INewBoard, INewTask } from '../interface/types';
+import { INewUser, IUser, INewColumn, INewBoard, INewTask, IUpdateTask } from '../interface/types';
 import { API_URL, API_METHODS, USER_STATUS, API_STATUS } from '.././constant/constant';
 
 class HTTPClient {
@@ -304,14 +304,17 @@ class HTTPClient {
 
   async getAllTasks(token: string, boardID: string, columnID: string) {
     try {
-      const response = await fetch(`${API_URL.MAIN_URL}/boards/${boardID}/columns/${columnID}`, {
-        method: `${API_METHODS.GET}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(
+        `${API_URL.MAIN_URL}/boards/${boardID}/columns/${columnID}/tasks`,
+        {
+          method: `${API_METHODS.GET}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        }
+      );
       if (response.status === API_STATUS.REAL_SUCCESS) {
         return await response.json();
       }
@@ -383,7 +386,7 @@ class HTTPClient {
     boardID: string,
     columnID: string,
     taskID: string,
-    taskBody: INewTask
+    taskBody: IUpdateTask
   ) {
     try {
       const response = await fetch(

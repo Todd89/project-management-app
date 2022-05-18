@@ -1,3 +1,5 @@
+import { INewBoard, INewColumn } from './types';
+
 export interface IAppUser {
   id: string;
   name: string;
@@ -10,11 +12,27 @@ export interface IBoard {
   columns: Array<IColumn>;
 }
 
+export interface IShortBoard {
+  id: string;
+  title: string;
+}
+
 export interface IColumn {
   id: string;
   title: string;
   order: number;
   tasks: Array<ITaskInColumn>;
+}
+
+export interface ITempColumn {
+  id: string;
+  title: string;
+  order: number;
+}
+
+export interface IBoardTempColumn {
+  boardId: string;
+  columns: Array<ITempColumn>;
 }
 
 export interface ITaskInColumn {
@@ -52,5 +70,96 @@ export interface TColumns {
 }
 
 export interface TUsers {
-  currentUser: IAppUser;
+  usersArray: Array<IAppUser>;
+}
+
+export interface ICreateBoard {
+  token: string;
+  board: INewBoard;
+}
+
+export interface IDeleteBoard {
+  token: string;
+  boardId: string;
+}
+
+export interface ICreateColumn {
+  token: string;
+  board: IBoard;
+  columnBody: INewColumn;
+}
+
+export interface IDeleteColumn {
+  token: string;
+  boardId: string;
+  columnId: string;
+}
+
+export interface IGetBoard {
+  token: string;
+  boardId: string;
+}
+
+export interface IGetColumn {
+  token: string;
+  boardId: string;
+  columnId: string;
+}
+
+export interface IGetAllColumns {
+  token: string;
+  boards: Array<IShortBoard>;
+}
+
+export interface IGetBoardColumns {
+  token: string;
+  boardId: string;
+}
+
+export interface IUpdateBoard {
+  token: string;
+  boardId: string;
+  boardTitle: string;
+}
+
+export interface IUpdateColumn {
+  token: string;
+  boardId: string;
+  columnId: string;
+  columnTitle: string;
+  columnOrder: number;
+}
+
+export interface IGetTasks {
+  token: string;
+  boardId: string;
+  columnId: string;
+}
+
+export interface ICreateTask {
+  token: string;
+  board: IBoard;
+  columnId: string;
+  taskTitle: string;
+  taskOrder: number;
+  taskDescription: string;
+  userId: string;
+}
+
+export interface IUpdateTask {
+  token: string;
+  boardId: string;
+  columnId: string;
+  taskId: string;
+  taskTitle: string;
+  taskOrder: number;
+  taskDescription: string;
+  userId: string;
+}
+
+export interface IDeleteTask {
+  token: string;
+  boardId: string;
+  columnId: string;
+  taskId: string;
 }

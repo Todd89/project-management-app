@@ -21,12 +21,22 @@ type INewBoard = {
 };
 type INewColumn = {
   title: string;
+  order: number;
 };
 type INewTask = {
   title: string;
   order: number;
   description: string;
   userId: string;
+};
+
+type IUpdateTask = {
+  title: string;
+  order: number;
+  description: string;
+  userId: string;
+  boardId: string;
+  columnId: string;
 };
 
 type IRegisterData = {
@@ -60,6 +70,7 @@ export {
   INewBoard,
   INewColumn,
   INewTask,
+  IUpdateTask,
   IState,
   IRegisterData,
   IAuthorizeData,

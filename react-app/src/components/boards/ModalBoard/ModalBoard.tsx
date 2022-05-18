@@ -3,11 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IBoard } from '../../../interface/interfaces';
 import ButtonSave from '../ButtonSave/ButtonSave';
 import './modalBoard.css';
-
-//remove
-import { setTempBoards, TempBoards } from '../../../react/features/tempSlice';
+import { createNewBoardAPI, DataBoards } from '../../../react/features/dataSlice';
 import { TStore } from '../../../react/store';
-//remove
+import { useTranslation } from 'react-i18next';
 
 interface IModalBoardProps {
   boardData: IBoard;
@@ -15,13 +13,11 @@ interface IModalBoardProps {
 }
 
 function ModalBoard(props: IModalBoardProps) {
-  //remove
-  const tempState: TempBoards = useSelector((state: TStore) => state.tempFunctions);
-  //remove
+  const loginState = useSelector((state: TStore) => state.loginData);
   const [currentData, setCurrentData] = useState({
     name: props.boardData.title,
   });
-
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -32,9 +28,7 @@ function ModalBoard(props: IModalBoardProps) {
 
   function handleDataSave() {
     props.cancelModalState();
-    const addBoard: IBoard = { ...props.boardData };
-    addBoard.title = currentData.name;
-    dispatch(setTempBoards([...tempState.boardsArray.slice(0), addBoard]));
+    dispatch(createNewBoardAPI({ token: loginState.token, board: { title: currentData.name } }));
   }
 
   function handleKeyDown(event: React.KeyboardEvent) {
@@ -60,7 +54,7 @@ function ModalBoard(props: IModalBoardProps) {
         <div className="wrapper outside">
           <ButtonSave handleSave={handleDataSave} />
           <article className="modal__board">
-            <span className="modal__board board-title">Board name</span>
+            <span className="modal__board board-title">{t('Board.titleName')}</span>
             <input
               type="text"
               className="modal__board board-name"

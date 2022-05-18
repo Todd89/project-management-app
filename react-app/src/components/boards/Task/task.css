@@ -17,6 +17,12 @@
   font-weight: 600;
 }
 
+.task__user {
+  align-self: flex-end;
+  padding: 10px;
+  font-size: 16px;
+}
+
 .header-text {
   font-size: 16px;
 }

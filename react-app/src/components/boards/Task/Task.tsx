@@ -1,87 +1,37 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-//import { setAppBoards } from '../../../react/features/boardsSlice';
-//import { tasksArray } from '../../../temporary/tempData';
-import { IBoard, IColumn, ITask } from '../../../interface/interfaces';
+import { IColumn, ITaskInColumn, TUsers } from '../../../interface/interfaces';
 import ButtonDelete from '../ButtonDelete/ButtonDelete';
 import ModalTask from '../ModalTask/ModalTask';
 import './task.css';
-
-//remove
-import {
-  setTempBoards,
-  setTempColumns,
-  setTempTasks,
-  TempBoards,
-} from '../../../react/features/tempSlice';
+import { DataBoards, deleteTaskAPI } from '../../../react/features/dataSlice';
 import { TStore } from '../../../react/store';
-//remove
 
 interface IPropsTask {
   columnData: IColumn;
-  taskData: ITask;
+  taskData: ITaskInColumn;
 }
 
 function Task(props: IPropsTask) {
-  //remove
-  const tempState: TempBoards = useSelector((state: TStore) => state.tempFunctions);
-  //remove
+  const loginState = useSelector((state: TStore) => state.loginData);
+  const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
+  const userState: TUsers = useSelector((state: TStore) => state.usersFunctions);
   const [isModalOn, setIsModalOn] = useState(false);
+
   const dispatch = useDispatch();
+  const taskUser =
+    userState.usersArray.find((user) => user.id === props.taskData.userId) ||
+    userState.usersArray[0];
 
   function handleTaskDelete(answer: boolean) {
     if (answer) {
-      const editBoard: IBoard = JSON.parse(
-        JSON.stringify(
-          tempState.boardsArray.find((item) => item.id === props.taskData.boardId) ||
-            tempState.boardsArray[0]
-        )
-      );
-
-      const editColumn: IColumn = JSON.parse(JSON.stringify(props.columnData));
-
-      const indexT = tempState.tasksArray.findIndex((item) => props.taskData.id === item.id);
-
-      const indexTC = editColumn.tasks.findIndex((item) => item.id === props.taskData.id);
-
-      const indexC = tempState.columnsArray.findIndex(
-        (item) => item.id === props.taskData.columnId
-      );
-
-      const columnTasks = [...editColumn.tasks];
-      columnTasks.splice(indexTC, 1);
-      editColumn.tasks = columnTasks;
-
-      const indexB = tempState.boardsArray.findIndex((item) => item.id === props.taskData.boardId);
-
-      const boardColumns = [...editBoard.columns];
-
-      const indexCB = boardColumns.findIndex((item) => item.id === props.taskData.columnId);
-
-      boardColumns.splice(indexCB, 1, editColumn);
-      editBoard.columns = boardColumns;
-
       dispatch(
-        setTempColumns([
-          ...tempState.columnsArray.slice(0, indexC),
-          editColumn,
-          ...tempState.columnsArray.slice(indexC + 1),
-        ])
-      );
-
-      dispatch(
-        setTempBoards([
-          ...tempState.boardsArray.slice(0, indexB),
-          editBoard,
-          ...tempState.boardsArray.slice(indexB + 1),
-        ])
-      );
-
-      dispatch(
-        setTempTasks([
-          ...tempState.tasksArray.slice(0, indexT),
-          ...tempState.tasksArray.slice(indexT + 1),
-        ])
+        deleteTaskAPI({
+          token: loginState.token,
+          boardId: dataState.currentBoard.id,
+          columnId: props.columnData.id,
+          taskId: props.taskData.id,
+        })
       );
     }
   }
@@ -103,12 +53,15 @@ function Task(props: IPropsTask) {
       {isModalOn && (
         <ModalTask
           taskData={props.taskData}
+          user={taskUser}
           columnData={props.columnData}
           cancelModalState={cancelModalState}
+          isNewTask={false}
         />
       )}
 
       <p className="task__description">{props.taskData.description}</p>
+      <p className="task__user">{taskUser.name}</p>
     </article>
   );
 }

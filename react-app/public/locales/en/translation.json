@@ -7,5 +7,20 @@
   "Header": {
     "board": "New board",
     "edit": "Edit profile"
+  },
+  "Board": {
+    "add": "Add board",
+    "back": "back to the board list",
+    "titleName": "Board name"
+  },
+  "Column": {
+    "add": "Add column",
+    "titleName": "Column name"
+  },
+  "Task": {
+    "add": "Add task",
+    "titleName": "Task name",
+    "titleDescription": "Task description",
+    "titleUser": "Task user"
   }
 }

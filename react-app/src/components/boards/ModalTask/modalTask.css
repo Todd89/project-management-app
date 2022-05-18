@@ -51,15 +51,9 @@
   margin: 10px 0;
 }
 
-/*.outside {
-  flex-direction: row;
-}
-
-.inside {
-  flex-direction: row;
-}
-*/
 .modal__task {
+  display: flex;
+  flex-direction: column;
   width: 300px;
 }
 

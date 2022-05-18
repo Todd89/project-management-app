@@ -16,7 +16,6 @@ const MainRoute: React.FC = () => {
     <section className="main-page">
       <Header />
       <article className="main-wrapper">
-        <h1>All Boards</h1>
         <BoardList />
       </article>
     </section>
