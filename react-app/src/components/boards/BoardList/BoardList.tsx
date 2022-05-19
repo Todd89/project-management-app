@@ -3,10 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TStore } from '../../../react/store';
 import { IBoard, IShortBoard } from '../../../interface/interfaces';
 import Board from '../Board/Board';
-
 import './boardList.css';
-
-import ButtonAdd from '../ButtonAdd/ButtonAdd';
 import ModalBoard from '../ModalBoard/ModalBoard';
 import BoardButton from '../BoardButton/boardButton';
 import {
@@ -14,6 +11,7 @@ import {
   setCurrentBoard,
   DataBoards,
   getBoardByIdAPI,
+  setIsModalOn,
 } from '../../../react/features/dataSlice';
 import { getAllUsersApi } from '../../../react/features/usersSlice';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +22,7 @@ function BoardList() {
   const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
   const { t, i18n } = useTranslation();
 
-  const [isModalOn, setIsModalOn] = useState(false);
+  //const [isModalOn, setIsModalOn] = useState(false);
   const [isBoardChosen, setIsBoardChosen] = useState(false);
 
   useEffect(() => {
@@ -40,12 +38,8 @@ function BoardList() {
     columns: [],
   };
 
-  function handleBoardAdd() {
-    setIsModalOn(true);
-  }
-
   function cancelModalState() {
-    setIsModalOn(false);
+    dispatch(setIsModalOn(false));
   }
 
   function handleBoardChoice(board: IShortBoard) {
@@ -63,7 +57,6 @@ function BoardList() {
       <section className="boards">
         {!isBoardChosen && (
           <>
-            <ButtonAdd buttonText={t('Board.add')} handleAdd={handleBoardAdd} />
             <div className="boards__list">
               {dataState.boardsArray.map((board) => {
                 return (
@@ -88,7 +81,9 @@ function BoardList() {
             <Board boardData={dataState.currentBoard} />
           </>
         )}
-        {isModalOn && <ModalBoard boardData={emptyBoard} cancelModalState={cancelModalState} />}
+        {dataState.isModalOn && (
+          <ModalBoard boardData={emptyBoard} cancelModalState={cancelModalState} />
+        )}
       </section>
     </>
   );
