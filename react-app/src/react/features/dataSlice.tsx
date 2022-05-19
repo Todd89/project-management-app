@@ -27,6 +27,7 @@ export interface DataBoards {
   currentColumn: IColumn;
   tasksArray: Array<ITask>;
   isChanged: boolean;
+  isModalOn: boolean;
 }
 
 export const initialState: DataBoards = {
@@ -36,6 +37,7 @@ export const initialState: DataBoards = {
   currentColumn: { id: '', title: '', order: 0, tasks: [] },
   tasksArray: [],
   isChanged: false,
+  isModalOn: false,
 };
 
 export const getAllBoardsFromAPI = createAsyncThunk(
@@ -56,6 +58,7 @@ export const createNewBoardAPI = createAsyncThunk(
     if (boardAPI) {
       getAllBoardsFromAPI(data.token);
       dispatch(setIsChanged(true));
+      dispatch(getAllBoardsFromAPI(data.token));
     }
   }
 );
@@ -248,6 +251,9 @@ export const dataSlice = createSlice({
     setIsChanged: (state, action) => {
       return { ...state, isChanged: action.payload };
     },
+    setIsModalOn: (state, action) => {
+      return { ...state, isModalOn: action.payload };
+    },
   },
 });
 
@@ -258,6 +264,7 @@ export const {
   setCurrentColumn,
   setAppTasks,
   setIsChanged,
+  setIsModalOn,
 } = dataSlice.actions;
 
 export default dataSlice.reducer;

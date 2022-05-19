@@ -8,6 +8,9 @@ import LogOutButton from '../reusableComponents/logOutButton/LogOutButton';
 import AppLogo from '../reusableComponents/appLogo/AppLogo';
 import { IState } from '../../../interface/types';
 import { useTranslation } from 'react-i18next';
+import { TStore } from '../../../react/store';
+import { DataBoards, setIsModalOn } from '../../../react/features/dataSlice';
+import ButtonAdd from '../../boards/ButtonAdd/ButtonAdd';
 
 const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -16,6 +19,7 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
   const [language, setLanguage] = useState('English');
+  const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
 
   const changeLanguage = (language: string) => {
     i18n.changeLanguage(language);
@@ -41,9 +45,18 @@ const Header: React.FC = () => {
     navigate('/');
   };
 
+  function handleBoardAdd() {
+    dispatch(dispatch(setIsModalOn(true)));
+  }
+
   const editProfileApp = () => {
     navigate('/edit');
   };
+  /*
+        <button className="button-add-board" type="button" handleAdd={handleBoardAdd}>
+        {t('Header.board')}
+      </button>
+      */
   return (
     <header className="header">
       <div className="header-logo">
@@ -52,10 +65,7 @@ const Header: React.FC = () => {
       <button onClick={editProfileApp} className="button-edit-profile" type="button">
         {t('Header.edit')}
       </button>
-      <button className="button-add-board" type="button">
-        {t('Header.board')}
-      </button>
-
+      <ButtonAdd buttonText={t('Board.add')} handleAdd={handleBoardAdd} />
       <div className="switcher-wrapper">
         <input
           type="checkbox"
