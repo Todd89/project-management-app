@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TStore } from '../../../react/store';
-import { IBoard } from '../../../interface/interfaces';
+import { IBoard, ITask } from '../../../interface/interfaces';
 import './board.css';
 import ButtonAdd from '../ButtonAdd/ButtonAdd';
 import ModalColumn from '../ModalColumn/ModalColumn';
@@ -13,8 +13,15 @@ import {
   getBoardByIdAPI,
   setIsChanged,
   updateBoard,
+  dragAndDropTaskInColumnAPI,
+  dragAndDropTaskBetweenColumnsAPI,
+  deleteTaskAPI,
+  updateTaskAPI,
+  createNewTaskAPI,
 } from '../../../react/features/dataSlice';
 import { useTranslation } from 'react-i18next';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
+import HTTPClient from '../../../API/api';
 
 interface IPropsBoard {
   boardData: IBoard;
@@ -79,8 +86,49 @@ function Board(props: IPropsBoard) {
     setIsModalOn(false);
   }
 
+  const token = useSelector((state: TStore) => state.loginData.token);
+
+  const onDragEnd = (result: DropResult) => {
+    const { draggableId, source, destination } = result;
+    HTTPClient.getTaskByID(
+      loginState.token,
+      dataState.currentBoard.id,
+      source.droppableId,
+      draggableId
+    ).then((response: ITask) => {
+      if (!destination) return;
+      if (destination.droppableId === source.droppableId && destination.index === source.index)
+        return;
+      if (destination.droppableId === source.droppableId && destination.index !== source.index) {
+        dispatch(
+          dragAndDropTaskInColumnAPI({
+            token: token,
+            boardId: dataState.currentBoard.id,
+            columnId: dataState.currentColumn.id,
+            oldIndex: source.index,
+            newIndex: destination.index,
+          })
+        );
+      }
+      if (destination.droppableId !== source.droppableId) {
+        dispatch(
+          dragAndDropTaskBetweenColumnsAPI({
+            token: token,
+            boardId: dataState.currentBoard.id,
+            oldColumnId: source.droppableId,
+            newColumnId: destination.droppableId,
+            oldIndex: source.index,
+            newIndex: destination.index,
+            board: dataState.currentBoard,
+          })
+        );
+      }
+    });
+    console.log('DropResult', result);
+  };
+
   return (
-    <>
+    <DragDropContext onDragEnd={onDragEnd}>
       <article className="board" onClick={handleBoardClick}>
         <div className="board__header">
           <nav className="column__nav">
@@ -114,7 +162,7 @@ function Board(props: IPropsBoard) {
           <ModalColumn boardData={props.boardData} cancelModalState={cancelModalState} />
         )}
       </article>
-    </>
+    </DragDropContext>
   );
 }
 

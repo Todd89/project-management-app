@@ -18,6 +18,8 @@ import {
   IUpdateBoard,
   IUpdateColumn,
   IUpdateTask,
+  IGetTasksForDNDinColumn,
+  IGetTasksForDNDinTwoColumns,
 } from '../../interface/interfaces';
 
 export interface DataBoards {
@@ -222,6 +224,144 @@ export const getAllTasksFromAPI = createAsyncThunk(
         order += 1;
       });
       dispatch(setAppTasks(tasksSorted));
+    }
+  }
+);
+
+export const dragAndDropTaskInColumnAPI = createAsyncThunk(
+  'dragAndDropTaskInColumnAPI',
+  async (data: IGetTasksForDNDinColumn, { dispatch }) => {
+    const tasksAPI = await httpClient.getAllTasks(data.token, data.boardId, data.columnId);
+    console.log('tasksAPI', tasksAPI);
+    if (tasksAPI) {
+      const tasksSorted: Array<ITask> = tasksAPI.sort((a: ITask, b: ITask) => a.order - b.order);
+      console.log('data.oldIndex', data.oldIndex);
+      console.log('data.newIndex', data.newIndex);
+      console.log('tasksSorted before DnD', tasksSorted);
+      if (data.oldIndex > data.newIndex) {
+        const draggableTask: Array<ITask> = tasksSorted.splice(data.oldIndex, 1);
+        console.log('tasksSorted while DnD', tasksSorted);
+        tasksSorted.splice(data.newIndex, 0, draggableTask[0]);
+        console.log('draggableTask[0]', draggableTask[0]);
+      }
+      if (data.oldIndex < data.newIndex) {
+        const draggableTask: Array<ITask> = tasksSorted.splice(data.oldIndex, 1);
+        console.log('tasksSorted while DnD', tasksSorted);
+        tasksSorted.splice(data.newIndex, 0, draggableTask[0]);
+        console.log('draggableTask[0]', draggableTask[0]);
+      }
+      console.log('tasksSorted after DnD', tasksSorted);
+
+      const tasksAfterDnD = tasksSorted.map((task: ITask, index) => {
+        return {
+          id: task.id,
+          title: task.title,
+          order: index,
+          description: task.description,
+          userId: task.userId,
+          boardId: task.boardId,
+          columnId: task.columnId,
+        };
+      });
+
+      tasksAfterDnD.forEach((task: ITask) => {
+        dispatch(
+          updateTaskAPI({
+            token: data.token,
+            boardId: data.boardId,
+            columnId: data.columnId,
+            taskId: task.id,
+            taskTitle: task.title,
+            taskOrder: task.order,
+            taskDescription: task.description,
+            userId: task.userId,
+          })
+        );
+      });
+      dispatch(setAppTasks(tasksSorted));
+    }
+  }
+);
+
+export const dragAndDropTaskBetweenColumnsAPI = createAsyncThunk(
+  'dragAndDropTaskInColumnAPI',
+  async (data: IGetTasksForDNDinTwoColumns, { dispatch }) => {
+    const oldColumnTasksAPI = await httpClient.getAllTasks(
+      data.token,
+      data.boardId,
+      data.oldColumnId
+    );
+    const newColumnTasksAPI = await httpClient.getAllTasks(
+      data.token,
+      data.boardId,
+      data.newColumnId
+    );
+    console.log('oldColumnTasksAPI', oldColumnTasksAPI);
+    console.log('newColumnTasksAPI', newColumnTasksAPI);
+
+    if (oldColumnTasksAPI && newColumnTasksAPI) {
+      const oldTasksSorted: Array<ITask> = oldColumnTasksAPI.sort(
+        (a: ITask, b: ITask) => a.order - b.order
+      );
+      const newTasksSorted: Array<ITask> = newColumnTasksAPI.sort(
+        (a: ITask, b: ITask) => a.order - b.order
+      );
+
+      const draggableTask: ITask = oldTasksSorted[data.oldIndex];
+      newTasksSorted.splice(data.newIndex, 0, draggableTask);
+
+      console.log('oldColumnTasksAPI', oldColumnTasksAPI);
+      console.log('newColumnTasksAPI', newColumnTasksAPI);
+
+      dispatch(
+        deleteTaskAPI({
+          token: data.token,
+          boardId: data.boardId,
+          columnId: data.oldColumnId,
+          taskId: draggableTask.id,
+        })
+      );
+
+      dispatch(
+        createNewTaskAPI({
+          token: data.token,
+          board: data.board,
+          columnId: data.newColumnId,
+          taskTitle: draggableTask.title,
+          taskOrder: newColumnTasksAPI.length,
+          taskDescription: draggableTask.description,
+          userId: draggableTask.userId,
+        })
+      );
+
+      const addNewColumnTasksAPI = await httpClient.getAllTasks(
+        data.token,
+        data.boardId,
+        data.newColumnId
+      );
+      const addNewTasksSorted: Array<ITask> = addNewColumnTasksAPI.sort(
+        (a: ITask, b: ITask) => a.order - b.order
+      );
+
+      const newDraggedTask = addNewTasksSorted.splice(newTasksSorted.length - 1, 1);
+      newTasksSorted.splice(data.newIndex, 0, newDraggedTask[0]);
+
+      newTasksSorted.forEach((task: ITask, index) => {
+        dispatch(
+          updateTaskAPI({
+            token: data.token,
+            boardId: data.boardId,
+            columnId: data.newColumnId,
+            taskId: task.id,
+            taskTitle: task.title,
+            taskOrder: index + 1,
+            taskDescription: task.description,
+            userId: task.userId,
+          })
+        );
+        //dispatch(setAppTasks(newTasksSorted));
+      });
+      dispatch(setAppTasks(newTasksSorted));
     }
   }
 );
