@@ -19,7 +19,6 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
   const [language, setLanguage] = useState('English');
-  const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
 
   const changeLanguage = (language: string) => {
     i18n.changeLanguage(language);
@@ -52,11 +51,7 @@ const Header: React.FC = () => {
   const editProfileApp = () => {
     navigate('/edit');
   };
-  /*
-        <button className="button-add-board" type="button" handleAdd={handleBoardAdd}>
-        {t('Header.board')}
-      </button>
-      */
+
   return (
     <header className="header">
       <div className="header-logo">

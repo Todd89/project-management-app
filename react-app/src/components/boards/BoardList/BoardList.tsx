@@ -3,10 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TStore } from '../../../react/store';
 import { IBoard, IShortBoard } from '../../../interface/interfaces';
 import Board from '../Board/Board';
-
 import './boardList.css';
-
-import ButtonAdd from '../ButtonAdd/ButtonAdd';
 import ModalBoard from '../ModalBoard/ModalBoard';
 import BoardButton from '../BoardButton/boardButton';
 import {
@@ -41,10 +38,6 @@ function BoardList() {
     columns: [],
   };
 
-  /* function handleBoardAdd() {
-    setIsModalOn(true);
-  }
-*/
   function cancelModalState() {
     dispatch(setIsModalOn(false));
   }
@@ -58,7 +51,7 @@ function BoardList() {
     setIsBoardChosen(false);
     dispatch(setCurrentBoard({ id: '', title: '', columns: [] }));
   }
-  //<ButtonAdd buttonText={t('Board.add')} handleAdd={handleBoardAdd} />
+
   return (
     <>
       <section className="boards">
