@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TStore } from '../../../react/store';
-import { IBoard, ITask } from '../../../interface/interfaces';
+import { IBoard, ITask, IColumn } from '../../../interface/interfaces';
 import './board.css';
 import ButtonAdd from '../ButtonAdd/ButtonAdd';
 import ModalColumn from '../ModalColumn/ModalColumn';
@@ -90,6 +90,15 @@ function Board(props: IPropsBoard) {
 
   const onDragEnd = (result: DropResult) => {
     const { draggableId, source, destination } = result;
+    let sourceColumn: IColumn = { id: '', title: '', order: 0, tasks: [] };
+    let destinationColumn: IColumn = { id: '', title: '', order: 0, tasks: [] };
+    boardColumns.forEach((column: IColumn) => {
+      if (column.id === source.droppableId) sourceColumn = column;
+      if (column.id === destination?.droppableId) destinationColumn = column;
+    });
+    console.log('boardColumns', boardColumns);
+    console.log('sourceColumn', sourceColumn);
+    console.log('destinationColumn', destinationColumn);
     HTTPClient.getTaskByID(
       loginState.token,
       dataState.currentBoard.id,

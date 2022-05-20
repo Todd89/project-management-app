@@ -161,9 +161,9 @@ export const createNewTaskAPI = createAsyncThunk(
       userId: data.userId,
     });
     if (tasksAPI) {
-      dispatch(
+      /* dispatch(
         getAllTasksFromAPI({ token: data.token, boardId: data.board.id, columnId: data.columnId })
-      );
+      );*/
       dispatch(setIsChanged(true));
     }
   }
@@ -205,7 +205,7 @@ export const getAllTasksFromAPI = createAsyncThunk(
     if (tasksAPI) {
       let order = 1;
       const tasksSorted: Array<ITask> = tasksAPI.sort((a: ITask, b: ITask) => a.order - b.order);
-      tasksSorted.forEach((task: ITask) => {
+      tasksSorted.forEach((task: ITask, index) => {
         if (task.order !== order) {
           task.order = order;
           dispatch(
@@ -215,7 +215,7 @@ export const getAllTasksFromAPI = createAsyncThunk(
               columnId: data.columnId,
               taskId: task.id,
               taskTitle: task.title,
-              taskOrder: task.order,
+              taskOrder: index + 1,
               taskDescription: task.description,
               userId: task.userId,
             })
@@ -264,7 +264,7 @@ export const dragAndDropTaskInColumnAPI = createAsyncThunk(
         };
       });
 
-      tasksAfterDnD.forEach((task: ITask) => {
+      tasksAfterDnD.forEach((task: ITask, index) => {
         dispatch(
           updateTaskAPI({
             token: data.token,
@@ -272,7 +272,7 @@ export const dragAndDropTaskInColumnAPI = createAsyncThunk(
             columnId: data.columnId,
             taskId: task.id,
             taskTitle: task.title,
-            taskOrder: task.order,
+            taskOrder: index + 1,
             taskDescription: task.description,
             userId: task.userId,
           })
@@ -342,11 +342,13 @@ export const dragAndDropTaskBetweenColumnsAPI = createAsyncThunk(
       const addNewTasksSorted: Array<ITask> = addNewColumnTasksAPI.sort(
         (a: ITask, b: ITask) => a.order - b.order
       );
+      console.log('addNewTasksSorted', addNewTasksSorted);
+      console.log('addNewTasksSorted.length', addNewTasksSorted.length);
 
-      const newDraggedTask = addNewTasksSorted.splice(newTasksSorted.length - 1, 1);
-      newTasksSorted.splice(data.newIndex, 0, newDraggedTask[0]);
+      const newDraggedTask = addNewTasksSorted.splice(addNewTasksSorted.length - 1, 1);
+      addNewTasksSorted.splice(data.newIndex, 0, newDraggedTask[0]);
 
-      newTasksSorted.forEach((task: ITask, index) => {
+      addNewTasksSorted.forEach((task: ITask, index) => {
         dispatch(
           updateTaskAPI({
             token: data.token,
