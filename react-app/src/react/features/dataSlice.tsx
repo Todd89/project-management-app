@@ -161,9 +161,9 @@ export const createNewTaskAPI = createAsyncThunk(
       userId: data.userId,
     });
     if (tasksAPI) {
-      /* dispatch(
+      dispatch(
         getAllTasksFromAPI({ token: data.token, boardId: data.board.id, columnId: data.columnId })
-      );*/
+      );
       dispatch(setIsChanged(true));
     }
   }
@@ -232,25 +232,18 @@ export const dragAndDropTaskInColumnAPI = createAsyncThunk(
   'dragAndDropTaskInColumnAPI',
   async (data: IGetTasksForDNDinColumn, { dispatch }) => {
     const tasksAPI = await httpClient.getAllTasks(data.token, data.boardId, data.columnId);
-    console.log('tasksAPI', tasksAPI);
     if (tasksAPI) {
       const tasksSorted: Array<ITask> = tasksAPI.sort((a: ITask, b: ITask) => a.order - b.order);
-      console.log('data.oldIndex', data.oldIndex);
-      console.log('data.newIndex', data.newIndex);
-      console.log('tasksSorted before DnD', tasksSorted);
       if (data.oldIndex > data.newIndex) {
         const draggableTask: Array<ITask> = tasksSorted.splice(data.oldIndex, 1);
-        console.log('tasksSorted while DnD', tasksSorted);
+
         tasksSorted.splice(data.newIndex, 0, draggableTask[0]);
-        console.log('draggableTask[0]', draggableTask[0]);
       }
       if (data.oldIndex < data.newIndex) {
         const draggableTask: Array<ITask> = tasksSorted.splice(data.oldIndex, 1);
-        console.log('tasksSorted while DnD', tasksSorted);
+
         tasksSorted.splice(data.newIndex, 0, draggableTask[0]);
-        console.log('draggableTask[0]', draggableTask[0]);
       }
-      console.log('tasksSorted after DnD', tasksSorted);
 
       const tasksAfterDnD = tasksSorted.map((task: ITask, index) => {
         return {
@@ -296,8 +289,6 @@ export const dragAndDropTaskBetweenColumnsAPI = createAsyncThunk(
       data.boardId,
       data.newColumnId
     );
-    console.log('oldColumnTasksAPI', oldColumnTasksAPI);
-    console.log('newColumnTasksAPI', newColumnTasksAPI);
 
     if (oldColumnTasksAPI && newColumnTasksAPI) {
       const oldTasksSorted: Array<ITask> = oldColumnTasksAPI.sort(
@@ -309,9 +300,6 @@ export const dragAndDropTaskBetweenColumnsAPI = createAsyncThunk(
 
       const draggableTask: ITask = oldTasksSorted[data.oldIndex];
       newTasksSorted.splice(data.newIndex, 0, draggableTask);
-
-      console.log('oldColumnTasksAPI', oldColumnTasksAPI);
-      console.log('newColumnTasksAPI', newColumnTasksAPI);
 
       dispatch(
         deleteTaskAPI({
@@ -342,8 +330,6 @@ export const dragAndDropTaskBetweenColumnsAPI = createAsyncThunk(
       const addNewTasksSorted: Array<ITask> = addNewColumnTasksAPI.sort(
         (a: ITask, b: ITask) => a.order - b.order
       );
-      console.log('addNewTasksSorted', addNewTasksSorted);
-      console.log('addNewTasksSorted.length', addNewTasksSorted.length);
 
       const newDraggedTask = addNewTasksSorted.splice(addNewTasksSorted.length - 1, 1);
       addNewTasksSorted.splice(data.newIndex, 0, newDraggedTask[0]);
