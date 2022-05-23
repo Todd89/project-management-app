@@ -6,8 +6,10 @@ import ModalTask from '../ModalTask/ModalTask';
 import './task.css';
 import { DataBoards, deleteTaskAPI } from '../../../react/features/dataSlice';
 import { TStore } from '../../../react/store';
+import { Draggable } from 'react-beautiful-dnd';
 
 interface IPropsTask {
+  index: number;
   columnData: IColumn;
   taskData: ITaskInColumn;
 }
@@ -45,24 +47,34 @@ function Task(props: IPropsTask) {
   }
 
   return (
-    <article className="task" onClick={handleTaskChange}>
-      <ButtonDelete confirmationText={props.taskData.title} handleDelete={handleTaskDelete} />
-      <p className="task__header header-text">
-        {props.taskData.order}. {props.taskData.title}
-      </p>
-      {isModalOn && (
-        <ModalTask
-          taskData={props.taskData}
-          user={taskUser}
-          columnData={props.columnData}
-          cancelModalState={cancelModalState}
-          isNewTask={false}
-        />
+    <Draggable draggableId={props.taskData.id.toString()} index={props.index}>
+      {(provided) => (
+        <article
+          className="task"
+          onClick={handleTaskChange}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+        >
+          <ButtonDelete confirmationText={props.taskData.title} handleDelete={handleTaskDelete} />
+          <p className="task__header header-text">
+            {props.taskData.order}. {props.taskData.title}
+          </p>
+          {isModalOn && (
+            <ModalTask
+              taskData={props.taskData}
+              user={taskUser}
+              columnData={props.columnData}
+              cancelModalState={cancelModalState}
+              isNewTask={false}
+            />
+          )}
+          <p className="task__description">{props.taskData.description}</p>
+          <p className="task__description">{props.taskData.order}</p>
+          <p className="task__user">{taskUser.name}</p>
+        </article>
       )}
-
-      <p className="task__description">{props.taskData.description}</p>
-      <p className="task__user">{taskUser.name}</p>
-    </article>
+    </Draggable>
   );
 }
 
