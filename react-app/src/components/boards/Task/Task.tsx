@@ -69,7 +69,6 @@ function Task(props: IPropsTask) {
               isNewTask={false}
             />
           )}
-
           <p className="task__description">{props.taskData.description}</p>
           <p className="task__description">{props.taskData.order}</p>
           <p className="task__user">{taskUser.name}</p>

@@ -227,7 +227,7 @@ export const getAllTasksFromAPI = createAsyncThunk(
     }
   }
 );
-
+/*
 export const dragAndDropTaskInColumnAPI = createAsyncThunk(
   'dragAndDropTaskInColumnAPI',
   async (data: IGetTasksForDNDinColumn, { dispatch }) => {
@@ -346,13 +346,13 @@ export const dragAndDropTaskBetweenColumnsAPI = createAsyncThunk(
             taskDescription: task.description,
             userId: task.userId,
           })
-        );
-        //dispatch(setAppTasks(newTasksSorted));
+        );        
       });
       dispatch(setAppTasks(newTasksSorted));
     }
   }
 );
+*/
 
 export const dataSlice = createSlice({
   name: 'boardsFunctions',
