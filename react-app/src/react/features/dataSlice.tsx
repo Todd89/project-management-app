@@ -18,8 +18,6 @@ import {
   IUpdateBoard,
   IUpdateColumn,
   IUpdateTask,
-  IGetTasksForDNDinColumn,
-  IGetTasksForDNDinTwoColumns,
 } from '../../interface/interfaces';
 
 export interface DataBoards {

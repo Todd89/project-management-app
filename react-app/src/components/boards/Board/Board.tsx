@@ -16,9 +16,10 @@ import {
   deleteTaskAPI,
   updateTaskAPI,
   createNewTaskAPI,
+  updateColumnAPI,
 } from '../../../react/features/dataSlice';
 import { useTranslation } from 'react-i18next';
-import { DragDropContext, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
 import httpClient from '../../../API/api';
 
 interface IPropsBoard {
@@ -36,8 +37,7 @@ function Board(props: IPropsBoard) {
 
   const [boardColumns, setBoardColumns] = useState<IColumn[]>(props.boardData.columns);
   const [changeColumns, setChangeColumns] = useState<IColumn[]>();
-
-  //const orderedBoardColumns = [...props.boardData.columns].sort((a, b) => a.order - b.order);
+  const randomNumberForColumnOrder = Math.round(Math.random() * 1000000);
 
   useEffect(() => {
     setCurrentBoardTitle(dataState.currentBoard.title);
@@ -91,12 +91,12 @@ function Board(props: IPropsBoard) {
   const token = useSelector((state: TStore) => state.loginData.token);
 
   const onDragEnd = (result: DropResult) => {
-    const { draggableId, source, destination } = result;
+    const { draggableId, source, destination, type } = result;
     let sourceColumn: IColumn = { id: '', title: '', order: 0, tasks: [] };
     let sourceColumnIndex = 0;
     let destinationColumn: IColumn = { id: '', title: '', order: 0, tasks: [] };
     let destinationColumnIndex = 0;
-    const boardColumnsCopy: IColumn[] = JSON.parse(JSON.stringify([...boardColumns]));
+    const boardColumnsCopy: IColumn[] = JSON.parse(JSON.stringify(boardColumns));
 
     if (!destination) return;
     if (destination.droppableId === source.droppableId && destination.index === source.index)
@@ -120,26 +120,20 @@ function Board(props: IPropsBoard) {
     if (
       destination &&
       destination.droppableId === source.droppableId &&
-      destination.index !== source.index
+      destination.index !== source.index &&
+      type === 'tasks'
     ) {
       const draggedTask: ITaskInColumn[] = sourceColumn.tasks.filter((task) => {
         return task.id === draggableId;
       });
-      const columnTasksCopy: ITaskInColumn[] = JSON.parse(JSON.stringify([...sourceColumn.tasks]));
+      const columnTasksCopy: ITaskInColumn[] = JSON.parse(JSON.stringify(sourceColumn.tasks));
 
       const filterColumnTasksCopy = columnTasksCopy.sort(
         (a: ITaskInColumn, b: ITaskInColumn) => a.order - b.order
       );
 
-      if (source.index > destination.index) {
-        filterColumnTasksCopy.splice(source.index, 1);
-        filterColumnTasksCopy.splice(destination.index, 0, draggedTask[0]);
-      }
-
-      if (source.index < destination.index) {
-        filterColumnTasksCopy.splice(source.index, 1);
-        filterColumnTasksCopy.splice(destination.index, 0, draggedTask[0]);
-      }
+      filterColumnTasksCopy.splice(source.index, 1);
+      filterColumnTasksCopy.splice(destination.index, 0, draggedTask[0]);
 
       const mapColumnTasksAfterDnD = filterColumnTasksCopy.map(
         (task: ITaskInColumn, index: number) => {
@@ -194,20 +188,20 @@ function Board(props: IPropsBoard) {
     //++++++++++++++++++++++++++++++++++++++++++++
     //        Drag-and-Drop между колонками
     //+++++++++++++++++++++++++++++++++++++++++++
-    if (destination.droppableId !== source.droppableId) {
+    if (destination.droppableId !== source.droppableId && type === 'tasks') {
       if (destination)
         httpClient
           .getTaskByID(loginState.token, dataState.currentBoard.id, source.droppableId, draggableId)
           .then((responseDragTask: ITask) => {
             const sourceColumnTasks: ITaskInColumn[] = JSON.parse(
-              JSON.stringify([...sourceColumn.tasks])
+              JSON.stringify(sourceColumn.tasks)
             );
             const sortSourceColumnTasks = sourceColumnTasks.sort(
               (a: ITaskInColumn, b: ITaskInColumn) => a.order - b.order
             );
 
             const destinationColumnTasks: ITaskInColumn[] = JSON.parse(
-              JSON.stringify([...destinationColumn.tasks])
+              JSON.stringify(destinationColumn.tasks)
             );
             const sortDestinationColumnTasks = destinationColumnTasks.sort(
               (a: ITaskInColumn, b: ITaskInColumn) => a.order - b.order
@@ -326,45 +320,84 @@ function Board(props: IPropsBoard) {
             getAllTasksForDnD();
           });
     }
+    //++++++++++++++++++++++++++++++++++++++++++++
+    //        Drag-and-Drop колонок
+    //+++++++++++++++++++++++++++++++++++++++++++
+    if (
+      destination &&
+      destination.droppableId === source.droppableId &&
+      destination.index !== source.index &&
+      type === 'columns'
+    ) {
+      const boardColumnsAfterDnD: IColumn[] = JSON.parse(JSON.stringify(boardColumnsCopy));
+      const draggedColumn = boardColumnsAfterDnD.splice(source.index, 1);
+      boardColumnsAfterDnD.splice(destination.index, 0, draggedColumn[0]);
+
+      setChangeColumns(boardColumnsAfterDnD);
+
+      boardColumnsAfterDnD.forEach((column: IColumn, index: number) => {
+        dispatch(
+          updateColumnAPI({
+            token: token,
+            boardId: dataState.currentBoard.id,
+            columnId: column.id,
+            columnTitle: column.title,
+            columnOrder: index + randomNumberForColumnOrder,
+          })
+        );
+      });
+    }
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="container">
-        <article className="board" onClick={handleBoardClick}>
-          <div className="board__header">
-            <nav className="column__nav">
-              <ButtonAdd buttonText={t('Column.add')} handleAdd={handleColumnAdd} />
-            </nav>
-            {isEditBoardModeOn ? (
-              <input
-                type="text"
-                className="board__name board-header-input"
-                value={currentBoardTitle}
-                autoFocus
-                onChange={handleHeaderEdit}
-                onBlur={handleHeaderEndEdit}
-                onKeyDown={handleKeyEvent}
-              />
-            ) : (
-              <span className="board__name board-header-text" onClick={handleHeaderStartEdit}>
-                {currentBoardTitle}
-              </span>
-            )}
-          </div>
+      <Droppable droppableId={props.boardData.id.toString()} direction="horizontal" type="columns">
+        {(provided) => (
+          <div className="board-container" ref={provided.innerRef} {...provided.droppableProps}>
+            <article className="board" onClick={handleBoardClick}>
+              <div className="board__header">
+                <nav className="column__nav">
+                  <ButtonAdd buttonText={t('Column.add')} handleAdd={handleColumnAdd} />
+                </nav>
+                {isEditBoardModeOn ? (
+                  <input
+                    type="text"
+                    className="board__name board-header-input"
+                    value={currentBoardTitle}
+                    autoFocus
+                    onChange={handleHeaderEdit}
+                    onBlur={handleHeaderEndEdit}
+                    onKeyDown={handleKeyEvent}
+                  />
+                ) : (
+                  <span className="board__name board-header-text" onClick={handleHeaderStartEdit}>
+                    {currentBoardTitle}
+                  </span>
+                )}
+              </div>
 
-          <div className="columns">
-            <div className="columns__list">
-              {boardColumns.map((column) => {
-                return <Column key={column.id} columnData={column} boardData={props.boardData} />;
-              })}
-            </div>
+              <div className="columns">
+                <div className="columns__list">
+                  {boardColumns.map((column, index) => {
+                    return (
+                      <Column
+                        key={column.id}
+                        columnData={column}
+                        boardData={props.boardData}
+                        index={index}
+                      />
+                    );
+                  })}
+                  {provided.placeholder}
+                </div>
+              </div>
+              {isModalOn && (
+                <ModalColumn boardData={props.boardData} cancelModalState={cancelModalState} />
+              )}
+            </article>
           </div>
-          {isModalOn && (
-            <ModalColumn boardData={props.boardData} cancelModalState={cancelModalState} />
-          )}
-        </article>
-      </div>
+        )}
+      </Droppable>
     </DragDropContext>
   );
 }
