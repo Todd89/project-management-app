@@ -34,15 +34,24 @@ function Board(props: IPropsBoard) {
   const [isEditBoardModeOn, setIsEditBoardModeOn] = useState(false);
   const [isModalOn, setIsModalOn] = useState(false);
   const [currentBoardTitle, setCurrentBoardTitle] = useState('');
-
-  const [boardColumns, setBoardColumns] = useState<IColumn[]>(props.boardData.columns);
   const [changeColumns, setChangeColumns] = useState<IColumn[]>();
+  const [boardColumns, setBoardColumns] = useState<IColumn[]>();
   const randomNumberForColumnOrder = Math.round(Math.random() * 1000000);
+  const boardColumnsCopy: IColumn[] = JSON.parse(JSON.stringify(props.boardData.columns));
+  const startBoardColumnsCopy = boardColumnsCopy.sort(
+    (a: IColumn, b: IColumn) => a.order - b.order
+  );
 
   useEffect(() => {
     setCurrentBoardTitle(dataState.currentBoard.title);
-    setBoardColumns(changeColumns ?? props.boardData.columns);
-  }, [dataState.currentBoard.title, changeColumns, props.boardData]);
+    setBoardColumns(changeColumns);
+  }, [
+    dataState.currentBoard.title,
+    changeColumns,
+    props.boardData,
+    dataState.currentColumn,
+    dataState.currentBoard,
+  ]);
 
   function handleBoardClick() {
     dispatch(setCurrentBoard(props.boardData));
@@ -96,8 +105,7 @@ function Board(props: IPropsBoard) {
     let sourceColumnIndex = 0;
     let destinationColumn: IColumn = { id: '', title: '', order: 0, tasks: [] };
     let destinationColumnIndex = 0;
-    const boardColumnsCopy: IColumn[] = JSON.parse(JSON.stringify(boardColumns));
-
+    console.log('Исходные колонки boardColumnsCopy', boardColumnsCopy);
     if (!destination) return;
     if (destination.droppableId === source.droppableId && destination.index === source.index)
       return;
@@ -329,20 +337,34 @@ function Board(props: IPropsBoard) {
       destination.index !== source.index &&
       type === 'columns'
     ) {
-      const boardColumnsAfterDnD: IColumn[] = JSON.parse(JSON.stringify(boardColumnsCopy));
+      const boardColumnsBeforeDnD: IColumn[] = JSON.parse(JSON.stringify(boardColumnsCopy));
+      const boardColumnsAfterDnD = boardColumnsBeforeDnD.sort(
+        (a: IColumn, b: IColumn) => a.order - b.order
+      );
       const draggedColumn = boardColumnsAfterDnD.splice(source.index, 1);
       boardColumnsAfterDnD.splice(destination.index, 0, draggedColumn[0]);
 
-      setChangeColumns(boardColumnsAfterDnD);
+      console.log('boardColumnsAfterDnD', boardColumnsAfterDnD);
 
-      boardColumnsAfterDnD.forEach((column: IColumn, index: number) => {
+      const mapBoardColumnsAfterDnD: IColumn[] = boardColumnsAfterDnD.map(
+        (column: IColumn, index: number) => {
+          return {
+            id: column.id,
+            order: index + randomNumberForColumnOrder,
+            tasks: column.tasks,
+            title: column.title,
+          };
+        }
+      );
+      setChangeColumns(mapBoardColumnsAfterDnD);
+      mapBoardColumnsAfterDnD.forEach((column: IColumn, index: number) => {
         dispatch(
           updateColumnAPI({
             token: token,
             boardId: dataState.currentBoard.id,
             columnId: column.id,
             columnTitle: column.title,
-            columnOrder: index + randomNumberForColumnOrder,
+            columnOrder: column.order,
           })
         );
       });
@@ -378,7 +400,7 @@ function Board(props: IPropsBoard) {
 
               <div className="columns">
                 <div className="columns__list">
-                  {boardColumns.map((column, index) => {
+                  {(boardColumns ?? startBoardColumnsCopy).map((column, index) => {
                     return (
                       <Column
                         key={column.id}
