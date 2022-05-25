@@ -58,7 +58,7 @@ function Task(props: IPropsTask) {
         >
           <ButtonDelete confirmationText={props.taskData.title} handleDelete={handleTaskDelete} />
           <p className="task__header header-text">
-            {props.taskData.order}. {props.taskData.title}
+            {props.index + 1}. {props.taskData.title}
           </p>
           {isModalOn && (
             <ModalTask
