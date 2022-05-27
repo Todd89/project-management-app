@@ -54,27 +54,34 @@ const Header: React.FC = () => {
 
   return (
     <header className="header">
-      <div className="header-logo">
-        <AppLogo />
+      <div className="header-controls">
+        <div className="header-logo">
+          <AppLogo />
+        </div>
+        <button onClick={editProfileApp} className="button-edit-profile" type="button">
+          {t('Header.edit')}
+        </button>
+        <ButtonAdd buttonText={t('Board.add')} handleAdd={handleBoardAdd} />
       </div>
-      <button onClick={editProfileApp} className="button-edit-profile" type="button">
-        {t('Header.edit')}
-      </button>
-      <ButtonAdd buttonText={t('Board.add')} handleAdd={handleBoardAdd} />
+
       <div className="switcher-wrapper">
-        <input
-          type="checkbox"
-          className="formSwitcher"
-          defaultChecked={checked}
-          onChange={changeCheckbox}
-          id={`formSwitcher`}
-        />
         <label className="formSwitcher-label" htmlFor={`formSwitcher`}>
-          <span className="formSwitcher-text">{language}</span>
+          <div className="formSwitcher-text">{language}</div>
         </label>
+        <div>
+          <input
+            type="checkbox"
+            className="formSwitcher"
+            defaultChecked={checked}
+            onChange={changeCheckbox}
+            id={`formSwitcher`}
+          />
+        </div>
       </div>
-      <div className="current-user">{userState.name}</div>
-      <LogOutButton logoutApp={logoutApp} />
+      <div className="user-control">
+        <div className="current-user">Hello, {userState.name}</div>
+        <LogOutButton logoutApp={logoutApp} />
+      </div>
     </header>
   );
 };

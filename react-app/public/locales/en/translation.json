@@ -1,6 +1,6 @@
 {
   "welcomeRoute": {
-    "description": "Project management app - application that helps an individual in a team or group of developers achieve their goals.",
+    "description": "Application that helps an individual in a team or group of developers achieve their goals. The application is designed to organize and schedule the execution of various tasks. Suitable for both adding daily notes and working on complex projects.",
     "team": "Our team",
     "RSS": "Project management app is an application that helps an individual in a team or group of developers achieve their goals."
   },
