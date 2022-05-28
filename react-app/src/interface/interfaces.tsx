@@ -134,6 +134,7 @@ export interface IGetTasks {
   token: string;
   boardId: string;
   columnId: string;
+  exceptOrder: number;
 }
 
 export interface ICreateTask {
@@ -146,7 +147,7 @@ export interface ICreateTask {
   userId: string;
 }
 
-export interface IUpdateTask {
+export interface IUpdateTaskAPI {
   token: string;
   boardId: string;
   columnId: string;
@@ -155,6 +156,10 @@ export interface IUpdateTask {
   taskOrder: number;
   taskDescription: string;
   userId: string;
+}
+
+export interface IUpdateAllTasks {
+  tasksArray: Array<IUpdateTaskAPI>;
 }
 
 export interface IDeleteTask {

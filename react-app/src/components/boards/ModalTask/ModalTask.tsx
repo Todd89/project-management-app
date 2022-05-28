@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TStore } from '../../../react/store';
 import { IAppUser, IColumn, ITaskInColumn, TUsers } from '../../../interface/interfaces';
@@ -63,16 +63,21 @@ function ModalTask(props: IModalTaskProps) {
   }
 
   function handleUserChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const selected = event.target.selectedOptions[0];
+    const selectedId = event.target.selectedOptions[0].value;
+    const userInd = usersState.usersArray.findIndex((user) => user.id === selectedId);
+    const taskUser = userInd >= 0 ? usersState.usersArray[userInd] : usersState.usersArray[0];
+
     setCurrentData({
       title: currentData.title,
       description: currentData.description,
       order: currentData.order,
-      user:
-        usersState.usersArray.find((user) => user.id === selected.value) ||
-        usersState.usersArray[0],
+      user: taskUser,
     });
   }
+
+  useEffect(() => {
+    console.log('handleUserChange', currentData.user);
+  }, [currentData]);
 
   function handleDataSave() {
     setIsFinished(true);
@@ -147,7 +152,7 @@ function ModalTask(props: IModalTaskProps) {
               onKeyDown={handleKeyDown}
             />
             <span className="modal__task task-title">{t('Task.titleUser')}</span>
-            <select value={currentData.user.name} onChange={handleUserChange}>
+            <select value={currentData.user.id} onChange={handleUserChange}>
               {userSelectOptions}
             </select>
           </article>

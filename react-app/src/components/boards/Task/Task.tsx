@@ -21,9 +21,8 @@ function Task(props: IPropsTask) {
   const [isModalOn, setIsModalOn] = useState(false);
 
   const dispatch = useDispatch();
-  const taskUser =
-    userState.usersArray.find((user) => user.id === props.taskData.userId) ||
-    userState.usersArray[0];
+  const userInd = userState.usersArray.findIndex((user) => user.id === props.taskData.userId);
+  const taskUser = userInd >= 0 ? userState.usersArray[userInd] : userState.usersArray[0];
 
   function handleTaskDelete(answer: boolean) {
     if (answer) {
@@ -47,7 +46,7 @@ function Task(props: IPropsTask) {
   }
 
   return (
-    <Draggable draggableId={props.taskData.id.toString()} index={props.index}>
+    <Draggable draggableId={props.taskData.id} key={props.taskData.id} index={props.index}>
       {(provided) => (
         <article
           className="task"
@@ -61,9 +60,7 @@ function Task(props: IPropsTask) {
             handleDelete={handleTaskDelete}
           />
           <div className="task__header-task-block">
-            <p className="task__header header-text">
-              {props.taskData.order}. {props.taskData.title}
-            </p>
+            <p className="task__header header-text">{props.taskData.title}</p>
             {isModalOn && (
               <ModalTask
                 taskData={props.taskData}
@@ -74,7 +71,6 @@ function Task(props: IPropsTask) {
               />
             )}
             <p className="task__description">{props.taskData.description}</p>
-            {/* <p className="task__description">{props.taskData.order}</p> */}
             <p className="task__user">User: {taskUser.name}</p>
           </div>
         </article>
