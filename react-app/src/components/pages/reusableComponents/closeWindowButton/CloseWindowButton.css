@@ -17,7 +17,8 @@
   }
   
   .close-btn:hover{
-    background-color: rgba(0, 0, 255, 0.15); 
+    background-color: rgba(0, 0, 255, 0.2);
+    transform: rotate(90deg);
   }
 
   .close-btn:active{
@@ -25,6 +26,7 @@
     box-shadow: 0rem 0rem 0.5rem 0.5rem rgba(0, 0, 255, 0.37);    
     background-image: url('/public/assets/close.png');
     transform: scale(0.9);
+    transform: rotate(270deg);
   }
 
  
