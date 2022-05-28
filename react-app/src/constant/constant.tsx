@@ -10,7 +10,7 @@ const API_METHODS = {
 };
 
 const USER_STATUS = {
-  AUTHORIZE: 'Authorize',
+  AUTHORIZE: 'Authorized',
   UNAUTHORIZED: 'Unauthorized',
   REGISTERED: 'Registered',
   UNREGISTER: 'Unregister',

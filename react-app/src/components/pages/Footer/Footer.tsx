@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
       <div className="footer-github">
         <GitHub className="git-hub_svg" />
         <a href="https://github.com/todd89" target="_Blank" rel="noreferrer">
-          Alexandr
+          Aleksandr
         </a>
         <a href="https://github.com/dairin-dei" target="_Blank" rel="noreferrer">
           Olga

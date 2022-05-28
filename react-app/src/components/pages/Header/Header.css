@@ -1,14 +1,22 @@
 .header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     width: 100%;
-    height: 6vh;
+    height: 13vh;
     background-color: rgba(0, 0, 255, 0.466);
 }
 
+.header-controls{
+  width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
 .header-logo {
-    flex: 0 0 1.7rem;
-    height: 1.7rem;
+    flex: 0 0 2.5rem;
+    height: 2.5rem;
     border-radius: 50%;
     margin: 0 0.7rem;
     overflow: hidden;
@@ -18,26 +26,26 @@
 
 .header-logo:hover {
     transform: scale(1.1);
+    transform: rotate(360deg);
 }
 
-.button-edit-profile,
-.button-add-board {
-    margin-right: 0.7rem;
-    height: 1.2rem;
-    font-size: 0.9rem;
-    border-radius: 0.4rem;
-    cursor: pointer;
-    transition: all 0.7s;
+.button-edit-profile {
+  top: 1rem;
+  padding: 8px;
+  margin-right: 0.5rem;
+  border: 1px solid rgb(0, 149, 255);
+  border-radius: 20px;
+  background: rgb(251,1,250);
+  background: linear-gradient(90deg, rgba(251,1,250,1) 0%, rgba(217,109,226,1) 58%, rgba(0,195,246,1) 100%);
+  transition: .3s;
+  letter-spacing: .7px;
+  cursor: pointer;
 }
 
-.button-edit-profile,
-.button-add-board {
-    min-width: 6rem;
-}
-
-.button-edit-profile:hover,
-.button-add-board:hover {
-    background-color:rgba(0, 0, 255, 0.2); 
+.button-edit-profile:hover {
+    transform: scale(1.1);
+    background: rgb(0,195,246);
+    background: linear-gradient(90deg, rgba(0,195,246,1) 0%, rgba(191,76,191,1) 44%, rgba(238,8,238,1) 100%);
 }
 
 .button-edit-profile:active,
@@ -48,7 +56,7 @@
 }
 
 .current-user {
-    color: blue;
+    color: rgb(255, 242, 0);
     margin-right: 0.5rem;
 }
 
@@ -58,8 +66,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 20%;
     height: 2rem;
+}
+.user-control{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 20%;
 }
 .formSwitcher {
     display: none;
@@ -86,6 +100,7 @@
 }
 
 .formSwitcher-label {
+  margin-left: 10px;
     display: inline-block;
     vertical-align: top;
     padding-left: 50px;
@@ -141,3 +156,36 @@
 }
 
 /*-------------------------------------*/
+
+@media (max-width: 950px) {
+  .header-controls{
+    width: 50%;
+  }
+}
+
+@media (max-width: 610px) {
+  .header-controls{
+    width: 60%;
+  }
+}
+
+@media (max-width: 390px) {
+  .header-controls{
+    width: 70%;
+  }
+  .switcher-wrapper{
+    width: 15%;
+    
+}
+.formSwitcher-text{
+  margin-left: 7px;
+  font-size: 14px;
+}
+.current-user{
+  display: none;
+}
+  .user-control{
+    width: 15%;
+    margin-right: -10px;
+}
+}

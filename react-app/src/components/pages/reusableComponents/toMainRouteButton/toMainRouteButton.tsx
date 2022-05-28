@@ -6,7 +6,7 @@ const ToMainRoute: React.FC = () => {
   const navigate = useNavigate();
   return (
     <button className="button-toMain" type="button" onClick={() => navigate('/main')}>
-      Go to Main Page
+      To Main Page
     </button>
   );
 };

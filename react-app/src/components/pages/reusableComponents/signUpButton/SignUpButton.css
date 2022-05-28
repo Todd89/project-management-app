@@ -11,7 +11,7 @@
     background-repeat: no-repeat;
     background-size: 1.5rem;   
     cursor: pointer;
-    transition: all 1s;
+    transition: all 0.3s;
 }
 
 
@@ -22,7 +22,7 @@
 }
 
 .button-signUp:hover{
-    background-color: rgba(0, 0, 255, 0.15);    
+    transform: scale(1.1);    
 }
 
 .button-signUp:active{

@@ -21,6 +21,8 @@ interface IPropsColumn {
   boardData: IBoard;
   index: number;
 }
+import ButtonAddTask from '../../pages/reusableComponents/buttonAddTask/buttonAddTask';
+import ButtonDeleteInColumn from '../buttonDeleteInColumn/buttonDeleteInColumn';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 function Column(props: IPropsColumn) {
@@ -105,69 +107,53 @@ function Column(props: IPropsColumn) {
           {...provided.dragHandleProps}
           ref={provided.innerRef}
         >
-          <Droppable droppableId={props.columnData.id.toString()} type="tasks">
-            {(provided) => (
-              <article
-                className="column"
-                onClick={handleColumnClick}
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
-                <div className="column__header">
-                  <nav className="column__nav">
-                    <ButtonDelete
-                      confirmationText={currentColumnTitle}
-                      handleDelete={handleColumnDelete}
-                    />
-                  </nav>
-                  {isEditColumnModeOn ? (
-                    <input
-                      type="text"
-                      className="header-input"
-                      value={currentColumnTitle}
-                      autoFocus
-                      onChange={handleHeaderEdit}
-                      onBlur={handleHeaderEndEdit}
-                      onKeyDown={handleKeyEvent}
-                    />
-                  ) : (
-                    <p className="header-text" onClick={handleHeaderStartEdit}>
-                      {props.index + 1}. {currentColumnTitle}
-                    </p>
-                  )}
-                </div>
-                <div className="column__wrapper">
-                  <div className="column__tasks">
-                    {columnTasks.map((task, index) => {
-                      return (
-                        <Task
-                          index={index}
-                          key={task.id}
-                          taskData={task}
-                          columnData={props.columnData}
-                        />
-                      );
-                    })}
-                    {provided.placeholder}
-                  </div>
-                </div>
-                <ButtonAdd buttonText={t('Task.add')} handleAdd={handleTaskAdd} />
-                {isModalOn && (
-                  <ModalTask
-                    taskData={emptyTask}
-                    user={
-                      userState.usersArray.find((user: IAppUser) => user.id === currentUser.id) ||
-                      userState.usersArray[0]
-                    }
-                    columnData={props.columnData}
-                    cancelModalState={cancelModalState}
-                    isNewTask={true}
-                  />
-                )}
-              </article>
+          <div className="column__header">
+            <nav className="column__nav">
+              <ButtonDeleteInColumn
+                confirmationText={currentColumnTitle}
+                handleDelete={handleColumnDelete}
+              />
+            </nav>
+            {isEditColumnModeOn ? (
+              <input
+                type="text"
+                className="header-input"
+                value={currentColumnTitle}
+                autoFocus
+                onChange={handleHeaderEdit}
+                onBlur={handleHeaderEndEdit}
+                onKeyDown={handleKeyEvent}
+              />
+            ) : (
+              <p className="header-text" onClick={handleHeaderStartEdit}>
+                {props.columnData.order}. {currentColumnTitle}
+              </p>
             )}
-          </Droppable>
-        </div>
+          </div>
+          <div className="column__wrapper">
+            <div className="column__tasks">
+              {columnTasks.map((task, index) => {
+                return (
+                  <Task index={index} key={task.id} taskData={task} columnData={props.columnData} />
+                );
+              })}
+              {provided.placeholder}
+            </div>
+          </div>
+          <ButtonAddTask buttonText={t('Task.add')} handleAdd={handleTaskAdd} />
+          {isModalOn && (
+            <ModalTask
+              taskData={emptyTask}
+              user={
+                userState.usersArray.find((user: IAppUser) => user.id === currentUser.id) ||
+                userState.usersArray[0]
+              }
+              columnData={props.columnData}
+              cancelModalState={cancelModalState}
+              isNewTask={true}
+            />
+          )}
+        </article>
       )}
     </Draggable>
   );

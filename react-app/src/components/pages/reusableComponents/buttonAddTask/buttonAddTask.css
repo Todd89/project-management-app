@@ -1,0 +1,13 @@
+.button-add-task {
+  padding: 8px;
+  background-color: rgb(34, 195, 195);
+  border: none;
+  border-top: 1px solid black;
+  cursor: pointer;
+  transition: .3s;
+}
+
+
+.button-add-task:hover{
+    background-color: rgb(16, 236, 236);
+}
