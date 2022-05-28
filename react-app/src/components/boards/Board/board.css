@@ -10,8 +10,7 @@
   align-items: flex-start;
   margin-left: 5px;
   min-height: 60px;
-  min-width: 95vw;
-  max-width: 95vw;
+  width: 95vw;
   border: 1px solid var(--color-grey);
   background-color: transparent;
   font-size: 14px;
@@ -33,6 +32,7 @@
   background-color: rgba(41, 127, 150, 0.715);
   font-size: 30px;
   font-weight: 700;
+  box-sizing: border-box;
 }
 
 .board__name {
