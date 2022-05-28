@@ -9,6 +9,7 @@
   transition: .3s;
   letter-spacing: .7px;
   transition: .3s;
+  cursor: pointer;
 }
 
 .button-add:hover {

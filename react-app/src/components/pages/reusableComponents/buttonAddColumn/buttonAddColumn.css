@@ -1,0 +1,14 @@
+.button-add-column {
+  padding: 8px;
+  background-color: rgb(34, 195, 195);
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+
+.button-add-column:hover{
+    transform: scale(1.05);  
+    background-color: rgb(16, 236, 236);
+}

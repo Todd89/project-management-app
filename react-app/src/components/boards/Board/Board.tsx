@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TStore } from '../../../react/store';
 import { IBoard, ITask, IColumn, ITaskInColumn } from '../../../interface/interfaces';
 import './board.css';
-import ButtonAdd from '../ButtonAdd/ButtonAdd';
+import ButtonAddColumn from '../../pages/reusableComponents/buttonAddColumn/buttonAddColumn';
 import ModalColumn from '../ModalColumn/ModalColumn';
 import Column from '../Column/Column';
 
@@ -331,28 +331,28 @@ function Board(props: IPropsBoard) {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="container">
+        <div className="board__header">
+          {isEditBoardModeOn ? (
+            <input
+              type="text"
+              className="board__name board-header-input"
+              value={currentBoardTitle}
+              autoFocus
+              onChange={handleHeaderEdit}
+              onBlur={handleHeaderEndEdit}
+              onKeyDown={handleKeyEvent}
+            />
+          ) : (
+            <span className="board__name board-header-text" onClick={handleHeaderStartEdit}>
+              <span className="board-header-text-name">Board name: </span>
+              {currentBoardTitle}
+            </span>
+          )}
+          <nav className="column__nav">
+            <ButtonAddColumn buttonText={t('Column.add')} handleAdd={handleColumnAdd} />
+          </nav>
+        </div>
         <article className="board" onClick={handleBoardClick}>
-          <div className="board__header">
-            <nav className="column__nav">
-              <ButtonAdd buttonText={t('Column.add')} handleAdd={handleColumnAdd} />
-            </nav>
-            {isEditBoardModeOn ? (
-              <input
-                type="text"
-                className="board__name board-header-input"
-                value={currentBoardTitle}
-                autoFocus
-                onChange={handleHeaderEdit}
-                onBlur={handleHeaderEndEdit}
-                onKeyDown={handleKeyEvent}
-              />
-            ) : (
-              <span className="board__name board-header-text" onClick={handleHeaderStartEdit}>
-                {currentBoardTitle}
-              </span>
-            )}
-          </div>
-
           <div className="columns">
             <div className="columns__list">
               {boardColumns.map((column) => {

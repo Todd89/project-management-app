@@ -10,6 +10,7 @@
   font-weight: 600;
   transition: .3s;
   letter-spacing: .7px;
+  cursor: pointer;
 }
 .button-toMain:hover {
   border: 3px solid rgb(0, 149, 255);;

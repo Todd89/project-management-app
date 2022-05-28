@@ -21,6 +21,8 @@ interface IPropsColumn {
   boardData: IBoard;
 }
 import { Droppable } from 'react-beautiful-dnd';
+import ButtonAddTask from '../../pages/reusableComponents/buttonAddTask/buttonAddTask';
+import ButtonDeleteInColumn from '../buttonDeleteInColumn/buttonDeleteInColumn';
 
 function Column(props: IPropsColumn) {
   const loginState = useSelector((state: TStore) => state.loginData);
@@ -106,7 +108,7 @@ function Column(props: IPropsColumn) {
         >
           <div className="column__header">
             <nav className="column__nav">
-              <ButtonDelete
+              <ButtonDeleteInColumn
                 confirmationText={currentColumnTitle}
                 handleDelete={handleColumnDelete}
               />
@@ -137,7 +139,7 @@ function Column(props: IPropsColumn) {
               {provided.placeholder}
             </div>
           </div>
-          <ButtonAdd buttonText={t('Task.add')} handleAdd={handleTaskAdd} />
+          <ButtonAddTask buttonText={t('Task.add')} handleAdd={handleTaskAdd} />
           {isModalOn && (
             <ModalTask
               taskData={emptyTask}

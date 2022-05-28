@@ -65,18 +65,17 @@ const Header: React.FC = () => {
       </div>
 
       <div className="switcher-wrapper">
-        <label className="formSwitcher-label" htmlFor={`formSwitcher`}>
-          <div className="formSwitcher-text">{language}</div>
-        </label>
         <div>
-          <input
-            type="checkbox"
-            className="formSwitcher"
-            defaultChecked={checked}
-            onChange={changeCheckbox}
-            id={`formSwitcher`}
-          />
+          <div className="formSwitcher-text">{language}</div>
+          <label className="formSwitcher-label" htmlFor={`formSwitcher`}></label>
         </div>
+        <input
+          type="checkbox"
+          className="formSwitcher"
+          defaultChecked={checked}
+          onChange={changeCheckbox}
+          id={`formSwitcher`}
+        />
       </div>
       <div className="user-control">
         <div className="current-user">Hello, {userState.name}</div>
