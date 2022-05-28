@@ -1,17 +1,20 @@
 .column {
   display: flex;
   flex-direction: column;
-  max-height: 50vh;
-  width: 200px;
+  max-height: 60vh;
+  width: 300px;
   border: 1px solid var(--color-grey);
   background-color: var(--color-silver);
   font-size: 18px;
   color: var(--color-black);
+  /* overflow-y: auto; */
 }
 
 .column__wrapper {
+  height: 70%;
   overflow-y: auto;
   overflow-x: hidden;
+  flex: 1 0 auto;
 }
 
 .column:hover {
@@ -26,6 +29,8 @@
 .column__header {
   display: flex;
   flex-direction: column;
+  flex: 0 0 auto;
+  height: 15%;
   width: 100%;
   margin: 0;
   border-bottom: 1px solid var(--color-grey);

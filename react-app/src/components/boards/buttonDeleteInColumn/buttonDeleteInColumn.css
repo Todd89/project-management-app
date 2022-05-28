@@ -1,4 +1,4 @@
-.button-delete {
+.button-delete-column {
   align-self: flex-end;
   width: 30px;
   height: 30px;
@@ -9,8 +9,9 @@
   background-repeat: no-repeat;
   background-size: contain;
   background-color: rgba(0, 128, 0, 0);
-  background-image: url('../../../../public/button-delete.svg');
+  background-image: url('../../../../public/trash-column.svg');
   transition: .3s;
+  cursor: pointer;
 }
 
 .button-delete:hover {
