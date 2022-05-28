@@ -12,7 +12,6 @@
 .welcome-page { 
     display: flex;
     flex-direction: column; 
-
     justify-content: center;
     align-items: center;
     min-height: 94vh;
@@ -26,6 +25,13 @@
     background: linear-gradient(10deg, rgba(182,192,194,1) 0%, rgba(136,136,255,1) 50%, rgba(136,136,255,1) 100%);
 }
 
+li {
+  list-style-type: none; 
+ }
+ li:before {
+  content: '✔';
+ }
+
 .welcome-logo {
     margin-top: 5vh;
     margin-bottom: 5vh;
@@ -33,6 +39,10 @@
     height: 5rem;
     border-radius: 50%;    
     overflow: hidden;
+    transition: .3s;
+}
+.welcome-logo:hover {
+ transform: rotate(360deg);
 }
 
 .welcome-page_app,
@@ -101,7 +111,7 @@
 }
 
 .course-text-member{
-  width: 25%;
+  width: 200px;
   height: 50vh;
   border: var(--color-dark-blue);
   background: white;
@@ -143,7 +153,7 @@
   gap: 10px;
   padding: 10px;
   width: 70vw;
-  height: 110vh;
+  height: 130vh;
   border-bottom: 1px solid red;
   border-top: 1px solid red;
 }
@@ -156,6 +166,9 @@
   background-color: rgb(197, 105, 221);
   border: 1px solid rgb(121, 7, 150);
   border-radius: 10px;
+}
+.info-part-block:hover{
+  border: 2px solid brown;
 }
 .info-part-block-list{
   height: 75%;
@@ -171,6 +184,7 @@
 .info-part-block-header{
   width: 85%;
   margin: 5px auto;
+  padding: 3px 0;
   text-align: center;
   border-bottom: 1px solid #000000;
   letter-spacing: .8px;
@@ -191,13 +205,14 @@
   right: -10vw;
 }
 
+
 .info-part-block-images,
 .info-part-block-images-second,
 .info-part-block-images-third{
   position: relative;
     background: url('/public/assets/img/board.jpg') no-repeat center/ cover;
-    width: 30%;
-    height: 30vh;
+    width: 36%;
+    height: 39vh;
     right: 5vw;
     border-radius: 20px;
 }
@@ -210,6 +225,9 @@
 }
 
 @media (max-width: 1050px) {
+  .course-text-member{
+    width: 180px;
+  }
   .info-part-block {
     width: 37%;
     height: 35vh;
@@ -223,6 +241,9 @@
 }
 
 @media (max-width: 900px) {
+  .course-text-member{
+    width: 150px;
+  }
   .info-part-block-list{
     margin-left: 5px;
   }
@@ -243,9 +264,6 @@
   .welcome-page_course{
     width: 80%;
   }
-  .course-text-member{
-    width: 30%;
-  }
 }
 
 @media (max-width: 780px) {
@@ -257,7 +275,7 @@
   }
   .information-block{
     width: 95vw;
-    height: 155vh;
+    height: 190vh;
     gap: 10px;
   }
   .info-part-block-header,
@@ -281,7 +299,6 @@
     width: 100%;
   }
   .course-text-member{
-    width: 32%;
-    height: 35vh;
+    width: 100px;
   }
 }

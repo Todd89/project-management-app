@@ -20,7 +20,7 @@ i18n
   .init({
     // Стандартный язык
     fallbackLng: 'en',
-    debug: true,
+    debug: false,
     // Распознавание и кэширование языковых кук
     detection: {
       order: ['queryString', 'cookie'],
