@@ -19,7 +19,6 @@ export const checkToken = (dispatch: any, navigate: any) => {
       };
       dispatch(setUserToken(tokenObject));
     } else {
-      console.log('BAD TOKEN');
       navigate('/');
       localStorage.removeItem('token');
     }

@@ -62,7 +62,6 @@ const userReducer = createSlice({
   initialState: userState,
   reducers: {
     setUserToken: (state, action) => {
-      console.log(action.payload.token);
       return { ...state, token: action.payload.token };
     },
     setRegisterUserData: (state, action) => {
