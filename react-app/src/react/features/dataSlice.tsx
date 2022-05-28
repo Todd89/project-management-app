@@ -17,7 +17,8 @@ import {
   ITempColumn,
   IUpdateBoard,
   IUpdateColumn,
-  IUpdateTask,
+  IUpdateTaskAPI,
+  IUpdateAllTasks,
 } from '../../interface/interfaces';
 
 export interface DataBoards {
@@ -118,7 +119,7 @@ export const deleteColumnAPI = createAsyncThunk(
       await httpClient.deleteColumn(data.token, data.boardId, data.columnId);
     } catch {}
 
-    const boardColumnsAPI = await httpClient.getAllColumns(data.token, data.boardId);
+    /*  const boardColumnsAPI = await httpClient.getAllColumns(data.token, data.boardId);
     if (boardColumnsAPI) {
       let order = 1;
       const columnsSorted: Array<IColumn> = boardColumnsAPI.sort(
@@ -139,7 +140,7 @@ export const deleteColumnAPI = createAsyncThunk(
         }
         order += 1;
       });
-    }
+    }*/
     dispatch(getBoardByIdAPI({ token: data.token, boardId: data.boardId }));
   }
 );
@@ -163,16 +164,24 @@ export const createNewTaskAPI = createAsyncThunk(
     });
     if (tasksAPI) {
       dispatch(
-        getAllTasksFromAPI({ token: data.token, boardId: data.board.id, columnId: data.columnId })
+        getAllTasksFromAPI({
+          token: data.token,
+          boardId: data.board.id,
+          columnId: data.columnId,
+          exceptOrder: data.taskOrder,
+        })
       );
+
       dispatch(setIsChanged(true));
+      dispatch(getBoardByIdAPI({ token: data.token, boardId: data.board.id }));
     }
   }
 );
 
 export const updateTaskAPI = createAsyncThunk(
   'updateTaskAPI',
-  async (data: IUpdateTask, { dispatch }) => {
+  async (data: IUpdateTaskAPI, { dispatch }) => {
+    //console.log('updateTaskAPI', data.taskTitle);
     await httpClient.updateTask(data.token, data.boardId, data.columnId, data.taskId, {
       title: data.taskTitle,
       order: data.taskOrder,
@@ -181,7 +190,48 @@ export const updateTaskAPI = createAsyncThunk(
       boardId: data.boardId,
       columnId: data.columnId,
     });
+
     dispatch(getBoardByIdAPI({ token: data.token, boardId: data.boardId }));
+  }
+);
+
+interface ITemp {
+  token: string;
+  boardId: string;
+  columnId: string;
+  taskId: string;
+  taskTitle: string;
+  taskOrder: number;
+  taskDescription: string;
+  userId: string;
+}
+
+export const updateAllTaskAPI = createAsyncThunk(
+  'updateAllTaskAPI',
+  async (data: IUpdateAllTasks, { dispatch }) => {
+    const promiseArray: Array<Promise<ITemp>> = [];
+    data.tasksArray.forEach((task) => {
+      const dataAnswer = httpClient.updateTask(
+        task.token,
+        task.boardId,
+        task.columnId,
+        task.taskId,
+        {
+          title: task.taskTitle,
+          order: task.taskOrder,
+          description: task.taskDescription,
+          userId: task.userId,
+          boardId: task.boardId,
+          columnId: task.columnId,
+        }
+      );
+      promiseArray.push(dataAnswer);
+    });
+    await Promise.all(promiseArray).then(() => {
+      dispatch(
+        getBoardByIdAPI({ token: data.tasksArray[0].token, boardId: data.tasksArray[0].boardId })
+      );
+    });
   }
 );
 
@@ -191,7 +241,12 @@ export const deleteTaskAPI = createAsyncThunk(
     try {
       await httpClient.deleteTask(data.token, data.boardId, data.columnId, data.taskId);
       dispatch(
-        getAllTasksFromAPI({ token: data.token, boardId: data.boardId, columnId: data.columnId })
+        getAllTasksFromAPI({
+          token: data.token,
+          boardId: data.boardId,
+          columnId: data.columnId,
+          exceptOrder: -1,
+        })
       );
       dispatch(setIsChanged(true));
     } catch {}
@@ -204,152 +259,44 @@ export const getAllTasksFromAPI = createAsyncThunk(
   async (data: IGetTasks, { dispatch }) => {
     const tasksAPI = await httpClient.getAllTasks(data.token, data.boardId, data.columnId);
     if (tasksAPI) {
-      const randomNumberForTasksOrder = Math.round(Math.random() * 1000000);
+      let order = data.exceptOrder === 0 ? 1 : 0;
       const tasksSorted: Array<ITask> = tasksAPI.sort((a: ITask, b: ITask) => a.order - b.order);
-      tasksSorted.forEach((task: ITask, index) => {
-        dispatch(
-          updateTaskAPI({
-            token: data.token,
-            boardId: data.boardId,
-            columnId: data.columnId,
-            taskId: task.id,
-            taskTitle: task.title,
-            taskOrder: index + randomNumberForTasksOrder,
-            taskDescription: task.description,
-            userId: task.userId,
-          })
-        );
-      });
-      dispatch(setAppTasks(tasksSorted));
-    }
-  }
-);
-/*
-export const dragAndDropTaskInColumnAPI = createAsyncThunk(
-  'dragAndDropTaskInColumnAPI',
-  async (data: IGetTasksForDNDinColumn, { dispatch }) => {
-    const tasksAPI = await httpClient.getAllTasks(data.token, data.boardId, data.columnId);
-    if (tasksAPI) {
-      const tasksSorted: Array<ITask> = tasksAPI.sort((a: ITask, b: ITask) => a.order - b.order);
-      if (data.oldIndex > data.newIndex) {
-        const draggableTask: Array<ITask> = tasksSorted.splice(data.oldIndex, 1);
-
-        tasksSorted.splice(data.newIndex, 0, draggableTask[0]);
-      }
-      if (data.oldIndex < data.newIndex) {
-        const draggableTask: Array<ITask> = tasksSorted.splice(data.oldIndex, 1);
-
-        tasksSorted.splice(data.newIndex, 0, draggableTask[0]);
-      }
-
-      const tasksAfterDnD = tasksSorted.map((task: ITask, index) => {
-        return {
-          id: task.id,
-          title: task.title,
-          order: index,
-          description: task.description,
-          userId: task.userId,
-          boardId: task.boardId,
-          columnId: task.columnId,
-        };
-      });
-
-      tasksAfterDnD.forEach((task: ITask, index) => {
-        dispatch(
-          updateTaskAPI({
-            token: data.token,
-            boardId: data.boardId,
-            columnId: data.columnId,
-            taskId: task.id,
-            taskTitle: task.title,
-            taskOrder: index + 1,
-            taskDescription: task.description,
-            userId: task.userId,
-          })
-        );
+      tasksSorted.forEach((task: ITask) => {
+        if (task.order === data.exceptOrder) {
+          order += 1;
+        }
+        if (task.order !== order) {
+          task.order = order;
+          dispatch(
+            updateTaskAPI({
+              token: data.token,
+              boardId: data.boardId,
+              columnId: data.columnId,
+              taskId: task.id,
+              taskTitle: task.title,
+              taskOrder: task.order,
+              taskDescription: task.description,
+              userId: task.userId,
+            })
+          );
+        }
+        order += 1;
       });
       dispatch(setAppTasks(tasksSorted));
     }
   }
 );
 
-export const dragAndDropTaskBetweenColumnsAPI = createAsyncThunk(
-  'dragAndDropTaskInColumnAPI',
-  async (data: IGetTasksForDNDinTwoColumns, { dispatch }) => {
-    const oldColumnTasksAPI = await httpClient.getAllTasks(
-      data.token,
-      data.boardId,
-      data.oldColumnId
-    );
-    const newColumnTasksAPI = await httpClient.getAllTasks(
-      data.token,
-      data.boardId,
-      data.newColumnId
-    );
-
-    if (oldColumnTasksAPI && newColumnTasksAPI) {
-      const oldTasksSorted: Array<ITask> = oldColumnTasksAPI.sort(
-        (a: ITask, b: ITask) => a.order - b.order
-      );
-      const newTasksSorted: Array<ITask> = newColumnTasksAPI.sort(
-        (a: ITask, b: ITask) => a.order - b.order
-      );
-
-      const draggableTask: ITask = oldTasksSorted[data.oldIndex];
-      newTasksSorted.splice(data.newIndex, 0, draggableTask);
-
-      dispatch(
-        deleteTaskAPI({
-          token: data.token,
-          boardId: data.boardId,
-          columnId: data.oldColumnId,
-          taskId: draggableTask.id,
-        })
-      );
-
-      dispatch(
-        createNewTaskAPI({
-          token: data.token,
-          board: data.board,
-          columnId: data.newColumnId,
-          taskTitle: draggableTask.title,
-          taskOrder: newColumnTasksAPI.length,
-          taskDescription: draggableTask.description,
-          userId: draggableTask.userId,
-        })
-      );
-
-      const addNewColumnTasksAPI = await httpClient.getAllTasks(
-        data.token,
-        data.boardId,
-        data.newColumnId
-      );
-      const addNewTasksSorted: Array<ITask> = addNewColumnTasksAPI.sort(
-        (a: ITask, b: ITask) => a.order - b.order
-      );
-
-      const newDraggedTask = addNewTasksSorted.splice(addNewTasksSorted.length - 1, 1);
-      addNewTasksSorted.splice(data.newIndex, 0, newDraggedTask[0]);
-
-      addNewTasksSorted.forEach((task: ITask, index) => {
-        dispatch(
-          updateTaskAPI({
-            token: data.token,
-            boardId: data.boardId,
-            columnId: data.newColumnId,
-            taskId: task.id,
-            taskTitle: task.title,
-            taskOrder: index + 1,
-            taskDescription: task.description,
-            userId: task.userId,
-          })
-        );        
-      });
-      dispatch(setAppTasks(newTasksSorted));
-    }
+export const deleteTaskAPIwoUpdate = createAsyncThunk(
+  'deleteTaskAPIwoUpdate',
+  async (data: IDeleteTask, { dispatch }) => {
+    try {
+      await httpClient.deleteTask(data.token, data.boardId, data.columnId, data.taskId);
+      dispatch(setIsChanged(true));
+    } catch {}
+    dispatch(getBoardByIdAPI({ token: data.token, boardId: data.boardId }));
   }
 );
-*/
 
 export const dataSlice = createSlice({
   name: 'boardsFunctions',

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TStore } from '../../../react/store';
 import { IColumn, IBoard, ITaskInColumn, IAppUser, TUsers } from '../../../interface/interfaces';
@@ -30,7 +30,7 @@ function Column(props: IPropsColumn) {
   const [currentColumnTitle, setCurrentColumnTitle] = useState(props.columnData.title);
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
-  const columnTasks = [...props.columnData.tasks].sort((a, b) => a.order - b.order);
+  const [columnTasks, setColumnTasks] = useState<ITaskInColumn[]>();
 
   const [isModalOn, setIsModalOn] = useState(false);
   function cancelModalState() {
@@ -38,7 +38,10 @@ function Column(props: IPropsColumn) {
   }
 
   const currentUser = useSelector((state: TStore) => state.loginData);
-
+  useEffect(() => {
+    console.log('useEffect - setColumnTasks', props.columnData.tasks);
+    setColumnTasks([...props.columnData.tasks].sort((a, b) => a.order - b.order));
+  }, [props.columnData]);
   function handleColumnClick() {
     dispatch(setCurrentColumn(props.columnData));
   }
@@ -97,7 +100,7 @@ function Column(props: IPropsColumn) {
   }
 
   return (
-    <Draggable draggableId={props.columnData.id.toString()} index={props.index}>
+    <Draggable draggableId={props.columnData.id} key={props.columnData.id} index={props.index}>
       {(provided) => (
         <div
           className="column-container"
@@ -105,7 +108,7 @@ function Column(props: IPropsColumn) {
           {...provided.dragHandleProps}
           ref={provided.innerRef}
         >
-          <Droppable droppableId={props.columnData.id.toString()} type="tasks">
+          <Droppable droppableId={props.columnData.id} type="tasks">
             {(provided) => (
               <article
                 className="column"
@@ -138,16 +141,17 @@ function Column(props: IPropsColumn) {
                 </div>
                 <div className="column__wrapper">
                   <div className="column__tasks">
-                    {columnTasks.map((task, index) => {
-                      return (
-                        <Task
-                          index={index}
-                          key={task.id}
-                          taskData={task}
-                          columnData={props.columnData}
-                        />
-                      );
-                    })}
+                    {columnTasks &&
+                      columnTasks.map((task, index) => {
+                        return (
+                          <Task
+                            index={index}
+                            key={task.id}
+                            taskData={task}
+                            columnData={props.columnData}
+                          />
+                        );
+                      })}
                     {provided.placeholder}
                   </div>
                 </div>
