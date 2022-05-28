@@ -6,7 +6,7 @@ import ErrorBoundary from './components/pages/ErrorRoute/boundaryError';
 import App from './App';
 import store from './react/store';
 import './i18n';
-const root = createRoot(document.getElementById('root')! as HTMLDivElement);
+const root = createRoot(document.getElementById('root') as HTMLDivElement);
 root.render(
   <Suspense fallback={<div>Loading...</div>}>
     <Provider store={store}>

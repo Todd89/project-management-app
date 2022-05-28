@@ -163,3 +163,21 @@ export interface IDeleteTask {
   columnId: string;
   taskId: string;
 }
+
+export interface IGetTasksForDNDinColumn {
+  token: string;
+  boardId: string;
+  columnId: string;
+  oldIndex: number;
+  newIndex: number;
+}
+
+export interface IGetTasksForDNDinTwoColumns {
+  token: string;
+  boardId: string;
+  oldColumnId: string;
+  newColumnId: string;
+  oldIndex: number;
+  newIndex: number;
+  board: IBoard;
+}
