@@ -18,8 +18,6 @@ import {
   IUpdateBoard,
   IUpdateColumn,
   IUpdateTask,
-  IGetTasksForDNDinColumn,
-  IGetTasksForDNDinTwoColumns,
 } from '../../interface/interfaces';
 
 export interface DataBoards {
@@ -206,25 +204,21 @@ export const getAllTasksFromAPI = createAsyncThunk(
   async (data: IGetTasks, { dispatch }) => {
     const tasksAPI = await httpClient.getAllTasks(data.token, data.boardId, data.columnId);
     if (tasksAPI) {
-      let order = 1;
+      const randomNumberForTasksOrder = Math.round(Math.random() * 1000000);
       const tasksSorted: Array<ITask> = tasksAPI.sort((a: ITask, b: ITask) => a.order - b.order);
       tasksSorted.forEach((task: ITask, index) => {
-        if (task.order !== order) {
-          task.order = order;
-          dispatch(
-            updateTaskAPI({
-              token: data.token,
-              boardId: data.boardId,
-              columnId: data.columnId,
-              taskId: task.id,
-              taskTitle: task.title,
-              taskOrder: index + 1,
-              taskDescription: task.description,
-              userId: task.userId,
-            })
-          );
-        }
-        order += 1;
+        dispatch(
+          updateTaskAPI({
+            token: data.token,
+            boardId: data.boardId,
+            columnId: data.columnId,
+            taskId: task.id,
+            taskTitle: task.title,
+            taskOrder: index + randomNumberForTasksOrder,
+            taskDescription: task.description,
+            userId: task.userId,
+          })
+        );
       });
       dispatch(setAppTasks(tasksSorted));
     }

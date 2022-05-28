@@ -19,10 +19,11 @@ import { useTranslation } from 'react-i18next';
 interface IPropsColumn {
   columnData: IColumn;
   boardData: IBoard;
+  index: number;
 }
-import { Droppable } from 'react-beautiful-dnd';
 import ButtonAddTask from '../../pages/reusableComponents/buttonAddTask/buttonAddTask';
 import ButtonDeleteInColumn from '../buttonDeleteInColumn/buttonDeleteInColumn';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 function Column(props: IPropsColumn) {
   const loginState = useSelector((state: TStore) => state.loginData);
@@ -98,13 +99,13 @@ function Column(props: IPropsColumn) {
   }
 
   return (
-    <Droppable droppableId={props.columnData.id ?? 'UndefinedColumn'}>
+    <Draggable draggableId={props.columnData.id.toString()} index={props.index}>
       {(provided) => (
-        <article
-          className="column"
-          onClick={handleColumnClick}
+        <div
+          className="column-container"
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
           ref={provided.innerRef}
-          {...provided.droppableProps}
         >
           <div className="column__header">
             <nav className="column__nav">
@@ -154,7 +155,7 @@ function Column(props: IPropsColumn) {
           )}
         </article>
       )}
-    </Droppable>
+    </Draggable>
   );
 }
 

@@ -16,9 +16,10 @@ import {
   deleteTaskAPI,
   updateTaskAPI,
   createNewTaskAPI,
+  updateColumnAPI,
 } from '../../../react/features/dataSlice';
 import { useTranslation } from 'react-i18next';
-import { DragDropContext, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
 import httpClient from '../../../API/api';
 
 interface IPropsBoard {
@@ -33,16 +34,25 @@ function Board(props: IPropsBoard) {
   const [isEditBoardModeOn, setIsEditBoardModeOn] = useState(false);
   const [isModalOn, setIsModalOn] = useState(false);
   const [currentBoardTitle, setCurrentBoardTitle] = useState('');
-
-  const [boardColumns, setBoardColumns] = useState<IColumn[]>(props.boardData.columns);
   const [changeColumns, setChangeColumns] = useState<IColumn[]>();
-
-  //const orderedBoardColumns = [...props.boardData.columns].sort((a, b) => a.order - b.order);
+  const [boardColumns, setBoardColumns] = useState<IColumn[]>();
+  const randomNumberForColumnOrder = Math.round(Math.random() * 1000000);
+  const boardColumnsCopy: IColumn[] = JSON.parse(JSON.stringify(props.boardData.columns));
+  const startBoardColumnsCopy = boardColumnsCopy.sort(
+    (a: IColumn, b: IColumn) => a.order - b.order
+  );
 
   useEffect(() => {
     setCurrentBoardTitle(dataState.currentBoard.title);
-    setBoardColumns(changeColumns ?? props.boardData.columns);
-  }, [dataState.currentBoard.title, changeColumns, props.boardData]);
+    setBoardColumns(changeColumns);
+  }, [
+    dataState.currentBoard.title,
+    changeColumns,
+    props.boardData,
+    dataState.currentColumn,
+    dataState.currentBoard,
+    startBoardColumnsCopy,
+  ]);
 
   function handleBoardClick() {
     dispatch(setCurrentBoard(props.boardData));
@@ -91,18 +101,18 @@ function Board(props: IPropsBoard) {
   const token = useSelector((state: TStore) => state.loginData.token);
 
   const onDragEnd = (result: DropResult) => {
-    const { draggableId, source, destination } = result;
+    const { draggableId, source, destination, type } = result;
     let sourceColumn: IColumn = { id: '', title: '', order: 0, tasks: [] };
     let sourceColumnIndex = 0;
     let destinationColumn: IColumn = { id: '', title: '', order: 0, tasks: [] };
     let destinationColumnIndex = 0;
-    const boardColumnsCopy: IColumn[] = JSON.parse(JSON.stringify([...boardColumns]));
-
+    console.log('result: DropResult', result);
+    console.log('Исходные колонки boardColumnsCopy', boardColumnsCopy);
     if (!destination) return;
     if (destination.droppableId === source.droppableId && destination.index === source.index)
       return;
 
-    boardColumnsCopy.forEach((column: IColumn, index: number) => {
+    startBoardColumnsCopy.forEach((column: IColumn, index: number) => {
       if (column.id === source.droppableId) {
         sourceColumn = JSON.parse(JSON.stringify(column));
         sourceColumnIndex = index;
@@ -116,37 +126,33 @@ function Board(props: IPropsBoard) {
     //++++++++++++++++++++++++++++++++++++++++++++
     //        Drag-and-Drop внутри колонки
     //+++++++++++++++++++++++++++++++++++++++++++
-
     if (
       destination &&
       destination.droppableId === source.droppableId &&
-      destination.index !== source.index
+      destination.index !== source.index &&
+      type === 'tasks'
     ) {
+      console.log('+++++++++Drag-and-Drop внутри колонки');
+      /*
       const draggedTask: ITaskInColumn[] = sourceColumn.tasks.filter((task) => {
         return task.id === draggableId;
       });
-      const columnTasksCopy: ITaskInColumn[] = JSON.parse(JSON.stringify([...sourceColumn.tasks]));
+      */
+      const columnTasksCopy: ITaskInColumn[] = JSON.parse(JSON.stringify(sourceColumn.tasks));
 
       const filterColumnTasksCopy = columnTasksCopy.sort(
         (a: ITaskInColumn, b: ITaskInColumn) => a.order - b.order
       );
 
-      if (source.index > destination.index) {
-        filterColumnTasksCopy.splice(source.index, 1);
-        filterColumnTasksCopy.splice(destination.index, 0, draggedTask[0]);
-      }
-
-      if (source.index < destination.index) {
-        filterColumnTasksCopy.splice(source.index, 1);
-        filterColumnTasksCopy.splice(destination.index, 0, draggedTask[0]);
-      }
+      const draggedTask = filterColumnTasksCopy.splice(source.index, 1);
+      filterColumnTasksCopy.splice(destination.index, 0, draggedTask[0]);
 
       const mapColumnTasksAfterDnD = filterColumnTasksCopy.map(
         (task: ITaskInColumn, index: number) => {
           return {
             id: task.id,
             title: task.title,
-            order: index + 1,
+            order: index + randomNumberForColumnOrder,
             done: task.done,
             description: task.description,
             userId: task.userId,
@@ -166,7 +172,7 @@ function Board(props: IPropsBoard) {
         title: sourceColumn.title,
       };
 
-      const newBoardColumnsAfterDnD = boardColumnsCopy.map((column, index: number) => {
+      const newBoardColumnsAfterDnD = startBoardColumnsCopy.map((column, index: number) => {
         return index === destinationColumnIndex ? newDestinationColumn : column;
       });
 
@@ -184,7 +190,7 @@ function Board(props: IPropsBoard) {
             columnId: newDestinationColumn.id,
             taskId: task.id,
             taskTitle: task.title,
-            taskOrder: index + 1,
+            taskOrder: index + randomNumberForColumnOrder,
             taskDescription: task.description,
             userId: task.userId,
           })
@@ -194,20 +200,22 @@ function Board(props: IPropsBoard) {
     //++++++++++++++++++++++++++++++++++++++++++++
     //        Drag-and-Drop между колонками
     //+++++++++++++++++++++++++++++++++++++++++++
-    if (destination.droppableId !== source.droppableId) {
+    if (destination.droppableId !== source.droppableId && type === 'tasks') {
+      console.log('+++++++++  Drag-and-Drop между колонками');
       if (destination)
         httpClient
-          .getTaskByID(loginState.token, dataState.currentBoard.id, source.droppableId, draggableId)
+          .getTaskByID(token, dataState.currentBoard.id, source.droppableId, draggableId)
           .then((responseDragTask: ITask) => {
+            console.log('Данные по пермещаемому таску responseDragTask', responseDragTask);
             const sourceColumnTasks: ITaskInColumn[] = JSON.parse(
-              JSON.stringify([...sourceColumn.tasks])
+              JSON.stringify(sourceColumn.tasks)
             );
             const sortSourceColumnTasks = sourceColumnTasks.sort(
               (a: ITaskInColumn, b: ITaskInColumn) => a.order - b.order
             );
 
             const destinationColumnTasks: ITaskInColumn[] = JSON.parse(
-              JSON.stringify([...destinationColumn.tasks])
+              JSON.stringify(destinationColumn.tasks)
             );
             const sortDestinationColumnTasks = destinationColumnTasks.sort(
               (a: ITaskInColumn, b: ITaskInColumn) => a.order - b.order
@@ -215,7 +223,7 @@ function Board(props: IPropsBoard) {
 
             dispatch(
               deleteTaskAPI({
-                token: loginState.token,
+                token: token,
                 boardId: props.boardData.id,
                 columnId: sourceColumn.id,
                 taskId: draggableId,
@@ -223,11 +231,11 @@ function Board(props: IPropsBoard) {
             );
             dispatch(
               createNewTaskAPI({
-                token: loginState.token,
+                token: token,
                 board: props.boardData,
                 columnId: destinationColumn.id,
                 taskTitle: responseDragTask.title,
-                taskOrder: sortDestinationColumnTasks.length + 2,
+                taskOrder: 11111111,
                 taskDescription: responseDragTask.description,
                 userId: loginState.id,
               })
@@ -239,93 +247,179 @@ function Board(props: IPropsBoard) {
                 .then((responseAllTasks: ITask[]) => {
                   if (
                     responseAllTasks.length ===
-                    boardColumnsCopy[destinationColumnIndex].tasks.length
+                    startBoardColumnsCopy[destinationColumnIndex].tasks.length
                   )
                     return getAllTasksForDnD();
                   else {
-                    const sortAllTasks = responseAllTasks.sort(
-                      (a: ITask, b: ITask) => a.order - b.order
-                    );
+                    if (responseAllTasks) {
+                      console.log('Колонка с тасками responseAllTasks', responseAllTasks);
+                      const sortAllTasks = responseAllTasks.sort(
+                        (a: ITask, b: ITask) => a.order - b.order
+                      );
+                      console.log('Отсортированная Колонка с тасками sortAllTasks', sortAllTasks);
 
-                    const updateDraggedTask: ITaskInColumn = {
-                      id: sortAllTasks[sortAllTasks.length - 1].id,
-                      title: sortAllTasks[sortAllTasks.length - 1].title,
-                      order: sortAllTasks[sortAllTasks.length - 1].order,
-                      done: boardColumnsCopy[sourceColumnIndex].tasks[source.index].done,
-                      description: sortAllTasks[sortAllTasks.length - 1].description,
-                      userId: sortAllTasks[sortAllTasks.length - 1].userId,
-                      files: boardColumnsCopy[sourceColumnIndex].tasks[source.index].files,
-                    };
-                    sortSourceColumnTasks.splice(source.index, 1);
-                    sortDestinationColumnTasks.splice(destination.index, 0, updateDraggedTask);
-
-                    const mapSourceColumnTasksAfterDnD = sortSourceColumnTasks.map(
-                      (task: ITaskInColumn, index: number) => {
-                        return {
-                          id: task.id,
-                          title: task.title,
-                          order: index + 1,
-                          done: task.done,
-                          description: task.description,
-                          userId: task.userId,
-                          files: task.files,
-                        };
-                      }
-                    );
-                    const mapDestinationColumnTasksAfterDnD = sortDestinationColumnTasks.map(
-                      (task: ITaskInColumn, index: number) => {
-                        return {
-                          id: task.id,
-                          title: task.title,
-                          order: index + 1,
-                          done: task.done,
-                          description: task.description,
-                          userId: task.userId,
-                          files: task.files,
-                        };
-                      }
-                    );
-
-                    const sortSourceColumnTasksAfterDnD = mapSourceColumnTasksAfterDnD.sort(
-                      (a: ITaskInColumn, b: ITaskInColumn) => a.order - b.order
-                    );
-                    const sortDestinationColumnTasksAfterDnD =
-                      mapDestinationColumnTasksAfterDnD.sort(
-                        (a: ITaskInColumn, b: ITaskInColumn) => a.order - b.order
+                      const updateDraggedTask: ITaskInColumn = {
+                        id: sortAllTasks[sortAllTasks.length - 1].id,
+                        title: sortAllTasks[sortAllTasks.length - 1].title,
+                        order: sortAllTasks[sortAllTasks.length - 1].order,
+                        done: startBoardColumnsCopy[sourceColumnIndex].tasks[source.index].done,
+                        description: sortAllTasks[sortAllTasks.length - 1].description,
+                        userId: sortAllTasks[sortAllTasks.length - 1].userId,
+                        files: startBoardColumnsCopy[sourceColumnIndex].tasks[source.index].files,
+                      };
+                      console.log('Созданный таск в колонку updateDraggedTask', updateDraggedTask);
+                      sortSourceColumnTasks.splice(source.index, 1);
+                      sortDestinationColumnTasks.splice(destination.index, 0, updateDraggedTask);
+                      console.log(
+                        'Колонка с созданным  таском sortDestinationColumnTasks',
+                        sortDestinationColumnTasks
+                      );
+                      const mapSourceColumnTasksAfterDnD = sortSourceColumnTasks.map(
+                        (task: ITaskInColumn, index: number) => {
+                          return {
+                            id: task.id,
+                            title: task.title,
+                            order: index + randomNumberForColumnOrder * 2,
+                            done: task.done,
+                            description: task.description,
+                            userId: task.userId,
+                            files: task.files,
+                          };
+                        }
+                      );
+                      const mapDestinationColumnTasksAfterDnD = sortDestinationColumnTasks.map(
+                        (task: ITaskInColumn, index: number) => {
+                          return {
+                            id: task.id,
+                            title: task.title,
+                            order: index + randomNumberForColumnOrder * 3,
+                            done: task.done,
+                            description: task.description,
+                            userId: task.userId,
+                            files: task.files,
+                          };
+                        }
                       );
 
-                    const newSourceColumn = {
-                      id: sourceColumn.id,
-                      order: sourceColumn.order,
-                      tasks: sortSourceColumnTasksAfterDnD,
-                      title: sourceColumn.title,
-                    };
-                    const newDestinationColumn = {
-                      id: destinationColumn.id,
-                      order: destinationColumn.order,
-                      tasks: sortDestinationColumnTasksAfterDnD,
-                      title: destinationColumn.title,
-                    };
+                      console.log(
+                        'Колонка с удаленным таском mapSourceColumnTasksAfterDnD',
+                        mapSourceColumnTasksAfterDnD
+                      );
+                      console.log(
+                        'Колонка с вставленным ОБновленным таском mapDestinationColumnTasksAfterDnD',
+                        mapDestinationColumnTasksAfterDnD
+                      );
 
-                    const newBoardColumnsAfterDnD = boardColumnsCopy.map(
-                      (column, index: number) => {
-                        if (index === sourceColumnIndex) return newSourceColumn;
-                        if (index === destinationColumnIndex) return newDestinationColumn;
-                        return column;
-                      }
-                    );
+                      const sortSourceColumnTasksAfterDnD = mapSourceColumnTasksAfterDnD.sort(
+                        (a: ITaskInColumn, b: ITaskInColumn) => a.order - b.order
+                      );
+                      const sortDestinationColumnTasksAfterDnD =
+                        mapDestinationColumnTasksAfterDnD.sort(
+                          (a: ITaskInColumn, b: ITaskInColumn) => a.order - b.order
+                        );
 
-                    const sortNewBoardColumnsAfterDnD = newBoardColumnsAfterDnD.sort(
-                      (a: IColumn, b: IColumn) => a.order - b.order
-                    );
+                      console.log(
+                        'sortDestinationColumnTasksAfterDnD',
+                        sortDestinationColumnTasksAfterDnD
+                      );
 
-                    setChangeColumns(sortNewBoardColumnsAfterDnD);
+                      const newSourceColumn = {
+                        id: sourceColumn.id,
+                        order: sourceColumn.order,
+                        tasks: sortSourceColumnTasksAfterDnD,
+                        title: sourceColumn.title,
+                      };
+                      const newDestinationColumn = {
+                        id: destinationColumn.id,
+                        order: destinationColumn.order,
+                        tasks: sortDestinationColumnTasksAfterDnD,
+                        title: destinationColumn.title,
+                      };
+
+                      const newBoardColumnsAfterDnD = startBoardColumnsCopy.map(
+                        (column, index: number) => {
+                          if (index === sourceColumnIndex) return newSourceColumn;
+                          if (index === destinationColumnIndex) return newDestinationColumn;
+                          return column;
+                        }
+                      );
+
+                      const sortNewBoardColumnsAfterDnD = newBoardColumnsAfterDnD.sort(
+                        (a: IColumn, b: IColumn) => a.order - b.order
+                      );
+                      console.log('sortNewBoardColumnsAfterDnD', sortNewBoardColumnsAfterDnD);
+                      console.log(
+                        'sortDestinationColumnTasksAfterDnD',
+                        sortDestinationColumnTasksAfterDnD
+                      );
+
+                      sortDestinationColumnTasksAfterDnD.forEach(
+                        (task: ITaskInColumn, index: number) => {
+                          dispatch(
+                            updateTaskAPI({
+                              token: loginState.token,
+                              boardId: props.boardData.id,
+                              columnId: newDestinationColumn.id,
+                              taskId: task.id,
+                              taskTitle: task.title,
+                              taskOrder: task.order,
+                              taskDescription: task.description,
+                              userId: task.userId,
+                            })
+                          );
+                        }
+                      );
+                      setChangeColumns(sortNewBoardColumnsAfterDnD);
+                    }
                   }
                 });
             };
             getAllTasksForDnD();
           });
     }
+    //++++++++++++++++++++++++++++++++++++++++++++
+    //        Drag-and-Drop колонок
+    //+++++++++++++++++++++++++++++++++++++++++++
+    if (
+      destination &&
+      destination.droppableId === source.droppableId &&
+      destination.index !== source.index &&
+      type === 'columns'
+    ) {
+      console.log('+++++++++  Drag-and-Drop КОЛОНОК');
+      const boardColumnsBeforeDnD: IColumn[] = JSON.parse(JSON.stringify(startBoardColumnsCopy));
+      const boardColumnsAfterDnD = boardColumnsBeforeDnD.sort(
+        (a: IColumn, b: IColumn) => a.order - b.order
+      );
+      const draggedColumn = boardColumnsAfterDnD.splice(source.index, 1);
+      boardColumnsAfterDnD.splice(destination.index, 0, draggedColumn[0]);
+
+      console.log('boardColumnsAfterDnD', boardColumnsAfterDnD);
+
+      const mapBoardColumnsAfterDnD: IColumn[] = boardColumnsAfterDnD.map(
+        (column: IColumn, index: number) => {
+          return {
+            id: column.id,
+            order: index + randomNumberForColumnOrder,
+            tasks: column.tasks,
+            title: column.title,
+          };
+        }
+      );
+      setChangeColumns(mapBoardColumnsAfterDnD);
+      mapBoardColumnsAfterDnD.forEach((column: IColumn, index: number) => {
+        dispatch(
+          updateColumnAPI({
+            token: token,
+            boardId: dataState.currentBoard.id,
+            columnId: column.id,
+            columnTitle: column.title,
+            columnOrder: column.order,
+          })
+        );
+      });
+    }
+    console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++');
   };
 
   return (
@@ -360,11 +454,8 @@ function Board(props: IPropsBoard) {
               })}
             </div>
           </div>
-          {isModalOn && (
-            <ModalColumn boardData={props.boardData} cancelModalState={cancelModalState} />
-          )}
-        </article>
-      </div>
+        )}
+      </Droppable>
     </DragDropContext>
   );
 }
