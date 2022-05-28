@@ -30,6 +30,7 @@ import { useTranslation } from 'react-i18next';
 import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
 import httpClient from '../../../API/api';
 import { IUpdateTask } from '../../../interface/types';
+import ButtonAdd from '../ButtonAdd/ButtonAdd';
 
 interface IPropsBoard {
   boardData: IBoard;
@@ -300,35 +301,55 @@ function Board(props: IPropsBoard) {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="container">
-        <div className="board__header">
-          {isEditBoardModeOn ? (
-            <input
-              type="text"
-              className="board__name board-header-input"
-              value={currentBoardTitle}
-              autoFocus
-              onChange={handleHeaderEdit}
-              onBlur={handleHeaderEndEdit}
-              onKeyDown={handleKeyEvent}
-            />
-          ) : (
-            <span className="board__name board-header-text" onClick={handleHeaderStartEdit}>
-              <span className="board-header-text-name">Board name: </span>
-              {currentBoardTitle}
-            </span>
-          )}
-          <nav className="column__nav">
-            <ButtonAddColumn buttonText={t('Column.add')} handleAdd={handleColumnAdd} />
-          </nav>
-        </div>
-        <article className="board" onClick={handleBoardClick}>
-          <div className="columns">
-            <div className="columns__list">
-              {boardColumns.map((column) => {
-                return <Column key={column.id} columnData={column} boardData={props.boardData} />;
-              })}
-            </div>
+      <Droppable
+        droppableId={props.boardData.id}
+        key={props.boardData.id}
+        direction="horizontal"
+        type="columns"
+      >
+        {(provided) => (
+          <div className="board-container" ref={provided.innerRef} {...provided.droppableProps}>
+            <article className="board" onClick={handleBoardClick}>
+              <div className="board__header">
+                <nav className="column__nav">
+                  <ButtonAdd buttonText={t('Column.add')} handleAdd={handleColumnAdd} />
+                </nav>
+                {isEditBoardModeOn ? (
+                  <input
+                    type="text"
+                    className="board__name board-header-input"
+                    value={currentBoardTitle}
+                    autoFocus
+                    onChange={handleHeaderEdit}
+                    onBlur={handleHeaderEndEdit}
+                    onKeyDown={handleKeyEvent}
+                  />
+                ) : (
+                  <span className="board__name board-header-text" onClick={handleHeaderStartEdit}>
+                    {currentBoardTitle}
+                  </span>
+                )}
+              </div>
+
+              <div className="columns">
+                <div className="columns__list">
+                  {boardColumns?.map((column, index) => {
+                    return (
+                      <Column
+                        key={column.id}
+                        columnData={column}
+                        boardData={props.boardData}
+                        index={index}
+                      />
+                    );
+                  })}
+                  {provided.placeholder}
+                </div>
+              </div>
+              {isModalOn && (
+                <ModalColumn boardData={props.boardData} cancelModalState={cancelModalState} />
+              )}
+            </article>
           </div>
         )}
       </Droppable>

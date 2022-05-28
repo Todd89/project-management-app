@@ -60,9 +60,7 @@ function Task(props: IPropsTask) {
             handleDelete={handleTaskDelete}
           />
           <div className="task__header-task-block">
-            <p className="task__header header-text">
-              {props.taskData.order}. {props.taskData.title}
-            </p>
+            <p className="task__header header-text">{props.taskData.title}</p>
             {isModalOn && (
               <ModalTask
                 taskData={props.taskData}
@@ -73,7 +71,6 @@ function Task(props: IPropsTask) {
               />
             )}
             <p className="task__description">{props.taskData.description}</p>
-            {/* <p className="task__description">{props.taskData.order}</p> */}
             <p className="task__user">User: {taskUser.name}</p>
           </div>
         </article>
