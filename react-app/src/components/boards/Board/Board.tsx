@@ -296,7 +296,6 @@ function Board(props: IPropsBoard) {
         );
       });
     }
-    //  console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++');
   };
 
   return (
@@ -311,9 +310,6 @@ function Board(props: IPropsBoard) {
           <div className="board-container" ref={provided.innerRef} {...provided.droppableProps}>
             <article className="board" onClick={handleBoardClick}>
               <div className="board__header">
-                <nav className="column__nav">
-                  <ButtonAdd buttonText={t('Column.add')} handleAdd={handleColumnAdd} />
-                </nav>
                 {isEditBoardModeOn ? (
                   <input
                     type="text"
@@ -326,9 +322,13 @@ function Board(props: IPropsBoard) {
                   />
                 ) : (
                   <span className="board__name board-header-text" onClick={handleHeaderStartEdit}>
+                    <span className="board-header-text-name">Board name: </span>
                     {currentBoardTitle}
                   </span>
                 )}
+                <nav className="column__nav">
+                  <ButtonAddColumn buttonText={t('Column.add')} handleAdd={handleColumnAdd} />
+                </nav>
               </div>
 
               <div className="columns">
