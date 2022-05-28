@@ -15,8 +15,8 @@
 }
 
 .header-logo {
-    flex: 0 0 1.7rem;
-    height: 1.7rem;
+    flex: 0 0 2.5rem;
+    height: 2.5rem;
     border-radius: 50%;
     margin: 0 0.7rem;
     overflow: hidden;
@@ -26,6 +26,7 @@
 
 .header-logo:hover {
     transform: scale(1.1);
+    transform: rotate(360deg);
 }
 
 .button-edit-profile {

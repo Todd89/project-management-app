@@ -18,13 +18,12 @@
 }
 
 .form-wrapper {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 18rem;
   width: 20rem;
-  height: 55vh;
+  height: 65vh;
   background-color: white;
   border-radius: 0 1rem 1rem 1rem;
 }
@@ -80,6 +79,6 @@
   text-align: center;
   color: red;
   position: absolute;
-  top: 2rem
-
+  top: 2rem;
+  font-size: .7rem;
 }
