@@ -39,7 +39,7 @@ function Column(props: IPropsColumn) {
 
   const currentUser = useSelector((state: TStore) => state.loginData);
   useEffect(() => {
-    console.log('useEffect - setColumnTasks', props.columnData.tasks);
+    // console.log('useEffect - setColumnTasks', props.columnData.tasks);
     setColumnTasks([...props.columnData.tasks].sort((a, b) => a.order - b.order));
   }, [props.columnData]);
   function handleColumnClick() {
