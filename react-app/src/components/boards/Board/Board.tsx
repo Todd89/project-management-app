@@ -111,8 +111,6 @@ function Board(props: IPropsBoard) {
     let sourceColumnIndex = 0;
     let destinationColumn: IColumn = { id: '', title: '', order: 0, tasks: [] };
     let destinationColumnIndex = 0;
-    // console.log('result: DropResult', result);
-    //console.log('Исходные колонки boardColumnsCopy', boardColumnsCopy);
     if (!destination) return;
     if (destination.droppableId === source.droppableId && destination.index === source.index)
       return;
@@ -264,15 +262,12 @@ function Board(props: IPropsBoard) {
       destination.index !== source.index &&
       type === 'columns'
     ) {
-      //  console.log('+++++++++  Drag-and-Drop КОЛОНОК');
       const boardColumnsBeforeDnD: IColumn[] = JSON.parse(JSON.stringify(boardColumns));
       const boardColumnsAfterDnD = boardColumnsBeforeDnD.sort(
         (a: IColumn, b: IColumn) => a.order - b.order
       );
       const draggedColumn = boardColumnsAfterDnD.splice(source.index, 1);
       boardColumnsAfterDnD.splice(destination.index, 0, draggedColumn[0]);
-
-      // console.log('boardColumnsAfterDnD', boardColumnsAfterDnD);
 
       const mapBoardColumnsAfterDnD: IColumn[] = boardColumnsAfterDnD.map(
         (column: IColumn, index: number) => {

@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router';
 import CloseWindowButton from '../../reusableComponents/closeWindowButton/CloseWindowButton';
 import SubmitButton from '../../reusableComponents/submitButton/SubmitButton';
 import { USER_STATUS } from '../../../../constant/constant';
+import { useTranslation } from 'react-i18next';
 
 type FormData = {
   userLoginIn: string;
@@ -26,6 +27,7 @@ const AurhorizeForm: React.FC = () => {
     handleSubmit,
     formState: { errors, isValid, isDirty },
   } = useForm<FormData>({ mode: 'onChange', reValidateMode: 'onChange' });
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [userLogin, setUserLogin] = useState('');
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState(true);
@@ -71,16 +73,18 @@ const AurhorizeForm: React.FC = () => {
     <div className="registration-block">
       <div className="registration-block_blur">
         <div className="form-wrapper">
-          <p className="info-block-preview">Авторизация</p>
-          <p className="info-block-status">Ваш статус:{userState.status}</p>
+          <p className="info-block-preview">{t('Autho.autho')}</p>
+          <p className="info-block-status">
+            {t('Autho.status')}:{userState.status}
+          </p>
           <form className="registration-form" onSubmit={onSubmit}>
             <label className="registration-form_userLogin" htmlFor="userLoginIn">
               <input
                 {...register('userLoginIn', {
-                  required: 'Поле обязательно к заполнению',
+                  required: 'The field is required',
                   minLength: {
                     value: 3,
-                    message: 'Минимум 3 символа',
+                    message: 'Minimum 3 characters',
                   },
                   pattern: /[\d\w\DА-я]{3,}/,
                 })}
@@ -100,10 +104,10 @@ const AurhorizeForm: React.FC = () => {
             <label className="registration-form_userPassword" htmlFor="userPasswordIn">
               <input
                 {...register('userPasswordIn', {
-                  required: 'Поле обязательно к заполнению',
+                  required: 'The field is required',
                   minLength: {
                     value: 7,
-                    message: 'Минимум 7 символов',
+                    message: 'Minimum 7 characters',
                   },
                   pattern: /[\d\wА-я]{7,}/,
                 })}

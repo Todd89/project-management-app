@@ -117,29 +117,6 @@ export const deleteColumnAPI = createAsyncThunk(
     try {
       await httpClient.deleteColumn(data.token, data.boardId, data.columnId);
     } catch {}
-
-    /*  const boardColumnsAPI = await httpClient.getAllColumns(data.token, data.boardId);
-    if (boardColumnsAPI) {
-      let order = 1;
-      const columnsSorted: Array<IColumn> = boardColumnsAPI.sort(
-        (a: ITask, b: ITask) => a.order - b.order
-      );
-      columnsSorted.forEach((column: IColumn) => {
-        if (column.order !== order) {
-          column.order = order;
-          dispatch(
-            updateColumnAPI({
-              token: data.token,
-              boardId: data.boardId,
-              columnId: column.id,
-              columnTitle: column.title,
-              columnOrder: column.order,
-            })
-          );
-        }
-        order += 1;
-      });
-    }*/
     dispatch(getBoardByIdAPI({ token: data.token, boardId: data.boardId }));
   }
 );
@@ -180,7 +157,6 @@ export const createNewTaskAPI = createAsyncThunk(
 export const updateTaskAPI = createAsyncThunk(
   'updateTaskAPI',
   async (data: IUpdateTaskAPI, { dispatch }) => {
-    //console.log('updateTaskAPI', data.taskTitle);
     await httpClient.updateTask(data.token, data.boardId, data.columnId, data.taskId, {
       title: data.taskTitle,
       order: data.taskOrder,

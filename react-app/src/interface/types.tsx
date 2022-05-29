@@ -15,6 +15,7 @@ type ILoginState = {
 };
 type IState = {
   loginData: ILoginState;
+  userLanguage: { language: string };
 };
 type INewBoard = {
   title: string;
@@ -63,6 +64,9 @@ type IToken = {
   login: string;
   userId: string;
 };
+type ILanguage = {
+  language: string;
+};
 
 export {
   INewUser,
@@ -78,4 +82,5 @@ export {
   IEditUser,
   IDeleteUser,
   IToken,
+  ILanguage,
 };

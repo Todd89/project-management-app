@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { CONFIRMATION_STATE } from '../../../constant/constant';
 import './modalDeleteConfirmation.css';
 
@@ -9,6 +10,7 @@ interface IModalConfirmationProps {
 }
 
 function ModalDeleteConfirmation(props: IModalConfirmationProps) {
+  const { t, i18n } = useTranslation();
   const [isClosing, setIsClosing] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(CONFIRMATION_STATE.UNSET);
 
@@ -38,15 +40,10 @@ function ModalDeleteConfirmation(props: IModalConfirmationProps) {
         onClick={(event: React.MouseEvent) => {
           event.stopPropagation();
         }}
-        //      onAnimationEnd={() => {
-        //        if (isClosing) {
-        //          props.cancelModalState();
-        //       }
-        //   }}
       >
         <div className="wrapper outside">
           <span className="modalC__confirmation">
-            Do you really want to delete &#34;{props.confirmationText}&#34;?
+            {t('Modal.quastion')} &#34;{props.confirmationText}&#34;?
           </span>
           <div className="modalC__buttons">
             <button
@@ -56,7 +53,7 @@ function ModalDeleteConfirmation(props: IModalConfirmationProps) {
                 setIsConfirmed(CONFIRMATION_STATE.YES);
               }}
             >
-              Yes
+              {t('Modal.yes')}
             </button>
             <button
               className="modalC__button"
@@ -65,7 +62,7 @@ function ModalDeleteConfirmation(props: IModalConfirmationProps) {
                 setIsConfirmed(CONFIRMATION_STATE.NO);
               }}
             >
-              No
+              {t('Modal.no')}
             </button>
           </div>
         </div>

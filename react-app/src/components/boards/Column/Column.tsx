@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TStore } from '../../../react/store';
 import { IColumn, IBoard, ITaskInColumn, IAppUser, TUsers } from '../../../interface/interfaces';
-import ButtonAdd from '../ButtonAdd/ButtonAdd';
-import ButtonDelete from '../ButtonDelete/ButtonDelete';
 import Task from '../Task/Task';
 import ModalTask from '../ModalTask/ModalTask';
 import './column.css';
@@ -41,7 +39,6 @@ function Column(props: IPropsColumn) {
 
   const currentUser = useSelector((state: TStore) => state.loginData);
   useEffect(() => {
-    // console.log('useEffect - setColumnTasks', props.columnData.tasks);
     setColumnTasks([...props.columnData.tasks].sort((a, b) => a.order - b.order));
   }, [props.columnData]);
   function handleColumnClick() {
@@ -179,63 +176,3 @@ function Column(props: IPropsColumn) {
   );
 }
 export default Column;
-
-{
-  /* <Droppable droppableId={props.columnData.id ?? 'UndefinedColumn'}>
-  {(provided) => (
-    <article
-      className="column"
-      onClick={handleColumnClick}
-      ref={provided.innerRef}
-      {...provided.droppableProps}
-    >
-      <div className="column__header">
-        <nav className="column__nav">
-          <ButtonDeleteInColumn
-            confirmationText={currentColumnTitle}
-            handleDelete={handleColumnDelete}
-          />
-        </nav>
-        {isEditColumnModeOn ? (
-          <input
-            type="text"
-            className="header-input"
-            value={currentColumnTitle}
-            autoFocus
-            onChange={handleHeaderEdit}
-            onBlur={handleHeaderEndEdit}
-            onKeyDown={handleKeyEvent}
-          />
-        ) : (
-          <p className="header-text" onClick={handleHeaderStartEdit}>
-            {props.columnData.order}. {currentColumnTitle}
-          </p>
-        )}
-      </div>
-      <div className="column__wrapper">
-        <div className="column__tasks">
-          {columnTasks.map((task, index) => {
-            return (
-              <Task index={index} key={task.id} taskData={task} columnData={props.columnData} />
-            );
-          })}
-          {provided.placeholder}
-        </div>
-      </div>
-      <ButtonAddTask buttonText={t('Task.add')} handleAdd={handleTaskAdd} />
-      {isModalOn && (
-        <ModalTask
-          taskData={emptyTask}
-          user={
-            userState.usersArray.find((user: IAppUser) => user.id === currentUser.id) ||
-            userState.usersArray[0]
-          }
-          columnData={props.columnData}
-          cancelModalState={cancelModalState}
-          isNewTask={true}
-        />
-      )}
-    </article>
-  )}
-</Droppable>; */
-}

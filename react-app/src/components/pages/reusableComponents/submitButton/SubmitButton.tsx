@@ -1,4 +1,4 @@
-import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './SubmitButton.css';
 
 type SubmitButtonProps = {
@@ -6,9 +6,10 @@ type SubmitButtonProps = {
 };
 
 const SubmitButton = ({ submitBtnDisabled }: SubmitButtonProps) => {
+  const { t, i18n } = useTranslation();
   return (
     <button type="submit" className="submit-btn" disabled={submitBtnDisabled}>
-      Отправить
+      {t('Autho.send')}
     </button>
   );
 };

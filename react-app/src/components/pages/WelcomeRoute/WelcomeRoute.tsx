@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { IState } from '../../../interface/types';
@@ -9,8 +9,6 @@ import SignUpButton from '../reusableComponents/signUpButton/SignUpButton';
 import AppLogo from '../reusableComponents/appLogo/AppLogo';
 import { useTranslation } from 'react-i18next';
 import { checkToken } from '../../../service/servise';
-import { fadeIn } from 'react-animations';
-import styled, { keyframes } from 'styled-components';
 import ScrollAnimation from 'react-animate-on-scroll';
 
 const WelcomeRoute: React.FC = () => {
@@ -18,6 +16,12 @@ const WelcomeRoute: React.FC = () => {
   const navigate = useNavigate();
   const userState = useSelector((state: IState) => state.loginData);
   const dispatch = useDispatch();
+
+  const [language, setLanguage] = useState('English');
+
+  const changeLanguageState = (language: string) => {
+    setLanguage(language);
+  };
 
   useEffect(() => {
     checkToken(dispatch, navigate);
@@ -42,18 +46,18 @@ const WelcomeRoute: React.FC = () => {
       <article className="welcome-page_app">
         <h1 className="app-title">Project management app</h1>
         <div className="app-text">{t('welcomeRoute.description')}</div>
-        <div className="app-text">Try it right now!</div>
+        <div className="app-text">{t('welcomeRoute.try')}</div>
       </article>
       <div className="information-block">
         <ScrollAnimation animateIn="fadeIn">
           <div className="information-block-part">
             <article className="info-part-block info-part-block-first">
-              <h3 className="info-part-block-header">Create tasks boards</h3>
+              <h3 className="info-part-block-header">{t('welcomeRoute.info.board-creacte')}</h3>
               <div className="info-part-block-list">
                 <ul>
-                  <li>You can create your own tasks boards</li>
-                  <li>Organize tasks by types</li>
-                  <li>Authotize and get all possibilities</li>
+                  <li>{t('welcomeRoute.info.board')}</li>
+                  <li>{t('welcomeRoute.info.organize')}</li>
+                  <li>{t('welcomeRoute.info.authotize')}</li>
                 </ul>
               </div>
             </article>
@@ -64,12 +68,12 @@ const WelcomeRoute: React.FC = () => {
           <div className="information-block-part">
             <div className="info-part-block-images-second"></div>
             <article className="info-part-block info-part-block-second">
-              <h3 className="info-part-block-header">Add tasks</h3>
+              <h3 className="info-part-block-header">{t('welcomeRoute.info.add-task')}</h3>
               <div className="info-part-block-list">
                 <ul>
-                  <li>Manage by your tasks</li>
-                  <li>Work with your team</li>
-                  <li>Appoint a responsible</li>
+                  <li>{t('welcomeRoute.info.manage')}</li>
+                  <li>{t('welcomeRoute.info.work')}</li>
+                  <li>{t('welcomeRoute.info.appoint')}</li>
                 </ul>
               </div>
             </article>
@@ -78,12 +82,12 @@ const WelcomeRoute: React.FC = () => {
         <ScrollAnimation animateIn="fadeIn">
           <div className="information-block-part">
             <article className="info-part-block info-part-block-third">
-              <h3 className="info-part-block-header">Never forget</h3>
+              <h3 className="info-part-block-header">{t('welcomeRoute.info.never')}</h3>
               <div className="info-part-block-list">
                 <ul>
-                  <li>Orginize your work</li>
-                  <li>App save your data</li>
-                  <li>Make your live easier</li>
+                  <li>{t('welcomeRoute.info.work-org')}</li>
+                  <li>{t('welcomeRoute.info.app')}</li>
+                  <li>{t('welcomeRoute.info.live')}</li>
                 </ul>
               </div>
             </article>
