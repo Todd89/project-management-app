@@ -6,6 +6,7 @@
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.4);
   overflow: hidden;
+  border: 1px solid red;
 }
 
 .modalC {

@@ -1,7 +1,8 @@
 .submit-btn {
   height: 1.5rem;  
   margin: 0 auto;
-  margin-top: -1rem;
+  margin-top: -2rem;
+  padding: 5px;
   border-radius: 1rem;
   font-weight: 800;
   cursor: pointer;

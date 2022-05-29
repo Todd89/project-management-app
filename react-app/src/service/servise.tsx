@@ -1,10 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpClient from '../API/api';
 import { ILoginState, IToken } from '../interface/types';
 import jwt_decode from 'jwt-decode';
 import { setAuthorizedUserData, setUserToken } from '../react/features/loginSlice';
+import { NavigateOptions, To } from 'react-router';
+import { Dispatch } from 'react';
 
-export const checkToken = (dispatch: any, navigate: any) => {
+export const checkToken = (
+  dispatch: Dispatch<{ payload: string; type: string }>,
+  navigate: (to: To, options?: NavigateOptions | undefined) => void
+) => {
   const TOKEN = localStorage.getItem('token');
   const check = async (TOKEN: string) => {
     const ALL_USERS = await httpClient.getAllUsers(TOKEN);
