@@ -1,14 +1,13 @@
 import './buttonAdd.css';
 
 interface IButtonAddProps {
-  buttonText: string;
   handleAdd: () => void;
 }
 
 function ButtonAdd(props: IButtonAddProps) {
   return (
     <button className="button-add" onClick={props.handleAdd}>
-      {props.buttonText}
+      <span className="button-add_text">+</span>
     </button>
   );
 }
