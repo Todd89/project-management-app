@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { setIsModalOn } from '../../../react/features/dataSlice';
 import { setLanguage } from '../../../react/features/languageState';
 import ButtonAdd from '../../boards/ButtonAdd/ButtonAdd';
+import { ReactComponent as EditProfile } from './edit-profile.svg';
 
 const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -40,6 +41,7 @@ const Header: React.FC = () => {
     } else {
       setChecked(true);
     }
+    console.log('checked', checked);
   }, [checked]);
 
   const logoutApp = () => {
@@ -63,15 +65,16 @@ const Header: React.FC = () => {
           <AppLogo />
         </div>
         <button onClick={editProfileApp} className="button-edit-profile" type="button">
-          {t('Header.edit')}
+          <EditProfile className="edit-profile" />
         </button>
-        <ButtonAdd buttonText={t('Board.add')} handleAdd={handleBoardAdd} />
+        <ButtonAdd handleAdd={handleBoardAdd} />
       </div>
       <div className="switcher-wrapper">
         <div>
           <div className="formSwitcher-text">{userlanguage.language}</div>
           <label className="formSwitcher-label" htmlFor={`formSwitcher`}></label>
         </div>
+
         <input
           type="checkbox"
           className="formSwitcher"
@@ -79,6 +82,9 @@ const Header: React.FC = () => {
           onChange={changeCheckbox}
           id={`formSwitcher`}
         />
+        <label className="formSwitcher-label" htmlFor={`formSwitcher`}>
+          <div className="formSwitcher-text">{language}</div>
+        </label>
       </div>
       <div className="user-control">
         <div className="current-user">
