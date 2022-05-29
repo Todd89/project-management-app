@@ -75,9 +75,7 @@ function BoardList() {
             <button
               className="boards__list__button button-return"
               onClick={handleReturnToBoardList}
-            >
-              {t('Board.back')}
-            </button>
+            ></button>
             <Board boardData={dataState.currentBoard} />
           </>
         )}

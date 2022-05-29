@@ -27,8 +27,9 @@
   },
   "Board": {
     "add": "Add board",
-    "back": "Back to the board list",
-    "titleName": "Board name"
+    "back": "Back",
+    "titleName": "Board name",
+    "name": "Board name"
   },
   "Column": {
     "add": "Add column",

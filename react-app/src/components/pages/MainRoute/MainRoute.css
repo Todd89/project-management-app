@@ -4,7 +4,7 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    min-height: 94vh;
+    min-height: 90vh;
     font-size: 1.5rem;
     overflow-x: visible;
 }
@@ -12,6 +12,6 @@
 
 .main-wrapper {
     width: 100%;
-    min-height: 88vh;
+    min-height: 77vh;
     background-color: rgba(137, 43, 226, 0.2);
 }
