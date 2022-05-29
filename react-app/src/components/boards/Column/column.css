@@ -5,7 +5,7 @@
 .column {
   display: flex;
   flex-direction: column;
-  height: 59vh;
+  height: 59.7vh;
   width: 300px;
   border: 1px solid var(--color-grey);
   background-color: var(--color-silver);
