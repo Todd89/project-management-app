@@ -1,12 +1,17 @@
 .header {
-  position: sticky;
-  top: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
     height: 13vh;
     background-color: #8888ff;
+    transition: .3s;
+}
+
+.sticky{
+  position: sticky;
+  top: 0;
+  background-color: rgb(137, 244, 208);
 }
 
 .header-controls{

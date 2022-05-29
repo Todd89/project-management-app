@@ -75,9 +75,7 @@ function ModalTask(props: IModalTaskProps) {
     });
   }
 
-  useEffect(() => {
-    console.log('handleUserChange', currentData.user);
-  }, [currentData]);
+  useEffect(() => {}, [currentData]);
 
   function handleDataSave() {
     setIsFinished(true);

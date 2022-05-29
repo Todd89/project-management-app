@@ -161,7 +161,7 @@ li {
 .info-part-block {
   position: relative;
   width: 37%;
-  height: 30vh;
+  height: 32vh;
   margin-left: 10px;
   background-color: rgb(197, 105, 221);
   border: 1px solid rgb(121, 7, 150);
@@ -275,7 +275,7 @@ li {
   }
   .information-block{
     width: 95vw;
-    height: 190vh;
+    height: 218vh;
     gap: 10px;
   }
   .info-part-block-header,
@@ -285,7 +285,7 @@ li {
 
   .info-part-block {
     width: 90%;
-    height: 50vh;
+    height: 55vh;
   }
   .information-block-part{
     height: 40vh;

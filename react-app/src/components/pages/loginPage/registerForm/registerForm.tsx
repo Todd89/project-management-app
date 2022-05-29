@@ -2,13 +2,14 @@ import './registerForm.css';
 import { useForm } from 'react-hook-form';
 import { setNewUser, setUserStatus } from '../../../../react/features/loginSlice';
 import { useSelector } from 'react-redux';
-import { INewUser, IState, IRegisterData } from '../../../../interface/types';
+import { INewUser, IState } from '../../../../interface/types';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import CloseWindowButton from '../../reusableComponents/closeWindowButton/CloseWindowButton';
 import SubmitButton from '../../reusableComponents/submitButton/SubmitButton';
 import { USER_STATUS } from '../../../../constant/constant';
+import { useTranslation } from 'react-i18next';
 
 type FormData = {
   userName: string;
@@ -22,6 +23,7 @@ const RegisterForm: React.FC = () => {
     handleSubmit,
     formState: { errors, isSubmitSuccessful, isValid, isDirty },
   } = useForm<FormData>({ mode: 'onChange', reValidateMode: 'onChange' });
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const userState = useSelector((state: IState) => state.loginData);
   const [submitBtnDisabled, setSubmitInputDisabled] = useState(true);
@@ -57,16 +59,18 @@ const RegisterForm: React.FC = () => {
     <div className="registration-block">
       <div className="registration-block_blur">
         <div className="form-wrapper">
-          <p className="info-block-preview">Регистрация</p>
-          <p className="info-block-status">Ваш статус:{userState.status}</p>
+          <p className="info-block-preview">{t('Autho.reg')}</p>
+          <p className="info-block-status">
+            {t('Autho.status')}:{userState.status}
+          </p>
           <form className="registration-form" onSubmit={onSubmit}>
             <label className="registration-form_userName" htmlFor="userName">
               <input
                 {...register('userName', {
-                  required: 'Поле обязательно к заполнению',
+                  required: 'The field is required',
                   minLength: {
                     value: 3,
-                    message: 'Минимум 3 символа',
+                    message: 'Minimum 3 characters',
                   },
                   pattern: /[\d\w\DА-я]{3,}/,
                 })}
@@ -86,10 +90,10 @@ const RegisterForm: React.FC = () => {
             <label className="registration-form_userLogin" htmlFor="userLogin">
               <input
                 {...register('userLogin', {
-                  required: 'Поле обязательно к заполнению',
+                  required: 'The field is required',
                   minLength: {
                     value: 3,
-                    message: 'Минимум 3 симовла',
+                    message: 'Minimum 3 characters',
                   },
                   pattern: /[\d\w\DА-я]{3,}/,
                 })}
@@ -109,10 +113,10 @@ const RegisterForm: React.FC = () => {
             <label className="registration-form_userPassword" htmlFor="userPassword">
               <input
                 {...register('userPassword', {
-                  required: 'Поле обязательно к заполнению',
+                  required: 'The field is required',
                   minLength: {
                     value: 7,
-                    message: 'Минимум 7 символов',
+                    message: 'Minimum 7 characters',
                   },
                   pattern: /[\d\wА-я]{7,}/,
                 })}

@@ -8,33 +8,37 @@ import LogOutButton from '../reusableComponents/logOutButton/LogOutButton';
 import AppLogo from '../reusableComponents/appLogo/AppLogo';
 import { IState } from '../../../interface/types';
 import { useTranslation } from 'react-i18next';
-import { TStore } from '../../../react/store';
-import { DataBoards, setIsModalOn } from '../../../react/features/dataSlice';
+import { setIsModalOn } from '../../../react/features/dataSlice';
+import { setLanguage } from '../../../react/features/languageState';
 import ButtonAdd from '../../boards/ButtonAdd/ButtonAdd';
 
 const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
   const userState = useSelector((state: IState) => state.loginData);
+  const userlanguage = useSelector((state: IState) => state.userLanguage);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
-  const [language, setLanguage] = useState('English');
 
   const changeLanguage = (language: string) => {
     i18n.changeLanguage(language);
   };
 
   function changeCheckbox() {
-    setChecked(!checked);
+    if (userlanguage.language === 'Русский') {
+      dispatch(setLanguage('English'));
+      changeLanguage('en');
+    } else {
+      dispatch(setLanguage('Русский'));
+      changeLanguage('ru');
+    }
   }
 
   useEffect(() => {
-    if (!checked) {
-      changeLanguage('en');
-      setLanguage('English');
+    if (userlanguage.language === 'English') {
+      setChecked(false);
     } else {
-      changeLanguage('ru');
-      setLanguage('Русский');
+      setChecked(true);
     }
   }, [checked]);
 
@@ -53,7 +57,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="header">
+    <header className="header" id="myHeader">
       <div className="header-controls">
         <div className="header-logo">
           <AppLogo />
@@ -63,10 +67,9 @@ const Header: React.FC = () => {
         </button>
         <ButtonAdd buttonText={t('Board.add')} handleAdd={handleBoardAdd} />
       </div>
-
       <div className="switcher-wrapper">
         <div>
-          <div className="formSwitcher-text">{language}</div>
+          <div className="formSwitcher-text">{userlanguage.language}</div>
           <label className="formSwitcher-label" htmlFor={`formSwitcher`}></label>
         </div>
         <input
@@ -78,7 +81,9 @@ const Header: React.FC = () => {
         />
       </div>
       <div className="user-control">
-        <div className="current-user">Hello, {userState.name}</div>
+        <div className="current-user">
+          {t('Header.hello')}, {userState.name}
+        </div>
         <LogOutButton logoutApp={logoutApp} />
       </div>
     </header>

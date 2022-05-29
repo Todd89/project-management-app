@@ -53,7 +53,6 @@ class HTTPClient {
     }
   }
   async updateUser(ID: string, token: string, user: INewUser) {
-    console.log(ID);
     try {
       const response = await fetch(`${API_URL.MAIN_URL}/users/${ID}`, {
         method: `${API_METHODS.PUT}`,
@@ -182,9 +181,6 @@ class HTTPClient {
           Authorization: `Bearer ${token}`,
         },
       });
-      if (response.status === API_STATUS.DELETE_SUCCESS) {
-        console.log('Board deleted');
-      }
     } catch (err) {
       console.error('Error: ', err);
     }
@@ -272,10 +268,6 @@ class HTTPClient {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      if (response.status === API_STATUS.DELETE_SUCCESS) {
-        console.log('Column deleted');
-      }
     } catch (err) {
       console.error('Error: ', err);
     }
@@ -374,9 +366,6 @@ class HTTPClient {
           },
         }
       );
-      if (response.status === API_STATUS.DELETE_SUCCESS) {
-        console.log('Task deleted');
-      }
     } catch (err) {
       console.error('Error: ', err);
     }

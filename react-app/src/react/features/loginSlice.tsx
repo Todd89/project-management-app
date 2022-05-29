@@ -2,7 +2,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import httpClient from '../../API/api';
 import { USER_STATUS } from '../../constant/constant';
-import { INewUser, IUser, IEditUser, IDeleteUser } from '../../interface/types';
+import { INewUser, IEditUser, IDeleteUser } from '../../interface/types';
 
 const userState = {
   name: '',

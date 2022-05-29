@@ -7,6 +7,7 @@ import { DataBoards, deleteTaskAPI } from '../../../react/features/dataSlice';
 import { TStore } from '../../../react/store';
 import { Draggable } from 'react-beautiful-dnd';
 import ButtonDeleteInColumn from '../buttonDeleteInColumn/buttonDeleteInColumn';
+import { useTranslation } from 'react-i18next';
 
 interface IPropsTask {
   index: number;
@@ -15,6 +16,7 @@ interface IPropsTask {
 }
 
 function Task(props: IPropsTask) {
+  const { t, i18n } = useTranslation();
   const loginState = useSelector((state: TStore) => state.loginData);
   const dataState: DataBoards = useSelector((state: TStore) => state.dataFunctions);
   const userState: TUsers = useSelector((state: TStore) => state.usersFunctions);
@@ -71,7 +73,9 @@ function Task(props: IPropsTask) {
               />
             )}
             <p className="task__description">{props.taskData.description}</p>
-            <p className="task__user">User: {taskUser.name}</p>
+            <p className="task__user">
+              {t('Task.titleUser')}: {taskUser.name}
+            </p>
           </div>
         </article>
       )}
