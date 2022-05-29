@@ -1,14 +1,14 @@
 .button-add {
   position: relative;
-  width:  2.5rem;
-  height: 2.5rem;    
+  width:  2.8rem;
+  height: 2.8rem;    
   border: 1px solid transparent;
   border-radius: 50%;
   background-color: transparent;
-  background-image: url('/public/assets/addNewBoard.png');
+  background-image: url('/public/assets/addNewBoard.svg');
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 1.9rem;   
+  background-size: 2.2rem;   
   cursor: pointer;
   transition: all 0.7s;
 }

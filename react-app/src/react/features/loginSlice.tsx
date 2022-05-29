@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import httpClient from '../../API/api';
 import { USER_STATUS } from '../../constant/constant';

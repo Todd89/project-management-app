@@ -317,7 +317,7 @@ function Board(props: IPropsBoard) {
                   />
                 ) : (
                   <span className="board__name board-header-text" onClick={handleHeaderStartEdit}>
-                    <span className="board-header-text-name">Board name: </span>
+                    <span className="board-header-text-name">{t('Board.name')}: </span>
                     {currentBoardTitle}
                   </span>
                 )}

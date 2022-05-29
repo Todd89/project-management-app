@@ -5,11 +5,7 @@ interface IButtonAddProps {
 }
 
 function ButtonAdd(props: IButtonAddProps) {
-  return (
-    <button className="button-add" onClick={props.handleAdd}>
-      <span className="button-add_text">+</span>
-    </button>
-  );
+  return <button className="button-add" onClick={props.handleAdd}></button>;
 }
 
 export default ButtonAdd;

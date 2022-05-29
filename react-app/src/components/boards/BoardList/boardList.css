@@ -32,11 +32,13 @@
 }
 
 .button-return {
-  height: 40px;
-  margin: 10px 0;
+  position: absolute;
+  height: 2rem;
+  width: 2rem;
+  left: 22px;
   padding: 5px;
-  border: 1px solid var(--color-grey);
-  background-color: var(--color-dark-blue);
+  background: url('/public/assets/back-to-list.svg') no-repeat center/cover;
+  border: none;
   font-size: 20px;
 }
 

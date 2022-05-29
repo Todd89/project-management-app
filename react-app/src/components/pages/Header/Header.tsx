@@ -41,7 +41,6 @@ const Header: React.FC = () => {
     } else {
       setChecked(true);
     }
-    console.log('checked', checked);
   }, [checked]);
 
   const logoutApp = () => {
@@ -70,11 +69,6 @@ const Header: React.FC = () => {
         <ButtonAdd handleAdd={handleBoardAdd} />
       </div>
       <div className="switcher-wrapper">
-        <div>
-          <div className="formSwitcher-text">{userlanguage.language}</div>
-          <label className="formSwitcher-label" htmlFor={`formSwitcher`}></label>
-        </div>
-
         <input
           type="checkbox"
           className="formSwitcher"
@@ -83,12 +77,12 @@ const Header: React.FC = () => {
           id={`formSwitcher`}
         />
         <label className="formSwitcher-label" htmlFor={`formSwitcher`}>
-          <div className="formSwitcher-text">{language}</div>
+          <div className="formSwitcher-text">{userlanguage.language}</div>
         </label>
       </div>
       <div className="user-control">
         <div className="current-user">
-          {t('Header.hello')}, {userState.name}
+          {t('Header.hello')}, <span className="current-user_name">{userState.name}</span>
         </div>
         <LogOutButton logoutApp={logoutApp} />
       </div>

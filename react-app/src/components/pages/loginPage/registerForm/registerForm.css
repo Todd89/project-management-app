@@ -21,7 +21,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
   min-width: 18rem;
   width: 20rem;
   height: 57vh;  
