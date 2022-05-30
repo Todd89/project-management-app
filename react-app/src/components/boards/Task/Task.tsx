@@ -49,9 +49,9 @@ function Task(props: IPropsTask) {
 
   return (
     <Draggable draggableId={props.taskData.id} key={props.taskData.id} index={props.index}>
-      {(provided) => (
+      {(provided, snapshot) => (
         <article
-          className="task"
+          className={`task ${snapshot.isDragging ? 'drag' : ''}`}
           onClick={handleTaskChange}
           {...provided.draggableProps}
           {...provided.dragHandleProps}

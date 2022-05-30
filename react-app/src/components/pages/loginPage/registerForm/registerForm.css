@@ -1,5 +1,5 @@
 .registration-block{  
-  height: 94vh;
+  height: 90vh;
   background-color: white;
   background-image: url('/public/assets/pma.png');
   background-repeat: no-repeat;
@@ -19,6 +19,7 @@
 
 .form-wrapper {
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   min-width: 18rem;
@@ -27,6 +28,7 @@
   background-color: white;
   border-radius: 0 1rem 1rem 1rem;
   box-shadow: 0rem 0rem 2rem 2rem rgba(2, 2, 2, 0.541);
+  box-sizing: inherit;
 
 }
 
@@ -36,7 +38,7 @@
   align-items: stretch;
   justify-content: space-around;
   width: 90%;
-  height: 65%;
+  height: 70%;
 }
 
 .registration-form_userName,
@@ -44,7 +46,7 @@
 .registration-form_userPassword {
   position: relative;
   display: block;
-  margin-bottom: 2.5rem;  
+  margin-bottom: 7%;  
 }
 
 .userName,
@@ -73,13 +75,13 @@
 }
 
 .info-block-preview{
-  margin-top: 1.5rem;
+  margin-top: 5%;
   font-size: 1.5rem;
   color: rgb(18, 121, 232);
 }
 
 .info-block-status{
-  margin: 10px 0 20px;
+  margin: 10px 0 10px;
 }
 
 .userName-error{
