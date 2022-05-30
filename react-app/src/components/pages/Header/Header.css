@@ -67,8 +67,12 @@
 }
 
 .current-user {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: rgba(24, 13, 13, 0.747);  
   font-weight: 500;
+  margin-right: 1rem;
 }
 
 .current-user_name {
@@ -186,6 +190,9 @@
   .header-controls{
     width: 60%;
   }
+  .current-user{
+    display: none;
+  }
 }
 
 @media (max-width: 390px) {
@@ -195,16 +202,13 @@
   .switcher-wrapper{
     width: 15%;
     
-}
-.formSwitcher-text{
-  margin-left: 7px;
-  font-size: 14px;
-}
-.current-user{
-  display: none;
-}
-  .user-control{
+  }
+  .formSwitcher-text{
+    margin-left: 7px;
+    font-size: 14px;
+  }
+    .user-control{
     width: 15%;
-    margin-right: -10px;
-}
+    margin-right: 0px;
+  }
 }

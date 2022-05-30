@@ -46,7 +46,13 @@
     height: 2.2rem;
     margin-left: 1rem;    
   }
-  .footer-github a {
+  .footer-github_wrapper {
+    display: flex;   
+    height: 100%;
+    justify-content: center;
+    align-items: center;     
+  }
+  .footer-github_wrapper a {
     display: block;    
     font-size: 1.2rem;
     font-weight: 700;
@@ -56,7 +62,7 @@
     cursor: pointer;
     transition: all 0.7s;
   }
-  .footer-github a:hover {
+  .footer-github_wrapper a:hover {
     color: red;
     transition: all 0.7s;
   }
@@ -71,3 +77,14 @@
   }
   
   /*======================================================*/
+
+  @media (max-width: 480px) {
+    .footer-github_wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;        
+    }
+
+  }

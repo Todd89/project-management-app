@@ -60,4 +60,13 @@
   font-size: 20px;
 }
 
+.dragactive {
+  box-shadow: 0rem 0rem 0.5rem 0.5rem rgba(0, 255, 221, 0.17);
+  background-color: rgba(0, 255, 221, 0.17);  
+}
+
+.drag {
+  box-shadow: 0rem 0rem 0.5rem 0.5rem rgba(255, 0, 0, 0.316);
+  background-color: rgba(255, 0, 0, 0.316); 
+}
 

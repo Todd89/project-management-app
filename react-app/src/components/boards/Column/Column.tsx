@@ -100,17 +100,17 @@ function Column(props: IPropsColumn) {
 
   return (
     <Draggable draggableId={props.columnData.id} key={props.columnData.id} index={props.index}>
-      {(provided) => (
+      {(provided, snapshot) => (
         <div
-          className="column-container"
+          className={`column-container ${snapshot.isDragging ? 'drag' : ''}`}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
         >
           <Droppable droppableId={props.columnData.id} type="tasks">
-            {(provided) => (
+            {(provided, snapshot) => (
               <article
-                className="column"
+                className={`column ${snapshot.isDraggingOver ? 'dragactive' : ''}`}
                 onClick={handleColumnClick}
                 ref={provided.innerRef}
                 {...provided.droppableProps}
