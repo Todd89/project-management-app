@@ -5,15 +5,22 @@
   margin-right: 10px;
   padding: 0;
   border: none;
+  border-radius: 50%;
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
   background-color: rgba(0, 128, 0, 0);
   background-image: url('../../../../public/trash-column.svg');
-  transition: .3s;
+  transition: all 0.7s;
   cursor: pointer;
 }
 
-.button-delete:hover {
+.button-delete-column:hover {
   transform: scale(1.1);
+}
+
+.button-delete-column:active {
+  background-color: rgba(6, 184, 255, 0.37);
+  box-shadow: 0rem 0rem 0.3rem 0.3rem rgba(6, 184, 255, 0.37);
+  transform: scale(0.95);
 }
