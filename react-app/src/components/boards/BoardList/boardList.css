@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: baseline;
-  margin: 20px 0;
+  margin: 10px auto;
 }
 
 .boards__list {

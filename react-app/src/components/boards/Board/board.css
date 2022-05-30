@@ -3,6 +3,10 @@
   border: 2px solid brown;
 }
 
+.board-container{
+  margin: 0 auto;
+}
+
 .board {
   display: flex;
   flex-direction: column;
