@@ -1,0 +1,214 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 13vh;
+    background-color: #8888ff;
+    transition: .3s;
+}
+
+.sticky{
+  position: sticky;
+  top: 0;
+  background-color: rgb(137, 244, 208);
+}
+
+.header-controls{
+  width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.header-logo {
+    flex: 0 0 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    margin: 0 0.7rem;
+    overflow: hidden;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.header-logo:hover {
+    transform: scale(1.1);
+    transform: rotate(360deg);
+}
+
+.button-edit-profile {
+  width: 2.2rem;
+  height: 2.2rem;  
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background-color: transparent;  
+  cursor: pointer;
+  transition: all 0.7s;
+}
+
+.button-edit-profile:hover {
+    transform: scale(1.1);   
+    /*background: linear-gradient(90deg, rgba(0,195,246,1) 0%, rgba(191,76,191,1) 44%, rgba(238,8,238,1) 100%);*/
+}
+
+.button-edit-profile:active,
+.button-add-board:active {
+    background-color: rgba(0, 0, 255, 0.37);
+    box-shadow: 0rem 0rem 0.5rem 0.5rem rgba(0, 0, 255, 0.37);
+    transform: scale(0.95);
+}
+
+.user-control{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 20%;  
+}
+
+.current-user {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgba(24, 13, 13, 0.747);  
+  font-weight: 500;
+  margin-right: 1rem;
+}
+
+.current-user_name {
+  color: rgba(255, 60, 0, 0.829) ;
+  font-weight: 900;
+}
+
+/*----------------Language switcher----------------------*/
+
+.switcher-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 17%;
+  height: 2rem;
+}
+.formSwitcher {
+    display: none;
+}
+
+.formSwitcher:checked + .formSwitcher-label {
+    color: rgba(24, 13, 13, 0.747);
+}
+
+.formSwitcher:checked + .formSwitcher-label:before {
+    background-color: rgba(229, 229, 238, 0.534);
+}
+
+.formSwitcher:checked + .formSwitcher-label:after {
+    transform: translateX(23px);
+    background-color: rgba(24, 13, 13, 0.747);
+}
+
+.formSwitcher:checked + .formSwitcher-label:active:after {
+    transform: translateX(12px);
+}
+
+.formSwitcher:checked + .formSwitcher-label:active:before {
+    background-color: rgba(229, 229, 238, 0.534);
+}
+
+.formSwitcher-label {
+  position: relative;
+  bottom: -0.2rem;
+  margin-left: 10px;  
+  vertical-align: top;
+  padding-left: 50px;
+  font-size: 1.2rem;
+  color: rgba(0, 0, 255, 0.5);
+  cursor: pointer;
+  position: relative;
+  transition: color .1s linear;
+  cursor: pointer;
+}
+
+.formSwitcher-text {
+  position: absolute;
+  top: -1.5rem;
+  left: -0.4rem;
+  font-weight: 700;
+}
+
+.formSwitcher-label:before {
+  content: "";
+  display: block;
+  width: 45px;
+  height: 22px;
+
+  background-color: rgba(229, 229, 238, 0.534);
+  border-radius: 10px;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+
+  transition: 1s linear;
+  cursor: pointer;
+}
+
+.formSwitcher-label:after {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 20px;
+
+  background-color: rgba(0, 0, 255, 0.5);
+  border-radius: 50%;
+
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  z-index: 2;
+
+  transition: transform .3s linear;
+}
+
+.formSwitcher-label:active:after {
+  transform: translateX(12px);
+}
+
+.formSwitcher-label:active:before {
+  background-color: rgba(238, 255, 0, 0.37);
+}
+
+/*-------------------------------------*/
+
+@media (max-width: 950px) {
+  .header-controls{
+    width: 50%;
+  }
+}
+
+@media (max-width: 610px) {
+  .header-controls{
+    width: 60%;
+  }
+  .current-user{
+    display: none;
+  }
+}
+
+@media (max-width: 390px) {
+  .header-controls{
+    width: 70%;
+  }
+  .switcher-wrapper{
+    width: 15%;
+    
+  }
+  .formSwitcher-text{
+    margin-left: 7px;
+    font-size: 14px;
+  }
+    .user-control{
+    width: 15%;
+    margin-right: 0px;
+  }
+}

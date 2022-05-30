@@ -1,0 +1,28 @@
+.logout-button_wrapper {
+    flex: 0 0 1.5rem;
+}
+
+.button-logout {
+    margin: 0rem 0rem;
+    width: 1.8rem;
+    height: 2rem;    
+    border: solid transparent;
+    border-radius: 50%;
+    background-color: transparent;
+    background-image: url('/public/assets/logOut.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 2rem;   
+    cursor: pointer;
+    transition: all 0.7s;
+}
+
+.button-logout:hover{
+    transform: scale(1.1);
+}
+
+.button-logout:active{
+    background-color: rgba(0, 0, 255, 0.37);
+    box-shadow: 0rem 0rem 0.5rem 0.5rem rgba(0, 0, 255, 0.37);
+    transform: scale(0.95);
+}

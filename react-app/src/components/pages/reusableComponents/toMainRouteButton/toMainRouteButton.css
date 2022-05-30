@@ -1,0 +1,24 @@
+.button-toMain {
+  position: absolute;
+  top: 1rem;
+  right: 4rem;
+  padding: 8px;
+  margin-right: 0.5rem;
+  border: 1px solid rgb(0, 149, 255);
+  border-radius: 20px;
+  background: rgb(251, 255, 0);
+  font-weight: 600;
+  transition: .3s;
+  letter-spacing: .7px;
+  cursor: pointer;
+}
+.button-toMain:hover {
+  border: 3px solid rgb(0, 149, 255);;
+  transform: scale(1.1);
+}
+
+@media (max-width: 600px) {
+  .button-toMain {
+    right: 0.5rem;
+  }
+}

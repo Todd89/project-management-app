@@ -1,0 +1,72 @@
+.column-container {
+  height: 60vh;
+  width: 300px;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  height: 59.7vh;
+  width: 300px;
+  border: 1px solid var(--color-grey);
+  background-color: var(--color-silver);
+  font-size: 18px;
+  color: var(--color-black);
+}
+
+.column__wrapper {
+  height: 70%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1 0 auto;
+}
+
+.column:hover {
+  border-color: var(--color-black);
+}
+
+.column__nav {
+  display: flex;
+  align-self: flex-end;
+}
+
+.column__header {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  height: 15%;
+  width: 100%;
+  margin: 0;
+  border-bottom: 1px solid var(--color-grey);
+  background-color: var(--color-dark-silver);
+  font-size: 20px;
+}
+
+.column__header:hover {
+  border-color: var(--color-black);
+  background-color: var(--color-azure);
+}
+
+.header-text {
+  margin: 0;
+  text-align: center;
+  font-size: 20px;
+}
+
+.header-input {
+  margin: 0;
+  width: calc(100% - 10px);
+  border: none;
+  background-color: var(--color-azure);
+  font-size: 20px;
+}
+
+.dragactive {
+  box-shadow: 0rem 0rem 0.5rem 0.5rem rgba(0, 255, 221, 0.17);
+  background-color: rgba(0, 255, 221, 0.17);  
+}
+
+.drag {
+  box-shadow: 0rem 0rem 0.5rem 0.5rem rgba(255, 0, 0, 0.316);
+  background-color: rgba(255, 0, 0, 0.316); 
+}
+

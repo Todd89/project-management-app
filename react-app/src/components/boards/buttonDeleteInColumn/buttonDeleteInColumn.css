@@ -1,0 +1,19 @@
+.button-delete-column {
+  align-self: flex-end;
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  padding: 0;
+  border: none;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: rgba(0, 128, 0, 0);
+  background-image: url('../../../../public/trash-column.svg');
+  transition: .3s;
+  cursor: pointer;
+}
+
+.button-delete:hover {
+  transform: scale(1.1);
+}

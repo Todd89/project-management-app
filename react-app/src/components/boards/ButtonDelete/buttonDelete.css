@@ -1,0 +1,26 @@
+.button-delete {
+  align-self: flex-end;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 10px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: rgba(0, 128, 0, 0);
+  background-image: url('../../../../public/button-delete.svg');
+  cursor: alias;
+  transition: all 0.7s;
+}
+
+.button-delete:hover {
+  transform: scale(1.1);  
+}
+
+.button-delete:active {
+  transform: scale(0.95);
+  background-color: rgba(38, 38, 39, 0.5);
+  box-shadow: 0rem 0rem 0.5rem 0.5rem rgba(38, 38, 39, 0.5);
+}

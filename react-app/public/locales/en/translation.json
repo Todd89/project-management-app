@@ -1,0 +1,63 @@
+{
+  "welcomeRoute": {
+    "description": "Application that helps an individual in a team or group of developers achieve their goals. The application is designed to organize and schedule the execution of various tasks. Suitable for both adding daily notes and working on complex projects.",
+    "team": "Our team",
+    "RSS": "Project management app is an application that helps an individual in a team or group of developers achieve their goals.",
+    "try": "Try it right now!",
+    "info":{
+      "board-creacte": "create tasks board",
+      "board": "You can create your own tasks boards",
+      "organize": "Organize tasks by types",
+      "authotize": "Authotize and get all possibilities",
+      "add-task": "add task",
+      "manage": "Manage by your tasks",
+      "work": "Work with your team",
+      "appoint": "Appoint a responsible",
+      "never": "never forget",
+      "work-org": "Orginize your work",
+      "app": "App save your data",
+      "live": "Make your live easier"
+    },
+    "to-main": "To Main Page"
+  },
+  "Header": {
+    "board": "New board",
+    "edit": "Edit profile",
+    "hello": "Hello"
+  },
+  "Board": {
+    "add": "Add board",
+    "back": "Back",
+    "titleName": "Board name",
+    "name": "Board name"
+  },
+  "Column": {
+    "add": "Add column",
+    "titleName": "Column name"
+  },
+  "Task": {
+    "add": "Add task",
+    "titleName": "Task name",
+    "titleDescription": "Task description",
+    "titleUser": "Task user"
+  },
+  "Modal": {
+    "quastion": "Do you really want to delete",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "Autho": {
+    "reg": "Registration",
+    "autho": "Authorization",
+    "edit": "Edit",
+    "status": "Status",
+    "send": "Send",
+    "delete": "Delete",
+    "name": "Insert your Name",
+    "log": "Insert your login",
+    "pass": "Insert your password",
+    "field": "The field is required",
+    "symb": "Minimum 3 characters",
+    "symb7": "Minimum 7 characters"
+  }
+}

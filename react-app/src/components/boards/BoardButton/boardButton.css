@@ -1,0 +1,31 @@
+.board-button {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  height: 200px;
+  padding: 20px 0;
+  border: 2px solid rgb(143, 46, 46);
+  background-color: var(--color-silver);
+  box-sizing: border-box;
+  background: url('/public/assets/img/board-add.jpg') no-repeat center/ cover;
+  cursor: pointer;
+  transition: all 0.7s;
+}
+
+.board-button__button {
+  margin: 40px 0;
+  font-size: 30px;
+  font-weight: 700;
+  border: none;
+  background: none;
+  color: white;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+}
+
+.board-button:hover {
+  background-color: var(--color-dark-blue);
+  border: 4px solid rgb(143, 46, 46);
+  box-shadow: 0rem 0rem 0.5rem 0.5rem rgba(2, 2, 2, 0.541);
+}
+

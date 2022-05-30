@@ -1,0 +1,18 @@
+.redaction-wrapper{
+  height: 72vh;
+}
+
+.delete-user-button{
+  height: 1.5rem;  
+  margin: 0 auto;
+  margin-top: 1rem;
+  padding: 5px;
+  border-radius: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.7s;
+}
+
+.delete-user-button:hover{
+  background-color: rgba(255, 0, 0, 0.6);
+}

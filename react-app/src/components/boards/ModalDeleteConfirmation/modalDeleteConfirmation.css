@@ -1,0 +1,88 @@
+.blur {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  border: 1px solid red;
+}
+
+.modalC {
+  position: relative;
+  top: calc(50vh - 100px);
+  margin: 0 auto;
+  width: 50%;
+  max-height: 200px;
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: #ffffff;
+  cursor: default;
+  opacity: 0;
+  animation: showAni 1s forwards;
+}
+
+@keyframes showAni {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.hide {
+  opacity: 1;
+  animation: hideAni 1s forwards;
+}
+
+@keyframes hideAni {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.modalC__confirmation {
+  text-align: center;
+  margin: 10px 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 25px;
+}
+
+.modalC__buttons {
+  display: flex;
+  justify-content: space-around;
+  width: 250px;
+}
+
+.modalC__button {
+  width: 120px;
+  height: 40px;
+  font-size: 16px;
+  font-style: italic;
+  line-height: 45px;
+}
+
+@media (max-width: 520px) {
+  .modalC__button {
+    width: 60px;
+  }
+
+  .modalC__buttons {
+    width: 180px;
+  }
+  
+}

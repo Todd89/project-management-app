@@ -1,0 +1,83 @@
+.blur {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.modalT {
+  position: relative;
+  top: calc(50vh - 100px);
+  margin: 0 auto;
+  width: 400px;
+  height: 270px;
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: #ffffff;
+  cursor: default;
+  animation: showAni 1s forwards;
+}
+
+@keyframes showAni {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.hide {
+  opacity: 1;
+  animation: hideAni 1s forwards;
+}
+
+@keyframes hideAni {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0;
+}
+
+.modal__task {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+.task-name {
+  margin: 10px 0 20px 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 25px;
+}
+
+.task-misc {
+  margin: 10px 0 20px 0;
+  font-size: 16px;
+  font-style: italic;
+  line-height: 25px;
+}
+
+.task-title {
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* @media (max-width: 1024px) {
+  .modalT {
+    width: 300px;
+  }
+} */
